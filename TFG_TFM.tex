@@ -321,7 +321,7 @@ every picture/.append style={
 
 
 %%%%%%%%%%%% -  INICIO PORTADA %%%%%%%%%%%%
-\definecolor{gold}{rgb}{1.0,0.84,0.0}
+\definecolor{gold}{rgb}{0,0,0} 
 \definecolor{MUII}{rgb}{0,0,0.5}
 \definecolor{MUIT}{rgb}{0.6,0.2,0.0}
 \definecolor{GIM}{rgb}{0.4,0.0,0.2}
@@ -646,7 +646,8 @@ Un TFG o TFM en la modalidad de Trabajo de Investigación deberá estructurarse 
     \item \textit{Introducción}: contendrá un estudio del estado actual de la técnica sobre el problema plateado, las alternativas consideradas y los objetivos a conseguir.
     \item \textit{Material y métodos}: se describirán los equipos y materiales utilizados para su realización, la metodología empleada y una descripción completa de los experimentos realizados.
     \item \textit{Resultados y discusión}: se describirán y analizarán los resultados obtenidos siguiendo la metodología propuesta.
-    \item \textit{Conclusiones}: en función de los resultados obtenidos, se expondrán las conclusiones de la investigación y se propondrán trabajos futuros.
+    \item \textit{Conclusiones}: en función de los resultados obtenidos, 
+    se expondrán las conclusiones de la investigación y se propondrán trabajos futuros.
     \item \textit{Anexos}: tantos como se considere necesario en función de los aspectos concretos que se quieran especificar.
     \item \textit{Bibliografía}: se indicarán todas las referencias bibliográficas utilizadas, ordenadas con código para su cita en la memoria.
 \end{enumerate}
@@ -698,7 +699,7 @@ Para citar una referencia basta con utilizar el comando \texttt{\textbackslash r
 \textbf{Nota:} ya que el comando \texttt{\textbackslash label} es compartido por títulos, figuras, tablas, etc., es bastante útil utilizar una nomenclatura clara para definir cada referencia, por ejemplo: ``tab:" \ seguido del nombre de la tabla para las tablas, ``fig:" \ seguido del nombre de la figura para las figuras, etc.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+ 
 
 %%%%%%%%%%%%%% - FORMATO DE TEXTO - %%%%%%%%%%%%%%
 
@@ -1664,7 +1665,14 @@ Contenido del segundo anexo (texto, tablas, figuras, códigos, etc.)
 
 
 %%%%%%%%%%%%%% - FIN DEL DOCUMENTO - %%%%%%%%%%%%%
+\begin{sloppypar}
+interwordspace: \the\fontdimen2\font \\
 
+interwordstretch: \the\fontdimen3\font \\
+
+emergencystretch: \the\emergencystretch\par
+
+\end{sloppypar}
 \end{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
