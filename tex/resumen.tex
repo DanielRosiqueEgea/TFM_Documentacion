@@ -1,0 +1,38 @@
+
+\newpage
+\section*{RESUMEN} % Se añade un asterisco a \section para que el título no esté numerado.
+\markright{RESUMEN} % Al utilizar \section* se ha de añadir manualmente el título del apartado al encabezado.
+\addcontentsline{toc}{section}{RESUMEN} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC)
+
+\begin{itemize}
+    \item Contexto/problema (1-2 frases)
+    \item Objetivos (1 frase corta)
+    \item Metodología (2-3 frases)
+    \item Resultados ()
+    \begin{itemize}
+        \item que el método funciona
+        \item comparas enfoques
+        \item cuál es mejor (aunque sea genérico) 
+    \end{itemize}
+    \item Conclusiones/impacto (1-2 frases)
+\end{itemize}
+Se utilizarán redes neuronales convolucionales para detectar patrones cerebrales que detecten la intención de caminar o detenerse con un exoesqueleto. Se ajustarán los modelos para maximizar la detección y reducir los falsos positivos en validación cruzada y en pseudo-online. Los modelos utilizarán información del mismo día, acumulativos o aplicando fine tuning. Se realizará el estudio con registros previamente realizados y se planteará su aplicación a nuevos datos experimentales.
+
+
+
+%%%%%%%%%%%%%%%%%%%% CHATTY
+
+
+Se utilizarán redes neuronales convolucionales para la detección de patrones cerebrales asociados a la intención de iniciar o detener la marcha en sistemas de asistencia robótica. Este problema resulta clave en el desarrollo de interfaces cerebro-computador aplicadas al control de exoesqueletos, donde la identificación precisa de la intención del usuario es fundamental para garantizar un funcionamiento seguro y eficiente.
+
+El objetivo de este trabajo es analizar el rendimiento de diferentes arquitecturas de redes neuronales convolucionales en la clasificación de señales EEG, así como evaluar distintas estrategias de entrenamiento, incluyendo modelos entrenados con datos del mismo día, enfoques acumulativos y técnicas de fine-tuning. Para ello, se emplean registros de EEG previamente adquiridos, aplicando esquemas de validación cruzada y evaluaciones en entornos pseudo-online que simulan condiciones reales de uso.
+
+Los resultados obtenidos permiten comparar el impacto de la arquitectura, el método de entrenamiento y la variabilidad entre usuarios en el rendimiento del sistema, destacando aquellas configuraciones que maximizan la precisión y reducen los falsos positivos. Asimismo, se identifican diferencias significativas entre los distintos enfoques evaluados, lo que proporciona información relevante para el diseño de sistemas más robustos.
+
+Finalmente, este trabajo sienta las bases para la aplicación de estos modelos en escenarios reales, contribuyendo al desarrollo de sistemas de control más fiables en exoesqueletos y otras tecnologías de asistencia basadas en interfaces cerebro-computador.
+
+\vspace{12cm}
+
+
+
+\afterpage{\blankpage} % Se añade una página en blanco después del resumen.

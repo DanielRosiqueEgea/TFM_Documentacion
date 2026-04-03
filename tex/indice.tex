@@ -1,0 +1,47 @@
+
+\newpage
+
+\renewcommand*\contentsname{ÍNDICE} % Se modifica el nombre por defecto de la "Table Of Contents" (tabla de contenidos, índice) para pasar a llamarla "ÍNDICE".
+
+\tableofcontents % Se genera el índice de contenidos del documento que incorpora todos los títulos de \section, \subsection y \subsubsection (y también \paragraph, ver capítulo 1), así como los títulos añadidos con \addcontentsline (como el resumen ejecutivo, por ejemplo).
+
+\afterpage{\blankpage} % Se añade una página en blanco después del índice.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - ÍNDICE DE TABLAS - %%%%%%%%%%%%%%
+
+\newpage
+
+\renewcommand{\listtablename}{ÍNDICE DE TABLAS} % Se define el nombre del índice de tablas.
+\listoftables % Se genera automáticamente el índice con las distintas tablas del documento (entorno \table o \longtable).
+\addcontentsline{toc}{section}{ÍNDICE DE TABLAS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% - ÍNDICE DE FIGURAS - %%%%%%%%%%%%%%
+
+\newpage
+
+\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS} % Se define el nombre del índice de figuras.
+\listoffigures % Se genera automáticamente el índice con las distintas figuras del documento (entorno \figure).
+\addcontentsline{toc}{section}{ÍNDICE DE FIGURAS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - ÍNDICE DE CÓDIGOS - %%%%%%%%%%%%%
+
+\newpage
+
+\listofcodes % Se genera automáticamente el índice con los distintos códigos del documento (entorno \code).
+\addcontentsline{toc}{section}{ÍNDICE DE CÓDIGOS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+\afterpage{\blankpage} % Se añade una página en blanco después del índice de códigos.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

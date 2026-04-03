@@ -1,0 +1,106 @@
+
+\section{Introducción} \label{sec:introduccion}
+Aquí haces el contexto global
+contendr´a un estudio del estado actual de la t´ecnica sobre el
+problema plateado, las alternativas consideradas y los objetivos a conseguir.
+
+\begin{itemize}
+    \item Qué es la neurorrobótica / BCI
+    \item Qué son las señales EEG (muy breve)
+    \item Aplicación: exoesqueletos / rehabilitación
+    \item Problema clave: detectar intención de movimiento
+\end{itemize}
+
+Sin embargo, este problema presenta múltiples desafíos...
+
+\subsection{Motivación}
+Aquí vendes por qué esto importa
+
+\begin{itemize}    
+    \item Problemas reales:
+    \begin{itemize}
+        \item pacientes con movilidad reducida
+        \item necesidad de control natural
+    \end{itemize}
+    \item Por qué EEG:
+    \begin{itemize}
+        \item no invasivo
+        \item accesible
+    \end{itemize}
+    \item Problema:
+    \begin{itemize}
+        \item ruido
+        \item variabilidad entre usuarios
+        \item falsos positivos (MUY importante en exoesqueletos)
+    \end{itemize}
+\end{itemize}
+
+Esto justifica la necesidad de métodos robustos…
+
+\subsection{Definición}
+
+\begin{itemize}
+    \item Qué señal tienes:
+    \begin{itemize}
+        \item EEG
+    \end{itemize}
+    \item Qué quieres detectar:
+    \begin{itemize}
+        \item intención de caminar
+        \item parada
+    \end{itemize}
+    \item Qué tipo de problema es:
+    \begin{itemize}
+        \item clasificación binaria (o multiclase si aplica)
+    \end{itemize}
+    \item Contexto:
+    \begin{itemize}
+        \item entorno pseudo-online
+        \item datos offline
+    \end{itemize}
+\end{itemize}
+
+Muy importante: que quede claro qué entra y qué sale del sistema
+
+\subsection{Alternativas Consideradas}
+
+Aquí haces un mini “estado del arte light”
+
+Qué meter:
+
+Métodos clásicos:
+features + SVM / LDA
+Métodos deep learning:
+CNNs (EEGNet, DeepConvNet…)
+Diferentes enfoques de entrenamiento:
+por usuario
+generalizados
+fine-tuning
+
+No te líes mucho, esto no es el estado del arte completo
+ Termina con:
+
+“En este trabajo se opta por…”
+
+\subsection{Objetivos a Conseguir}
+
+Aquí tienes que ser cristalino
+
+ Objetivo general (1 frase)
+Desarrollar/evaluar modelos CNN para detectar intención de marcha en EEG
+Objetivos específicos (bullet points)
+
+Algo tipo:
+
+Evaluar diferentes arquitecturas (EEGNet, DeepConvNet…)
+Comparar métodos de entrenamiento:
+same-day
+acumulativo
+fine-tuning
+Analizar variabilidad entre usuarios
+Evaluar rendimiento en:
+validación cruzada
+pseudo-online
+Reducir falsos positivos
+
+ Esto suele gustar MUCHO a tribunales
