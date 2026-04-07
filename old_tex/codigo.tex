@@ -1,0 +1,61 @@
+
+\section{CÓDIGO} \label{sec:codigo}
+
+Los  fragmentos de código se incorporan al informe en el entorno \texttt{code} y corresponden al paquete \texttt{listings}. A continuación se presenta el fragmento de código Python que genera la figura \ref{fig:ondacuadrada} introducida en el apartado \ref{sec:graficas}:
+
+\vspace{-5pt}
+
+\begin{code}[H]
+\begin{lstlisting}[firstnumber=1, breakindent=55pt]
+# Se importa las librerías matplotlib y numpy:
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Se configura matplotlib para exportar la gráfica a ".pgf":
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+   "pgf.texsystem": "pdflatex",
+   "font.family": "serif",
+   "text.usetex": True,
+   "pgf.rcfonts": False,
+})
+
+# Se define el dominio de la variable temporal y el "sample rate":
+t = np.linspace(0, 6, 1000, endpoint=True)
+
+# Se representan los ocho armónicos de la onda cuadrada:
+for k in range(1,9):
+   if k == 1:
+       plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray", label="Ondas sinusoidales")
+   else:
+       plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray")
+
+# Se suman los armónicos y se representa la onda cuadrada resultante:
+suma = 0 
+for k in range(1,9):
+   suma = suma + (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1)
+plt.plot(t, suma, linewidth=1, color="red", label="Onda cuadrada resultante")
+
+# Se define diversos aspectos del formato de la gráfica (título, leyenda, etc.):
+plt.title("Onda cuadrada construida por síntesis aditiva \n a partir de sus ocho primeros armónicos")
+plt.xlabel("Tiempo")
+plt.ylabel("Amplitud")
+plt.legend(loc="lower right")
+plt.grid(True, which="both")
+plt.axhline(y=0, color="k")
+plt.ylim(-3, 3)
+
+# Se exporta la gráfica a formato ".pgf" y ".pdf"
+plt.savefig("SquareWave.pgf", format="pgf")
+plt.savefig("SquareWave.pdf", dpi=400)
+plt.clf()
+\end{lstlisting}
+\vspace{-5pt}
+\caption{Código utilizado para generar la gráfica \ref{fig:ondacuadrada}}
+\label{cod:ondacuadrada}
+\end{code}
+
+La inmensa mayoría de operaciones relacionadas con el formato del código se realizan en el preámbulo del documento (cuyo código está comentado). En él se definen todos los parámetros necesarios para que el paquete \texttt{listings} se adapte a código escrito en Python (palabras clave, colores, comentarios, etc.). Si se desea incluir código de otro lenguaje de programación, es necesario modificar el preámbulo para que \texttt{listings} se adapte a dicho lenguaje (en la mayoría de casos se puede encontrar el código adaptado a cada lenguaje de programación en foros relacionados con \LaTeX).
+
+Los únicos parámetros que pueden modificarse en este punto del código son \texttt{firstnumber}, cuyo valor corresponde al número de la primera línea de código (en este caso se ha fijado en 1) y \texttt{breakindent}, que indica el ancho de la indentación al realizar un salto de línea.

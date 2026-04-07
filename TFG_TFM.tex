@@ -1,5 +1,6 @@
 \input{preamble.tex}
 \addbibresource{biblio.bib}
+\addbibresource{TFM.bib}
 \input{acronyms.tex}
 % ---------------------------------------------- % 
 
@@ -68,227 +69,47 @@
 %%%%%%%%%%%%%%%%%%% - Introducción - %%%%%%%%%%%%%%%%%%
 
 \input{tex/introduccion.tex}
+\newpage
+
+%%%%%%%%%%%%%%%%%%% - Estado del Arte - %%%%%%%%%%%%%%%%%%
+
+\input{tex/estado_del_arte.tex}
+\newpage
 
 %%%%%%%%%%%%%%%%%%% - Material y Métodos - %%%%%%%%%%%%%%%%%%
 
 \input{tex/material.tex}
+\newpage
 
 %%%%%%%%%%%%%%%%%%% - Resultados y discusion - %%%%%%%%%%%%%%%%%%
 
 \input{tex/resultados.tex}
+\newpage
 
 %%%%%%%%%%%%%%%%%%% - Conclusiones - %%%%%%%%%%%%%%%%%%
 
 \input{tex/conclusiones.tex}
+\newpage
 
 %%%%%%%%%%%%%%%%%%% - Anexos - %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%% - Contenido de TFG y TFM - %%%%%%%%%%%%%%%%%%
 
-\section{Contenido de TFG y TFM} 
-
-\subsubsection{Estructura y contenidos de un Trabajo de Investigación}
-\label{sec:estructuratrabajoinvestigacion}
-
-Un TFG o TFM en la modalidad de Trabajo de Investigación deberá estructurarse en los siguientes apartados:
-\begin{enumerate}
-    \item \textit{Introducción}: contendrá un estudio del estado actual de la técnica sobre el problema plateado, las alternativas consideradas y los objetivos a conseguir.
-    \item \textit{Material y métodos}: se describirán los equipos y materiales utilizados para su realización, la metodología empleada y una descripción completa de los experimentos realizados.
-    \item \textit{Resultados y discusión}: se describirán y analizarán los resultados obtenidos siguiendo la metodología propuesta.
-    \item \textit{Conclusiones}: en función de los resultados obtenidos, 
-    se expondrán las conclusiones de la investigación y se propondrán trabajos futuros.
-    \item \textit{Anexos}: tantos como se considere necesario en función de los aspectos concretos que se quieran especificar.
-    \item \textit{Bibliografía}: se indicarán todas las referencias bibliográficas utilizadas, ordenadas con código para su cita en la memoria.
-\end{enumerate}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-\section{TABLAS} \label{sec:tablas}
-
-Las tablas se definen en el entorno \texttt{table}. Existen infinidad de posibilidades en cuanto a su formato: omitir o dibujar líneas horizontales y verticales, fusionar columnas y filas, alinear el contenido a la derecha, izquierda o centro, y demás opciones resumidas en \url{https://www.overleaf.com/learn/latex/tables}. Dado que la forma de construir una tabla directamente en código \LaTeX \ está lejos de ser cómoda e intuitiva, quizás lo más recomendable sea acudir a editores de tablas que generan automáticamente el código correspondiente y cuya interfaz es similar a la que puede encontrarse en Excel, como por ejemplo \url{https://www.tablesgenerator.com/}. Un ejemplo sencillo de tabla se muestra a continuación:
-
-\vspace{25pt}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|l|}
-\hline
-$\bm{n}$ & $\bm{a_n}$ & $\bm{a_{n+1}}$ & $\bm{\varphi} \ _{(= a_{n+1}/a_n)}$ \\ \hline\hline
-\textbf{1} & 1 & 1 & 1 \\ \hline
-\textbf{2} & 1 & 2 & 2 \\ \hline
-\textbf{3} & 2 & 3 & 1,5 \\ \hline
-\textbf{4} & 3 & 5 & 1,66666667 \\ \hline
-\textbf{5} & 5 & 8 & 1,6 \\ \hline
-\textbf{6} & 8 & 13 & 1,625 \\ \hline
-\textbf{7} & 13 & 21 & 1,61538462 \\ \hline
-\textbf{8} & 21 & 34 & 1,61904762 \\ \hline
-\textbf{9} & 34 & 55 & 1,61764706 \\ \hline
-\textbf{10} & 55 & - & - \\ \hline
-\end{tabular}
-\caption{Cinco primeros términos de la sucesión de Fibonacci}
-\label{tabla:fibonacci5}
-\end{table}
-
-\vspace{5pt}
-
-El título de la tabla se indica mediante el comando \textbackslash\texttt{caption} (este comando no solamente sirve para añadir un título a la tabla, sino que es esencial para que ésta aparezca en el índice de tablas), y, al igual que en el caso de los títulos de capítulos (ver apartado \ref{sec:referencias}), es muy recomendable añadir el comando \textbackslash\texttt{label} para poder referirse a la tabla en cuestión en partes posteriores (o anteriores) del documento.
-
-
-\subsection{Posicionamiento}
-
-Las tablas (al igual que otros elementos como imágenes o diagramas, como se verá más adelante) pueden posicionarse en distintos lugares de la página y en distintas posiciones con respecto al texto. La forma más común de situar una tabla es inmediatamente después de un párrafo y centrada en la página (como en el caso de la tabla \ref{tabla:fibonacci5}), lo que se consigue indicando \texttt{[H]} al iniciar el entorno \texttt{table} y añadiendo el comando \textbackslash\texttt{centering}, respectivamente. Una guía que recopila las distintas opciones en lo que se refiere al posicionamiento de tablas e imágenes puede consultarse en \url{https://www.overleaf.com/learn/latex/positioning_images_and_tables}.
-
-
+\input{old_tex/contenido_TFG_TFM.tex}
 \newpage
-\subsection{Entorno \textbackslash\texttt{longtable}}
-
-En el caso de que una tabla sea demasiado larga como para caber en una única página se puede utilizar el entorno \texttt{longtable}, mediante el cual \LaTeX \ secciona la tabla de forma automática en tantas partes como sea necesario.
-
-\vspace{10pt}
-
-\begin{longtable}[H]{|c|c|c|l|}
-\hline
-$\bm{n}$ & $\bm{a_n}$ & $\bm{a_{n+1}}$ & $\bm{\varphi} \ _{(= a_{n+1}/a_n)}$ \\ \hline\hline
-\endhead
-\textbf{1} & 1 & 1 & 1 \\ \hline
-\textbf{2} & 1 & 2 & 2 \\ \hline
-\textbf{3} & 2 & 3 & 1,5 \\ \hline
-\textbf{4} & 3 & 5 & 1,66666667 \\ \hline
-\textbf{5} & 5 & 8 & 1,6 \\ \hline
-\textbf{6} & 8 & 13 & 1,625 \\ \hline
-\textbf{7} & 13 & 21 & 1,61538462 \\ \hline
-\textbf{8} & 21 & 34 & 1,61904762 \\ \hline
-\textbf{9} & 34 & 55 & 1,61764706 \\ \hline
-\textbf{10} & 55 & 89 & 1,61818182 \\ \hline
-\textbf{11} & 89 & 144 & 1,61797753 \\ \hline
-\textbf{12} & 144 & 233 & 1,61805556 \\ \hline
-\textbf{13} & 233 & 377 & 1,61802575 \\ \hline
-\textbf{14} & 377 & 610 & 1,61803714 \\ \hline
-\textbf{15} & 610 & 987 & 1,61803279 \\ \hline
-\textbf{16} & 987 & 1597 & 1,61803445 \\ \hline
-\textbf{17} & 1597 & 2584 & 1,61803381 \\ \hline
-\textbf{18} & 2584 & 4181 & 1,61803406 \\ \hline
-\textbf{19} & 4181 & 6765 & 1,61803396 \\ \hline
-\textbf{20} & 6765 & 10946 & 1,618034 \\ \hline
-\textbf{21} & 10946 & 17711 & 1,61803399 \\ \hline
-\textbf{22} & 17711 & 28657 & 1,61803399 \\ \hline
-\textbf{23} & 28657 & 46368 & 1,61803399 \\ \hline
-\textbf{24} & 46368 & 75025 & 1,61803399 \\ \hline
-\textbf{25} & 75025 & 121393 & 1,61803399 \\ \hline
-\textbf{26} & 121393 & 196418 & 1,61803399 \\ \hline
-\textbf{27} & 196418 & 317811 & 1,61803399 \\ \hline
-\textbf{28} & 317811 & 514229 & 1,61803399 \\ \hline
-\textbf{29} & 514229 & 832040 & 1,61803399 \\ \hline
-\textbf{30} & 832040 & 1346269 & 1,61803399 \\ \hline
-\textbf{31} & 1346269 & 2178309 & 1,61803399 \\ \hline
-\textbf{32} & 2178309 & 3524578 & 1,61803399 \\ \hline
-\textbf{33} & 3524578 & 5702887 & 1,61803399 \\ \hline
-\textbf{34} & 5702887 & 9227465 & 1,61803399 \\ \hline
-\textbf{35} & 9227465 & 14930352 & 1,61803399 \\ \hline
-\textbf{36} & 14930352 & 24157817 & 1,61803399 \\ \hline
-\textbf{37} & 24157817 & 39088169 & 1,61803399 \\ \hline
-\textbf{38} & 39088169 & 63245986 & 1,61803399 \\ \hline
-\textbf{39} & 63245986 & 102334155 & 1,61803399 \\ \hline
-\textbf{40} & 102334155 & 165580141 & 1,61803399 \\ \hline
-\textbf{41} & 165580141 & 267914296 & 1,61803399 \\ \hline
-\textbf{42} & 267914296 & 433494437 & 1,61803399 \\ \hline
-\textbf{43} & 433494437 & 701408733 & 1,61803399 \\ \hline
-\textbf{44} & 701408733 & 1134903170 & 1,61803399 \\ \hline
-\textbf{45} & 1134903170 & 1836311903 & 1,61803399 \\ \hline
-\textbf{46} & 1836311903 & 2971215073 & 1,61803399 \\ \hline
-\textbf{47} & 2971215073 & 4807526976 & 1,61803399 \\ \hline
-\textbf{48} & 4807526976 & 7778742049 & 1,61803399 \\ \hline
-\textbf{49} & 7778742049 & 1,2586E+10 & 1,61803399 \\ \hline
-\textbf{50} & 1,2586E+10 & - & - \\ \hline
-\caption{Cincuenta primeros términos de la sucesión de Fibonacci}
-\label{tabla:fibonacci50}
-\end{longtable}
-
-Existen distintas alternativas en cuanto a qué elementos incluir tanto en la primera como en la última línea de cada sección de tabla (en el caso de la tabla \ref{tabla:fibonacci50} se ha elegido repetir la primera línea en cada una de sus secciones), que pueden consultarse en \url{https://texblog.org/2011/05/15/multi-page-tables-using-longtable/}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+ \input{old_tex/tablas.tex}
+ \newpage
 %%%%%%%%%%%%%%%%%% - IMÁGENES - %%%%%%%%%%%%%%%%%%
 
+\input{old_tex/images.tex}
 \newpage
-\section{IMÁGENES} \label{sec:imagenes}
-
-Las imágenes se insertan mediante el comando \textbackslash\texttt{includegraphics} que es conveniente situar en el entorno \texttt{figure} (mismo entorno utilizado, como se verá más adelante, para gráficas o diagramas). Un ejemplo de imagen se muestra a continuación (al utilizar Overleaf es esencial cargar la imagen en el directorio de trabajo antes de insertarla en el documento): 
-
-\vspace{10pt}
-
-
-En la inmensa mayoría de casos el tamaño original de la imagen no se adapta correctamente a las dimensiones de la página, por lo que es necesario redimensionar la imagen mediante el argumento \texttt{scale} de \textbackslash\texttt{includegraphics}. 
-
-Al igual que para las tablas, existen distintas alternativas en cuanto a su posicionamiento (que, se recuerda, pueden consultarse en \url{https://www.overleaf.com/learn/latex/positioning_images_and_tables}), el título se indica mediante el comando \textbackslash\texttt{caption} y la referencia mediante el comando \textbackslash\texttt{label}. 
-
-Existen, además, diversas opciones en lo relativo al manejo de imágenes que no se detallan en este documento, pero que pueden consultarse en \url{https://es.overleaf.com/learn/latex/Inserting_Images} 
 
 %%%%%%%%%%%%%%%%%%% - CÓDIGO - %%%%%%%%%%%%%%%%%%%%
 
+\input{old_tex/codigo.tex}
 \newpage
-\section{CÓDIGO} \label{sec:codigo}
-
-Los  fragmentos de código se incorporan al informe en el entorno \texttt{code} y corresponden al paquete \texttt{listings}. A continuación se presenta el fragmento de código Python que genera la figura \ref{fig:ondacuadrada} introducida en el apartado \ref{sec:graficas}:
-
-\vspace{-5pt}
-
-\begin{code}[H]
-\begin{lstlisting}[firstnumber=1, breakindent=55pt]
-# Se importa las librerías matplotlib y numpy:
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
-
-# Se configura matplotlib para exportar la gráfica a ".pgf":
-matplotlib.use("pgf")
-matplotlib.rcParams.update({
-   "pgf.texsystem": "pdflatex",
-   "font.family": "serif",
-   "text.usetex": True,
-   "pgf.rcfonts": False,
-})
-
-# Se define el dominio de la variable temporal y el "sample rate":
-t = np.linspace(0, 6, 1000, endpoint=True)
-
-# Se representan los ocho armónicos de la onda cuadrada:
-for k in range(1,9):
-   if k == 1:
-       plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray", label="Ondas sinusoidales")
-   else:
-       plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray")
-
-# Se suman los armónicos y se representa la onda cuadrada resultante:
-suma = 0 
-for k in range(1,9):
-   suma = suma + (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1)
-plt.plot(t, suma, linewidth=1, color="red", label="Onda cuadrada resultante")
-
-# Se define diversos aspectos del formato de la gráfica (título, leyenda, etc.):
-plt.title("Onda cuadrada construida por síntesis aditiva \n a partir de sus ocho primeros armónicos")
-plt.xlabel("Tiempo")
-plt.ylabel("Amplitud")
-plt.legend(loc="lower right")
-plt.grid(True, which="both")
-plt.axhline(y=0, color="k")
-plt.ylim(-3, 3)
-
-# Se exporta la gráfica a formato ".pgf" y ".pdf"
-plt.savefig("SquareWave.pgf", format="pgf")
-plt.savefig("SquareWave.pdf", dpi=400)
-plt.clf()
-\end{lstlisting}
-\vspace{-5pt}
-\caption{Código utilizado para generar la gráfica \ref{fig:ondacuadrada}}
-\label{cod:ondacuadrada}
-\end{code}
-
-La inmensa mayoría de operaciones relacionadas con el formato del código se realizan en el preámbulo del documento (cuyo código está comentado). En él se definen todos los parámetros necesarios para que el paquete \texttt{listings} se adapte a código escrito en Python (palabras clave, colores, comentarios, etc.). Si se desea incluir código de otro lenguaje de programación, es necesario modificar el preámbulo para que \texttt{listings} se adapte a dicho lenguaje (en la mayoría de casos se puede encontrar el código adaptado a cada lenguaje de programación en foros relacionados con \LaTeX).
-
-Los únicos parámetros que pueden modificarse en este punto del código son \texttt{firstnumber}, cuyo valor corresponde al número de la primera línea de código (en este caso se ha fijado en 1) y \texttt{breakindent}, que indica el ancho de la indentación al realizar un salto de línea.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -296,19 +117,10 @@ Los únicos parámetros que pueden modificarse en este punto del código son \te
 %%%%%%%%%%%%%%%% - BIBLIOGRAFÍA - %%%%%%%%%%%%%%%%
 
 \newpage
-
-El formato elegido para la bibliografía es IEEE , tanto para las referencias a lo largo del documento como para el apartado de bibliografía. El conjunto de operaciones realizadas para establecer el formato de la bibliografía se puede consultar en el preámbulo del documento (en el que se describen algunos de sus parámetros básicos como el contenido de las referencias, el número de autores por cita, etc.).
-
-Citar una referencia es sencillo, basta con utilizar el comando \textbackslash\texttt{cite} seguido del nombre de la referencia correspondiente (el nombre utilizado en el archivo \textit{.bib}, que es esencial cargar en el directorio de trabajo y cuyas principales características pueden consultarse en \url{https://en.wikipedia.org/wiki/BibTeX}), por ejemplo:
-
-\begin{itemize}
-    \item \textit{The Art of Electronics} constituye un fantástico manual (plagado de ejemplos prácticos y explicaciones tangibles) para aprender electrónica, siendo su tercera edición la versión más completa \cite{horowitz2015}.
-    \item \textit{The Loudspeaker Design Cookbook} \cite{dickson2007} es probablemente la guía más completa en cuanto a acústica aplicada al diseño de sistemas de sonido, abarcando desde conceptos teóricos de electroacústica hasta planos para la construcción de sistemas de sonido caseros.
-    \item \textit{Les fous du son} \cite{dewilde2016} es un relato cuidadosamente escrito y documentado sobre la historia de los sintetizadores desde Edison hasta nuestros días, pasando por los inventos más inverosímiles como las Ondas Martenot o el Trautonium.
-    \item En su artículo de 2003 \cite{wang2003}, el co-fundador de Shazam describe el funcionamiento de su algoritmo de búsqueda para archivos de audio.
-\end{itemize}
+\input{old_tex/bibliografia.tex}
 
 % Se genera la bibliografía mediante el comando \printbibliography (en ella aparecen únicamente las referencias citadas a lo largo del documento):
+\newpage
 \appto{\bibsetup}{\sloppy}
 \printbibliography[heading=bibintoc, title=BIBLIOGRAFÍA] % el argumento "title" puede modificarse indicando el título que convenga (bibliografía, referencias, etc.).
 

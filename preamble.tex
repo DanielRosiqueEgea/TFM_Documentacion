@@ -6,7 +6,9 @@
 % ---------------------------------------------- %
 
 
+% ---------------- AÑADIDOS POR MÍ ------------- %
 \usepackage{glossaries}
+\usepackage{amsmath}
 % ------------------ Página -------------------- %
 % Se define el tamaño de las páginas, indicando el tamaño de los márgenes superior e inferior ("top" y "bottom"), e izquierdo y derecho ("left" y "right"):
 \usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=3cm]{geometry}
@@ -121,7 +123,7 @@
 % -------------- Diagramas TikZ ---------------- %
 % Se importa el paquete TikZ para diagramas de propósito general (diagramas de bloques, de flujo, etc.):
 \usepackage{tikz}
-\usetikzlibrary{shadows, trees, shapes.geometric}
+\usetikzlibrary{shadows, trees, shapes.geometric, arrows.meta, positioning, shapes.geometric}
 \tikzset{
 every picture/.append style={
   execute at begin picture={\deactivatequoting},
