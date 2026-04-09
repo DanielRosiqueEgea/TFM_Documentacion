@@ -80,7 +80,66 @@ Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/
 Todas estas herramientas han sido integradas en un flujo de trabajo unificado orientado a la ejecución reproducible de experimentos.
 
 \subsection{Estructura Dataset}
-\subsection{Preprocesamiento de datos}
+
+El dataset utilizado se compone por dos ficheros de labels y dos de datos de entrenamiento. Los labels contienen la intención de movimiento de cada canal de EEG, mientras que los datos contienen las lecturas de cada canal de EEG.
+
+Estos ficheros están separados por la tarea a analizar, de esta forma tenemos los cuatro ficheros:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+         & \textbf{Labels} & \textbf{Training} \\ \hline
+        \textbf{Static} &\texttt{labels\_static\_data.mat} & \texttt{training\_static\_data.mat} \\ \hline
+        \textbf{Motion} &\texttt{labels\_motion\_data.mat} & \texttt{training\_motion\_data.mat} \\ \hline
+    \end{tabular}
+\end{center}
+
+%% también puedo ponerlo así
+\begin{itemize}
+    \item \texttt{labels\_static\_data.mat}
+    \item \texttt{training\_static\_data.mat}
+    \item \texttt{labels\_motion\_data.mat}
+    \item \texttt{training\_motion\_data.mat}
+\end{itemize}
+
+Los ficheros contienen la siguiente estructura de datos:
+Los labels tienen la forma (15400, 1), mientras que los datos tienen la forma (15400, 27, 400).
+Los ficheros de labels contienen una matriz con el numero de ventanas y una columna con la intención de movimiento
+Los ficheros de training contienen una matriz de tamaño $N \times C \times S$, donde $N$ es el número de ventanas, $C$ es el número de canales y $S$ es el número de muestras. En el caso de este experimento $N = 15400$ $C = 27$ y $S = 400$. Las muestras son obtenidas durante 2 segundos a 200hz
+
+%% ESTA PARTE ESTÁ Sacada del paper original de donde se sacan los datos
+The 27 channels selected for acquisition were: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6, P4. They were placed following the 10-10 international system.
+Four electrodes were located next to the eyes to record electrooculography (EOG) and ground and reference electrodes were located on the right and left ear lobes, respectively. Each channel signal was amplified with BrainVision BrainAmp amplifier. 
+
+%NOSE COMO PONER ESTO:
+Se tienen los datos de 5 usuarios, con 5 días cada uno, 11 trials por día, cada día, 56 ventanas por trial. Por lo tanto, se tienen 5 x 5 x 11 x 56 = 15400 ventanas.
+
+Cada trial corresponde a una secuencia de dos tareas mentales, relajación e imaginación de la marcha, que se repite en intervalos de 14 ventanas temporales (0.5s x ventana = 0.7s) de relajación, 28 de imaginación de la marcha (0.5s x ventana = 1.4s) y finalmente otras 14 de relajación. 
+Se cuenta con un periodo inicial de duración aleatoria en la cual se le pedía al sujeto realizar una tarea mental compleja, diferente a la imaginación motora. Este periodo se utiliza para eliminar ruidos en la señal EEG y se ha eliminado del dataset final.
+
+Un esquema de las ventanas se puede ver en la figura \ref{fig:ventanas}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ventanas.png}
+    \caption{Esquema de las ventanas}
+    \label{fig:ventanas}
+\end{figure}
+
+Los labels y los datos están relacionados a nivel de ventana, utilizando un fichero auxiliar vector_tasks_training.mat.
+
+\subsubsection{Preprocesamiento de datos}
+
+Los datos han sido procesados previamente en otro estudio.
+Para este trabajo, se modificaron los arrays para que tuvieran 6 dimensiones (input) y 5 dimensiones (labels):
+input_6d = input_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,N_CHANNELS,N_SAMPLES)
+labels_6d = labels_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,1)
+
+La separación entre los datos de entrenamiento y testeo se ha hecho en un 70\% de entrenamiento y 30\% de testeo y se aplica al nivel de trial. Esta separación se ha hecho para cada entrenamiento del modelo y se toma en cuenta el usuario y día de cada uno. No se ha hecho de manera aleatoria, sino que se han utilizado para testeo empezando por el final de la lista de trials. 
+
+La razón de esta decisión es que en los primeros trials el sujeto suele presentar un menor control sobre su imaginación motora. %esta frase no me gusta ni un pelooooooo
+
+Más allá de estos preprocesamientos, no se ha hecho nada más
 
 la Pipeline
 qué hace tu sistema de principio a fin
