@@ -81,6 +81,107 @@ Todas estas herramientas han sido integradas en un flujo de trabajo unificado or
 
 \subsection{Estructura Dataset}
 
+El dataset incluye registros de 5 sujetos, adquiridos a lo largo de 5 días diferentes (de lunes a viernes). Para cada día, se realizaron 11 ensayos (\textit{trials}), y cada ensayo se segmentó en 56 ventanas temporales, lo que da lugar a un total de:
+
+\[
+5 \times 5 \times 11 \times 56 = 15400 \text{ ventanas}
+\]
+
+Cada \textit{trial} corresponde a una secuencia estructurada de tareas mentales, compuesta por:
+\begin{itemize}
+    \item 14 ventanas de relajación inicial,
+    \item 28 ventanas de imaginación motora de la marcha,
+    \item 14 ventanas finales de relajación.
+\end{itemize}
+
+Un esquema de esta segmentación temporal se muestra en la Figura \ref{fig:ventanas_trial}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Relajación} & \textbf{Imaginación motora} & \textbf{Relajación} \\ \hline
+        Ventanas 1--14 & Ventanas 15--42 & Ventanas 43--56 \\ \hline
+        14 ventanas & 28 ventanas & 14 ventanas \\ \hline
+    \end{tabular}
+    \caption{Estructura temporal de un trial en términos de ventanas EEG.}
+    \label{fig:ventanas_trial}
+\end{figure}
+
+
+El usuario alterna entre las dos tareas (static, y motion) durante los ensayos para que no sea tán repetitivo. 
+
+Cada instancia del dataset corresponde a una ventana de 400 muestras de señal EEG. Dado que la frecuencia de muestreo es de 200 Hz, cada ventana representa 2 s de señal. Las ventanas se organizan secuencialmente dentro de cada trial con un desplazamiento temporal de 0.5 s entre ventanas consecutivas.
+
+Antes de cada tarea mental se le da una instrucción al usuario, esta instrucción puede alterar el clasificador, ya que no corresponde con ninguna tarea mental definida, por lo que se eliminan durante el preprocesamiento.
+
+Adicionalmente, antes de cada ensayo se incluía un periodo inicial de duración aleatoria en el que el sujeto realizaba una tarea mental distinta. El objetivo de este periodo es el de reducir artefactos y ruido en la señal (convergencia de filtros). Este segmento fue eliminado durante el procesamiento previo del dataset.
+
+Cada ventana de datos EEG está formada por 27 canales y 400 muestras por canal. Los 27 canales corresponden a los electrodos seleccionados para la adquisición de la señal. Por tanto, cada instancia del dataset puede interpretarse como una matriz de tamaño $27 \times 400$, donde cada fila representa la evolución temporal de un canal EEG durante la ventana analizada.
+
+Los 27 canales EEG utilizados fueron: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6 y P4. Estos electrodos se colocaron siguiendo el sistema internacional 10-10.
+
+Los datos y las etiquetas están alineados a nivel de ventana, utilizando un fichero auxiliar que permite asociar cada segmento de señal con su correspondiente etiqueta.
+
+
+
+\subsubsection{Preprocesamiento}
+
+A partir de los datos disponibles, se ha realizado una reorganización estructural de los mismos con el objetivo de facilitar su uso en los modelos propuestos. En concreto, los datos se han reestructurado en tensores de seis dimensiones:
+\begin{figure}[H]
+    \centering
+    \fbox{
+    \begin{minipage}{0.95\textwidth}
+    \centering
+
+    \textbf{Input tensor shape:} $(5, 5, 11, 56, 27, 400)$
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{c | c c c c c c}
+        \textbf{Dim.} & 1 & 2 & 3 & 4 & 5 & 6 \\
+        \textbf{Name} & Users & Days & Trials & Windows & Channels & Samples \\
+        \textbf{Size} & 5 & 5 & 11 & 56 & 27 & 400
+    \end{tabular}
+
+    \vspace{0.6cm}
+
+    \textbf{Labels tensor shape:} $(5, 5, 11, 56, 1)$
+
+    \vspace{0.3cm}
+
+    \begin{tabular}{c | c c c c c}
+        \textbf{Dim.} & 1 & 2 & 3 & 4 & 5 \\
+        \textbf{Name} & Users & Days & Trials & Windows & Label \\
+        \textbf{Size} & 5 & 5 & 11 & 56 & 1 
+    \end{tabular}
+
+    \end{minipage}
+    }
+    \caption{Estructura jerárquica de los tensores de entrada y etiquetas utilizados en el modelo.}
+    \label{fig:tensor_input}
+\end{figure}
+
+Esta reorganización permite explotar explícitamente la estructura jerárquica del dataset durante el entrenamiento y la evaluación de los modelos.
+
+En cuanto a la partición de los datos, se ha realizado una división entrenamiento-test con una proporción del 70\% y 30\%, respectivamente. Esta separación se ha llevado a cabo a nivel de \textit{trial}, manteniendo la coherencia temporal de las ventanas.
+
+La selección de los datos de test no se ha realizado de forma aleatoria, sino utilizando los últimos \textit{trials} de cada sujeto y día. Esta decisión se basa en la hipótesis de que los sujetos presentan una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, lo que permite evaluar el modelo en condiciones más estables.
+
+Finalmente, no se han aplicado técnicas adicionales de preprocesamiento o filtrado sobre las señales EEG más allá de la estructuración descrita.
+
+
+\begin{itemize}
+    \item adsad
+\end{itemize}
+
+¿Qué preprocesado EEG se aplicó?
+
+filtrado (bandpass?)
+eliminación de artefactos (ICA?)
+normalización?
+
+
 El dataset utilizado se compone por dos ficheros de labels y dos de datos de entrenamiento. Los labels contienen la intención de movimiento de cada canal de EEG, mientras que los datos contienen las lecturas de cada canal de EEG.
 
 Estos ficheros están separados por la tarea a analizar, de esta forma tenemos los cuatro ficheros:
@@ -119,21 +220,21 @@ Se cuenta con un periodo inicial de duración aleatoria en la cual se le pedía 
 
 Un esquema de las ventanas se puede ver en la figura \ref{fig:ventanas}.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{ventanas.png}
-    \caption{Esquema de las ventanas}
-    \label{fig:ventanas}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{ventanas.png}
+%     \caption{Esquema de las ventanas}
+%     \label{fig:ventanas}
+% \end{figure}
 
-Los labels y los datos están relacionados a nivel de ventana, utilizando un fichero auxiliar vector_tasks_training.mat.
+% Los labels y los datos están relacionados a nivel de ventana, utilizando un fichero auxiliar vector_tasks_training.mat.
 
 \subsubsection{Preprocesamiento de datos}
 
 Los datos han sido procesados previamente en otro estudio.
-Para este trabajo, se modificaron los arrays para que tuvieran 6 dimensiones (input) y 5 dimensiones (labels):
-input_6d = input_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,N_CHANNELS,N_SAMPLES)
-labels_6d = labels_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,1)
+% Para este trabajo, se modificaron los arrays para que tuvieran 6 dimensiones (input) y 5 dimensiones (labels):
+% input_6d = input_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,N_CHANNELS,N_SAMPLES)
+% labels_6d = labels_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,1)
 
 La separación entre los datos de entrenamiento y testeo se ha hecho en un 70\% de entrenamiento y 30\% de testeo y se aplica al nivel de trial. Esta separación se ha hecho para cada entrenamiento del modelo y se toma en cuenta el usuario y día de cada uno. No se ha hecho de manera aleatoria, sino que se han utilizado para testeo empezando por el final de la lista de trials. 
 
@@ -141,6 +242,7 @@ La razón de esta decisión es que en los primeros trials el sujeto suele presen
 
 Más allá de estos preprocesamientos, no se ha hecho nada más
 
+\begin{comment}
 la Pipeline
 qué hace tu sistema de principio a fin
 
@@ -155,6 +257,8 @@ Ejemplo:
     salida: predicción
 
 
+\end{comment}
+
 \subsection{Modelos utilizados}
 Aquí metes:
 
@@ -162,13 +266,16 @@ Aquí metes:
 \subsubsection{DeepConvNet}
 \subsubsection{ShallowConvNet} (si lo usas)
 
-Para cada uno:
+\begin{comment}
 
+    Para cada uno:
+    
     breve descripción (2–3 líneas)
-
+    
     por qué lo eliges
-
-NO pongas la arquitectura entera en detalle aquí (eso es más de anexos si acaso)
+    
+    NO pongas la arquitectura entera en detalle aquí (eso es más de anexos si acaso)
+\end{comment}
 
 \subsection{Metodología experimental}
 

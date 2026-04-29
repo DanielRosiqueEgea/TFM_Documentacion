@@ -1,7 +1,27 @@
 
 \section{Introducción} \label{sec:introduccion}
-Aquí haces el contexto global
-contendr´a un estudio del estado actual de la t´ecnica sobre el
+
+Según la \gls{oms}, las lesiones modulares afectan a más de 15 millones de personas a nivel mundial. Estas lesiones pueden ser ocasionadas por traumatismos o por causas no traumáticas, como tumores, enfermedades degenerativas y vasculares, infecciones o defectos congénitos.
+Las lesiones medulares producen una perdida completa o parcial de las funciones sensoriales y/o motoras por debajo del nivel de la lesión y son una de las principales causas de discapacidad de larga duración \cite{who_LesionMedula2024}.
+
+Las barreras a la movilidad impiden a muchas personas participar plenamente en la sociedad, en los adultos se refleja con tasas de desempleo superiores al $60\%$ y en los niños una menor tasa de escolarización \cite{who_LesionMedula2024}.
+
+\begin{comment}
+
+    las enfermedades neuronales, las cuales suelen afectar al funcionamiento motor del organismo son un problema de salud que afecta a alrededor del millón de personas a nivel mundial. \cite{}
+\end{comment}
+    
+Las \gls{bci} son una tecnología que se ha utilizado para ayudar a pacientes con problemas locomotrices, proporcionando un enfoque de rehabilitación basado en la interacción entre el cerebro y el cuerpo. El principal canal de comunicación analizado en estas interfaces es la señal eléctrica generada por el sistema nervioso central \cite{sadiq_ExploitingPretrained2022}. El uso de estas señales para controlar dispositivos es la mejor vía actualmente disponible para mejorar la calidad de vida de pacientes con lesiones modulares. 
+
+\begin{comment}
+
+    El cerebro humano es un sistema complejo que contiene miles de millones de neuronas \cite{adear_QueSucede2024}. la complejidad de este órgano dificulta....
+\end{comment}
+
+
+\begin{comment}
+    Aquí haces el contexto global
+    contendr´a un estudio del estado actual de la t´ecnica sobre el
 problema plateado, las alternativas consideradas y los objetivos a conseguir.
 
 \begin{itemize}
@@ -12,31 +32,40 @@ problema plateado, las alternativas consideradas y los objetivos a conseguir.
 \end{itemize}
 
 Sin embargo, este problema presenta múltiples desafíos...
+\end{comment}
 
 \subsection{Motivación}
-Aquí vendes por qué esto importa
 
-\begin{itemize}    
+\begin{comment}
+
+    Aquí vendes por qué esto importa
+    
+    \begin{itemize}    
     \item Problemas reales:
     \begin{itemize}
-        \item pacientes con movilidad reducida
-        \item necesidad de control natural
-    \end{itemize}
-    \item Por qué EEG:
-    \begin{itemize}
-        \item no invasivo
-        \item accesible
-    \end{itemize}
-    \item Problema:
-    \begin{itemize}
-        \item ruido
-        \item variabilidad entre usuarios
-        \item falsos positivos (MUY importante en exoesqueletos)
-    \end{itemize}
+    \item pacientes con movilidad reducida
+    \item necesidad de control natural
+\end{itemize}
+\item Por qué EEG:
+\begin{itemize}
+\item no invasivo
+\item accesible
+\end{itemize}
+\item Problema:
+\begin{itemize}
+\item ruido
+\item variabilidad entre usuarios
+\item falsos positivos (MUY importante en exoesqueletos)
+\end{itemize}
 \end{itemize}
 
 Esto justifica la necesidad de métodos robustos…
+\end{comment}
 
+
+La identificación precisa de patrones neuronales asociados a la intención de movimiento representa uno de los principales desafíos en el desarrollo de sistemas BCI aplicados a rehabilitación. La elevada variabilidad de las señales EEG, junto con su baja relación señal-ruido, dificulta la generalización de modelos entre sujetos y sesiones experimentales.
+
+El desarrollo de técnicas basadas en redes neuronales convolucionales permite explorar nuevas estrategias para mejorar la detección de intención motora durante la marcha asistida con exoesqueletos, contribuyendo potencialmente al diseño de sistemas de asistencia más adaptativos y eficientes.
 \subsection{Definición}
 
 \begin{itemize}
@@ -61,6 +90,11 @@ Esto justifica la necesidad de métodos robustos…
 \end{itemize}
 
 Muy importante: que quede claro qué entra y qué sale del sistema
+
+
+Este trabajo aborda la clasificación de señales EEG registradas durante tareas de marcha con exoesqueleto, con el objetivo de detectar patrones cerebrales relacionados con la intención de caminar o detenerse.
+
+Se pretende evaluar la capacidad de diferentes arquitecturas de redes neuronales convolucionales para extraer características discriminativas a partir de datos EEG preprocesados, analizando su rendimiento tanto en validación cruzada como en escenarios pseudo-online.
 
 \subsection{Alternativas Consideradas}
 
