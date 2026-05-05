@@ -1,152 +1,47 @@
-
 \section{Introducción} \label{sec:introduccion}
-
-Según la \gls{oms}, las lesiones modulares afectan a más de 15 millones de personas a nivel mundial. Estas lesiones pueden ser ocasionadas por traumatismos o por causas no traumáticas, como tumores, enfermedades degenerativas y vasculares, infecciones o defectos congénitos.
-Las lesiones medulares producen una perdida completa o parcial de las funciones sensoriales y/o motoras por debajo del nivel de la lesión y son una de las principales causas de discapacidad de larga duración \cite{who_LesionMedula2024}.
-
-Las barreras a la movilidad impiden a muchas personas participar plenamente en la sociedad, en los adultos se refleja con tasas de desempleo superiores al $60\%$ y en los niños una menor tasa de escolarización \cite{who_LesionMedula2024}.
-
-\begin{comment}
-
-    las enfermedades neuronales, las cuales suelen afectar al funcionamiento motor del organismo son un problema de salud que afecta a alrededor del millón de personas a nivel mundial. \cite{}
-\end{comment}
-    
-Las \gls{bci} son una tecnología que se ha utilizado para ayudar a pacientes con problemas locomotrices, proporcionando un enfoque de rehabilitación basado en la interacción entre el cerebro y el cuerpo. El principal canal de comunicación analizado en estas interfaces es la señal eléctrica generada por el sistema nervioso central \cite{sadiq_ExploitingPretrained2022}. El uso de estas señales para controlar dispositivos es la mejor vía actualmente disponible para mejorar la calidad de vida de pacientes con lesiones modulares. 
-
-\begin{comment}
-
-    El cerebro humano es un sistema complejo que contiene miles de millones de neuronas \cite{adear_QueSucede2024}. la complejidad de este órgano dificulta....
-\end{comment}
+Según la \gls{oms}, las lesiones medulares afectan a más de 15 millones de personas a nivel mundial. Estas pueden ser ocasionadas tanto por traumatismos como por causas no traumáticas, incluyendo tumores, enfermedades degenerativas y vasculares, infecciones o defectos congénitos. Como consecuencia, producen una pérdida completa o parcial de las funciones sensoriales y/o motoras por debajo del nivel de la lesión, siendo una de las principales causas de discapacidad de larga duración \cite{who_LesionMedula2024}.
 
 
-\begin{comment}
-    Aquí haces el contexto global
-    contendr´a un estudio del estado actual de la t´ecnica sobre el
-problema plateado, las alternativas consideradas y los objetivos a conseguir.
+Las limitaciones en la movilidad derivadas de estas lesiones dificultan la participación plena en la sociedad. En adultos, esto se traduce en tasas de desempleo superiores al $60\%$, mientras que en población infantil se observa una menor continuidad en el sistema educativo \cite{who_LesionMedula2024,bravo_ExclusionSocial2017}.
 
-\begin{itemize}
-    \item Qué es la neurorrobótica / BCI
-    \item Qué son las señales EEG (muy breve)
-    \item Aplicación: exoesqueletos / rehabilitación
-    \item Problema clave: detectar intención de movimiento
-\end{itemize}
+La necesidad de abordar los problemas causados por estas lesiones ha impulsado en los últimos años el desarrollo de nuevas terapias y dispositivos de rehabilitación \cite{morone_NeurorehabilitationInsights2025}.
 
-Sin embargo, este problema presenta múltiples desafíos...
-\end{comment}
+En este contexto, las \gls{bcis} han emergido como una tecnología prometedora para la asistencia y rehabilitación de pacientes con discapacidad motora, al permitir la comunicación directa entre la actividad cerebral y dispositivos externos. Estas interfaces emplean principalmente señales electroencefalográficas (EEG) para identificar patrones neuronales asociados a la intención de movimiento \cite{sadiq_ExploitingPretrained2022}. Su aplicación en sistemas de asistencia, como exoesqueletos robóticos, abre nuevas posibilidades para mejorar la autonomía y calidad de vida de personas con lesiones medulares.
+
+Sin embargo, la interpretación de las señales \acrshort{eeg} presenta importantes desafíos debido a su baja relación señal-ruido y a la elevada variabilidad entre sujetos y sesiones, lo que dificulta el desarrollo de modelos robustos y generalizables \cite{yun_AdvancesChallenges2024}.
 
 \subsection{Motivación}
 
-\begin{comment}
+\subsection{Definición del problema}
 
-    Aquí vendes por qué esto importa
-    
-    \begin{itemize}    
-    \item Problemas reales:
-    \begin{itemize}
-    \item pacientes con movilidad reducida
-    \item necesidad de control natural
-\end{itemize}
-\item Por qué EEG:
-\begin{itemize}
-\item no invasivo
-\item accesible
-\end{itemize}
-\item Problema:
-\begin{itemize}
-\item ruido
-\item variabilidad entre usuarios
-\item falsos positivos (MUY importante en exoesqueletos)
-\end{itemize}
-\end{itemize}
+Este trabajo aborda la clasificación de señales \acrshort{eeg} registradas durante la imaginación activa de tareas de marcha, con el objetivo de detectar patrones cerebrales relacionados con la intención de caminar o detenerse. 
 
-Esto justifica la necesidad de métodos robustos…
-\end{comment}
+El problema se enmarca en el contexto de las \acrshort{bci} orientadas a aplicaciones de rehabilitación, donde resulta fundamental identificar de forma fiable los estados mentales del usuario a partir de señales cerebrales no invasivas.
 
+Para ello, se pretende evaluar la capacidad de diferentes arquitecturas de redes neuronales para extraer características discriminativas a partir de datos \acrshort{eeg} preprocesados, analizando su rendimiento bajo distintos esquemas de entrenamiento y validación.
 
-La identificación precisa de patrones neuronales asociados a la intención de movimiento representa uno de los principales desafíos en el desarrollo de sistemas BCI aplicados a rehabilitación. La elevada variabilidad de las señales EEG, junto con su baja relación señal-ruido, dificulta la generalización de modelos entre sujetos y sesiones experimentales.
-
-El desarrollo de técnicas basadas en redes neuronales convolucionales permite explorar nuevas estrategias para mejorar la detección de intención motora durante la marcha asistida con exoesqueletos, contribuyendo potencialmente al diseño de sistemas de asistencia más adaptativos y eficientes.
-\subsection{Definición}
-
-\begin{itemize}
-    \item Qué señal tienes:
-    \begin{itemize}
-        \item EEG
-    \end{itemize}
-    \item Qué quieres detectar:
-    \begin{itemize}
-        \item intención de caminar
-        \item parada
-    \end{itemize}
-    \item Qué tipo de problema es:
-    \begin{itemize}
-        \item clasificación binaria (o multiclase si aplica)
-    \end{itemize}
-    \item Contexto:
-    \begin{itemize}
-        \item entorno pseudo-online
-        \item datos offline
-    \end{itemize}
-\end{itemize}
-
-Muy importante: que quede claro qué entra y qué sale del sistema
-
-
-Este trabajo aborda la clasificación de señales EEG registradas durante tareas de marcha con exoesqueleto, con el objetivo de detectar patrones cerebrales relacionados con la intención de caminar o detenerse.
-
-Se pretende evaluar la capacidad de diferentes arquitecturas de redes neuronales convolucionales para extraer características discriminativas a partir de datos EEG preprocesados, analizando su rendimiento tanto en validación cruzada como en escenarios pseudo-online.
-
-\subsection{Alternativas Consideradas}
-
-Aquí haces un mini “estado del arte light”
-
-Qué meter:
-\begin{itemize}
-    \item Métodos clásicos:
-    \begin{itemize}
-        \item features + SVM / LDA
-    \end{itemize}
-    \item Métodos deep learning:
-    \begin{itemize}
-        \item CNNs (EEGNet, DeepConvNet…)
-    \end{itemize}
-    \item Diferentes enfoques de entrenamiento:
-    \begin{itemize}
-        \item por usuario
-        \item generalizados
-        \item fine-tuning
-    \end{itemize}
-\end{itemize}
-
-No te líes mucho, esto no es el estado del arte completo
- Termina con:
-
-“En este trabajo se opta por…”
+Además, se estudia la capacidad de generalización de los modelos, evaluando su robustez frente a la variabilidad entre los sujetos y las diferentes sesiones de registro.
 
 \subsection{Objetivos a Conseguir}
 
-Aquí tienes que ser cristalino
+El objetivo principal de este trabajo es evaluar el rendimiento de distintas arquitecturas de redes neuronales en la clasificación de la intención de marcha del usuario a partir de señales \acrshort{eeg}.
 
-Objetivo general (1 frase)
-Desarrollar/evaluar modelos CNN para detectar intención de marcha en EEG
-\subsubsection{Objetivos específicos}
+Para alcanzar este objetivo general, se plantean los siguientes objetivos específicos:
 
-Algo tipo:
-\begin{itemize}
-    \item Evaluar diferentes arquitecturas (EEGNet, DeepConvNet…)
-    \item Comparar métodos de entrenamiento:
+\begin{enumerate}
+    \item  Entrenar y evaluar diferentes arquitecturas de redes neuronales
     \begin{itemize}
-        \item same-day
-        \item acumulativo
-        \item fine-tuning
+        \item EEGNet
+        \item DeepConvNet
+        \item ShallowConvNet
     \end{itemize}
-    \item Analizar variabilidad entre usuarios
-    \item Evaluar rendimiento en:
+    \item Evaluar diferentes métodos de entrenamiento
     \begin{itemize}
-        \item validación cruzada
-        \item pseudo-online
+        \item Same-day
+        \item Acumulativo
+        \item Fine-tuning
+        \item Same-day + Fine-tuning 
     \end{itemize}
-    \item Reducir falsos positivos
-\end{itemize}
-
- Esto suele gustar MUCHO a tribunales
+    \item Analizar variabilidad entre usuarios y su efecto en el rendimiento de los modelos
+    \item Evaluar el comportamiento de los modelos en diferentes escenarios de validación, incluyendo validación cruzada y entornos pseudo-online.
+\end{enumerate}
