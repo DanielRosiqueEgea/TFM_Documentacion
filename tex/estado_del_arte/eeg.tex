@@ -1,0 +1,55 @@
+
+\subsubsection*{Electroencefalografía (EEG)}
+
+La electroencefalografía (EEG) consiste en la captación de la actividad eléctrica cerebral generada por la comunicación entre neuronas. Estas señales se registran mediante electrodos no invasivos colocados sobre el cuero cabelludo y son posteriormente amplificadas y representadas en función del tiempo \cite{luck_IntroductionEventRelated2014,sherman_EEGSignal2020}. 
+
+Dentro de estas señales se encuentran respuestas neuronales asociadas a distintos tipos de eventos (sensoriales, cognitivos y motores) conocidas como potenciales relacionados con eventos (\acrshort{erp}), así como aquellas asociadas a la imaginación motora (\acrshort{mi}) \cite{luck_IntroductionEventRelated2014,jiang_ComprehensiveReview2026}.
+
+\textcolor{red}{
+Estas respuestas se denominan potenciales debido a que reflejan variaciones en los potenciales eléctricos registrados. Entre los relacionados con la imaginación motora destacan los potenciales corticales relacionados con el movimiento (\acrshort{mrcp}), los cuales permiten detectar la intención de movimiento antes de que este ocurra \cite{niazi_DetectionMovement2011}.
+}
+
+Es común realizar una separación de estas señales en función de su frecuencia, ya que se ha demostrado que distintas bandas de frecuencia se corresponden con estados mentales concretos \cite{sherman_EEGSignal2020,roohi-azizi_ChangesBrains2017}.
+
+\begin{itemize}
+    \item \textbf{Delta} (\textless4 Hz): Ubicadas en la región frontal en adultos y posterior en los niños. Se asocian principalmente al sueño, siendo también frecuentes en niños y en tareas de atención sostenida.
+    
+    \item \textbf{Theta} (4--7 Hz): Predominan en las regiones parietal y temporal en niños. En adultos, aparecen durante algunas fases del sueño o en estados de estrés
+    
+    \item \textbf{Alpha} (8--13 Hz): Se localizan en la región occipital. Se asocian a estados de relajación con los ojos cerrados, disminuyendo durante la concentración y el sueño.
+    
+    \item \textbf{Beta} (13--30 Hz): Son detectadas en los lóbulos frontal y parietal y presentan una distribución relativamente simétrica. Aparecen en tareas de calma activa con los ojos abiertos. Pero también pueden aparecer durante actividad mental intensa o situaciones de estrés.
+    
+    \item \textbf{Gamma} (\textgreater30 Hz): Se han relacionado con actividad en la región somatosensorial durante tareas de procesamiento multisensorial y en procesos cognitivos complejos, como la memoria.
+ 
+    \item \textbf{Mu} (8--12 Hz): Se localizan en el córtex sensoriomotor y se asocian a la actividad de este sistema en reposo.
+\end{itemize}
+
+El análisis de señales \acrshort{eeg} es una herramienta muy potente que permite revelar información sobre la actividad cerebral de un individuo, teniendo muchas aplicaciones en neurociencia y en \acrshort{bci} \cite{craik_DeepLearning2019}.
+
+Entre las principales ventajas del uso de \acrshort{eeg} se encuentran \cite{sherman_EEGSignal2020,luck_IntroductionEventRelated2014, telpaz_UsingEEG2015}: 
+
+\begin{itemize}
+    \item \textbf{Alta resolución temporal}: Permite registrar cambios en la actividad cerebral en el rango de milisegundos.
+
+    \textbf{Medición directa de actividad eléctrica}: A diferencia de otras técnicas que estiman la actividad cerebral de forma indirecta mediante cambios en los niveles de oxígeno en sangre, las señales \acrshort{eeg} registran directamente la actividad eléctrica generada por poblaciones neuronales.
+    
+    \item \textbf{Carácter no invasivo}: La señal puede registrarse mediante electrodos colocados sobre el cuero cabelludo, sin necesidad de procedimientos quirúrgicos. Esto reduce el riesgo de sufrir complicaciones durante la captura de la señal y las molestias a los pacientes.
+
+    \item \textbf{Bajo coste relativo}: En comparación con otras técnicas de neuroimagen, como la resonancia magnética funcional, los sistemas \acrshort{eeg} suelen ser más accesibles y fáciles de utilizar.
+
+\end{itemize}
+
+Algunas de las desventajas que convierten a estas señales en difíciles de analizar son las siguientes \cite{luck_IntroductionEventRelated2014,vidyaratne_RealTimeEpileptic2017,saha_IntraIntersubject2020}:
+
+
+\begin{itemize}
+    \item \textbf{Baja resolución espacial}: Las señales \acrshort{eeg} no permiten localizar con precisión la fuente de actividad cerebral, ya que representan una media de multiples fuentes de actividad neuronales. 
+    
+    \item \textbf{Variabilidad inter-sujeto e intra-sujeto}: Existe una gran variabilidad en las señales EEG entre diferentes individuos, lo que dificulta la observación de patrones en ellas. A su vez, las propiedades estadísticas de las señales pueden variar a lo largo del tiempo, incluso para un mismo sujeto y tarea.
+    
+    \item \textbf{Ruido}: Las señales EEG son altamente susceptibles a artefactos, como el movimiento, la actividad muscular (EMG) o interferencias externas. Además, la amplitud de las señales EEG es muy baja en comparación con el ruido presente, lo que exige un preprocesado avanzado para eliminar el ruido y mejorar la calidad de las señales.
+    
+\end{itemize}
+
+Estas limitaciones justifican el uso de técnicas avanzadas de procesamiento y aprendizaje automático. En los últimos años el uso de modelos de aprendizaje profundo (deep learning) ha supuesto un avance significativo, facilitando el desarrollo de aplicaciones más prácticas y reduciendo la dependencia de procesamiento manual por parte de expertos \cite{craik_DeepLearning2019}.
