@@ -25,7 +25,7 @@ Este proceso permite realizar un estudio posterior de los resultados obtenidos p
 
 La Figura \ref{fig:pipeline_general} resume la organización jerárquica del pipeline experimental.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{img/diagrama_pipeline.drawio.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
@@ -65,7 +65,7 @@ Para el desarrollo del proyecto se ha utilizado una infraestructura basada en he
 
 Como lenguaje de programación principal se ha utilizado Python\footnote{https://www.python.org/}, debido a su amplio ecosistema de librerías científicas y de aprendizaje automático, así como su facilidad de integración con frameworks de alto nivel.
 
-Para la construcción y entrenamiento de los modelos se han utilizado TensorFlow\footnote{https://www.tensorflow.org/} y Keras\footnote{https://keras.io/}, frameworks de aprendizaje profundo que permiten definir, entrenar y evaluar redes neuronales de forma eficiente. Keras se ha empleado como interfaz de alto nivel sobre TensorFlow, facilitando la experimentación rápida con distintas arquitecturas.
+Para la construcción y entrenamiento de los modelos se han utilizado TensorFlow\footnote{https://www.tensorflow.org/}\par y Keras\footnote{https://keras.io/}, frameworks de aprendizaje profundo que permiten definir, entrenar y evaluar redes neuronales de forma eficiente. Keras se ha empleado como interfaz de alto nivel sobre TensorFlow, facilitando la experimentación rápida con distintas arquitecturas.
 
 Durante las etapas iniciales del proyecto se empleó Jupyter Notebook\footnote{https://jupyter.org/} para la realización de pruebas exploratorias y la visualización preliminar de resultados. Sin embargo, su uso fue descartado en fases posteriores debido a la dificultad para mantener una estructura de código modular y escalable en experimentos de mayor complejidad.
 
@@ -73,9 +73,9 @@ Posteriormente, se adoptó Visual Studio Code\footnote{https://code.visualstudio
 
 Como sistema de control de versiones se ha utilizado GitHub\footnote{https://github.com/}, que facilita la gestión del código, el seguimiento de cambios y la colaboración con el tutor del proyecto. Además, permite la sincronización del repositorio entre distintos dispositivos de forma eficiente.
 
-Para la visualización de resultados se ha utilizado Vega-Altair\footnote{https://altair-viz.github.io/}, una librería de visualización estadística declarativa enfocada en la simplicidad, eficiencia y legibilidad. A diferencia de enfoques imperativos como Matplotlib, Altair permite definir visualizaciones de forma estructurada y reproducible, enfocándose en lo que se quiere observar en lugar de en los detalles de la implementación. Esto conduce a un código más limpio y legible\cite{geeks_altair_2025}.
+Para la visualización de resultados se ha utilizado Vega-Altair\footnote{https://altair-viz.github.io/}, una librería de visualización estadística declarativa enfocada en la simplicidad, eficiencia y legibilidad. A diferencia de enfoques imperativos como Matplotlib, Altair permite definir visualizaciones de forma estructurada y reproducible, enfocándose en lo que se quiere observar en lugar de en los detalles de la implementación. Esto conduce a un código más limpio y legible\cite{_IntroductionAltair2025}
 
-Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/}, un sistema de bases de datos analítico embebido que permite realizar consultas SQL de forma eficiente directamente sobre archivos locales. Su integración con Python y su alto rendimiento lo hacen especialmente adecuado para el procesamiento de grandes volúmenes de resultados experimentales\cite{duckdb_2026}.
+Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/}, un sistema de bases de datos analítico embebido que permite realizar consultas SQL de forma eficiente directamente sobre archivos locales. Su integración con Python y su alto rendimiento lo hacen especialmente adecuado para el procesamiento de grandes volúmenes de resultados experimentales\cite{_WhyDuckDB2026}.
 
 Todas estas herramientas han sido integradas en un flujo de trabajo unificado orientado a la ejecución reproducible de experimentos.
 
