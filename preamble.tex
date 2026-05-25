@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%% - PREÁMBULO - %%%%%%%%%%%%%%%%% 
 % ----------------- Documento ----------------- %
 % Se define el tipo de documento (en este caso un artículo), en hoja A4 con tamaño de fuente de 11pt, escrito en castellano, e indicando que el documento tendrá páginas distintas a izquierda y derecha ("twoside"):
-\documentclass[a4paper, 12pt, spanish, twoside]{article}
+
 % Los demás tipos de documentos así como sus características y opciones pueden consultarse en: https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Document_classes
 % ---------------------------------------------- %
 
@@ -9,9 +9,26 @@
 % ---------------- DANIEL ROSIQUE EGEA --------- %
 % ---------------- AÑADIDOS POR MÍ ------------- %
 \usepackage{glossaries}
-
 \usepackage{amsmath}
 \usepackage{verbatim}
+
+
+
+% ------------ Paquetes específicos ------------ %
+% Se importan distintos paquetes que será utilizados en momentos concretos del documento: 
+\usepackage{pdfpages} % Para insertar la portada en formato PDF.
+\usepackage{amssymb} % Para símbolos matemáticos.
+\usepackage{bm} % Para negrita en símbolos matemáticos.
+\usepackage{amsmath} % Para el entorno "split".
+\usepackage[hidelinks]{hyperref} % Para urls.
+\usepackage{longtable} % Para tablas largas.
+\usepackage{pgf} % Para gráficas en formato PGF.
+\usepackage{graphicx} % Para insertar imágenes.
+\usepackage{wrapfig} % Para posicionar imágenes alrededor del texto.
+\usepackage{fontawesome5} % Para utilizar iconos de "fontawesome".
+\usepackage{pdflscape}  % Para colocar páginas en formato apaisado.
+% ---------------------------------------------- %
+
 % ------------------ Página -------------------- %
 % Se define el tamaño de las páginas, indicando el tamaño de los márgenes superior e inferior ("top" y "bottom"), e izquierdo y derecho ("left" y "right"):
 \usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=3cm]{geometry}
@@ -31,20 +48,6 @@
 % ---------------------------------------------- %
 
 
-% ------------ Paquetes específicos ------------ %
-% Se importan distintos paquetes que será utilizados en momentos concretos del documento: 
-\usepackage{pdfpages} % Para insertar la portada en formato PDF.
-\usepackage{amssymb} % Para símbolos matemáticos.
-\usepackage{bm} % Para negrita en símbolos matemáticos.
-\usepackage{amsmath} % Para el entorno "split".
-\usepackage[hidelinks]{hyperref} % Para urls.
-\usepackage{longtable} % Para tablas largas.
-\usepackage{pgf} % Para gráficas en formato PGF.
-\usepackage{graphicx} % Para insertar imágenes.
-\usepackage{wrapfig} % Para posicionar imágenes alrededor del texto.
-\usepackage{fontawesome5} % Para utilizar iconos de "fontawesome".
-\usepackage{pdflscape}  % Para colocar páginas en formato apaisado.
-% ---------------------------------------------- %
 
 
 % ---------------- Numeración ------------------ %

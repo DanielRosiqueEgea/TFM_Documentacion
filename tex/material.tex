@@ -73,61 +73,87 @@ Posteriormente, se adoptó Visual Studio Code\footnote{https://code.visualstudio
 
 Como sistema de control de versiones se ha utilizado GitHub\footnote{https://github.com/}, que facilita la gestión del código, el seguimiento de cambios y la colaboración con el tutor del proyecto. Además, permite la sincronización del repositorio entre distintos dispositivos de forma eficiente.
 
-Para la visualización de resultados se ha utilizado Vega-Altair\footnote{https://altair-viz.github.io/}, una librería de visualización estadística declarativa enfocada en la simplicidad, eficiencia y legibilidad. A diferencia de enfoques imperativos como Matplotlib, Altair permite definir visualizaciones de forma estructurada y reproducible, enfocándose en lo que se quiere observar en lugar de en los detalles de la implementación. Esto conduce a un código más limpio y legible\cite{_IntroductionAltair2025}
+Para la visualización de resultados se ha utilizado Vega-Altair\footnote{https://altair-viz.github.io/}, una librería de visualización estadística declarativa enfocada en la simplicidad, eficiencia y legibilidad. A diferencia de enfoques imperativos como Matplotlib, Altair permite definir visualizaciones de forma estructurada y reproducible, enfocándose en lo que se quiere observar en lugar de en los detalles de la implementación. Esto conduce a un código más limpio y legible \cite{_IntroductionAltair2025}
 
-Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/}, un sistema de bases de datos analítico embebido que permite realizar consultas SQL de forma eficiente directamente sobre archivos locales. Su integración con Python y su alto rendimiento lo hacen especialmente adecuado para el procesamiento de grandes volúmenes de resultados experimentales\cite{_WhyDuckDB2026}.
+Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/}, un sistema de bases de datos analítico embebido que permite realizar consultas SQL de forma eficiente directamente sobre archivos locales. Su integración con Python y su alto rendimiento lo hacen especialmente adecuado para el procesamiento de grandes volúmenes de resultados experimentales \cite{_WhyDuckDB2026}.
 
 Todas estas herramientas han sido integradas en un flujo de trabajo unificado orientado a la ejecución reproducible de experimentos.
 
-\subsection{Estructura Dataset}
+\subsection{Dataset}
 
-El dataset incluye registros de 5 sujetos, adquiridos a lo largo de 5 días diferentes (de lunes a viernes). Para cada día, se realizaron 11 ensayos (\textit{trials}), y cada ensayo se segmentó en 56 ventanas temporales, lo que da lugar a un total de:
+El dataset utilizado en este trabajo está compuesto por registros EEG obtenidos de 5 sujetos a lo largo de 5 días consecutivos de adquisición. Para cada día se realizaron 11 ensayos (\textit{trials}), y cada ensayo fue segmentado en 56 ventanas temporales, obteniendo un total de:
 
 \[
 5 \times 5 \times 11 \times 56 = 15400 \text{ ventanas}
 \]
 
-Cada \textit{trial} corresponde a una secuencia estructurada de tareas mentales, compuesta por:
-\begin{itemize}
-    \item 14 ventanas de relajación inicial,
-    \item 28 ventanas de imaginación motora de la marcha,
-    \item 14 ventanas finales de relajación.
-\end{itemize}
+Cada ventana contiene 400 muestras adquiridas a una frecuencia de muestreo de 200 Hz, lo que equivale a 2 segundos de señal \acrshort{eeg}.
 
-Un esquema de esta segmentación temporal se muestra en la Figura \ref{fig:ventanas_trial}.
+Las Muestras a su vez incluyen la señal de 27 canales \acrshort{eeg}. Los 27 canales corresponden a los electrodos seleccionados para la adquisición de la señal. Por tanto, cada instancia del dataset puede interpretarse como una matriz de tamaño $27 \times 400$, donde cada fila representa la evolución temporal de un canal EEG durante la ventana analizada.
 
-\begin{figure}[H]
-    \centering
+Los 27 canales EEG utilizados fueron: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6 y P4. Estos electrodos se colocaron siguiendo el sistema internacional 10-10 \cite{ferrero_BCIBased2021}.
+
+Los datos originales se encuentran distribuidos en cuatro ficheros MATLAB diferenciados según la tarea experimental:
+
+\begin{center}
     \begin{tabular}{|c|c|c|}
         \hline
-        \textbf{Relajación} & \textbf{Imaginación motora} & \textbf{Relajación} \\ \hline
-        Ventanas 1--14 & Ventanas 15--42 & Ventanas 43--56 \\ \hline
-        14 ventanas & 28 ventanas & 14 ventanas \\ \hline
+         & \textbf{Labels} & \textbf{Training} \\ \hline
+        \textbf{Static} & \texttt{labels\_static\_data.mat} & \texttt{training\_static\_data.mat} \\ \hline
+        \textbf{Motion} & \texttt{labels\_motion\_data.mat} & \texttt{training\_motion\_data.mat} \\ \hline
     \end{tabular}
-    \caption{Estructura temporal de un trial en términos de ventanas EEG.}
-    \label{fig:ventanas_trial}
-\end{figure}
+\end{center}
+
+Los ficheros de etiquetas contienen la intención de movimiento asociada a cada ventana temporal, mientras que los ficheros de entrenamiento almacenan las señales EEG correspondientes.
 
 
-El usuario alterna entre las dos tareas (static, y motion) durante los ensayos para que no sea tán repetitivo. 
+Las etiquetas presentan una dimensión $(15400, 1)$, mientras que los datos EEG poseen una estructura $(15400, 27, 400)$, donde:
 
-Cada instancia del dataset corresponde a una ventana de 400 muestras de señal EEG. Dado que la frecuencia de muestreo es de 200 Hz, cada ventana representa 2 s de señal. Las ventanas se organizan secuencialmente dentro de cada trial con un desplazamiento temporal de 0.5 s entre ventanas consecutivas.
+\begin{itemize}
+    \item $N = 15400$ corresponde al número total de ventanas,
+    \item $C = 27$ representa el número de canales EEG,
+    \item $S = 400$ indica el número de muestras temporales por ventana.
+\end{itemize}
+
+\subsubsection{Estructura temporal de los ensayos}
+
+Cada \textit{trial} corresponde a una secuencia estructurada de tareas mentales compuesta por tres etapas:
+
+\begin{itemize}
+    \item 14 ventanas de relajación inicial (7s),
+    \item 28 ventanas de imaginación motora de la marcha (14s),
+    \item 14 ventanas finales de relajación (7s).
+\end{itemize}
+
+Las ventanas se organizan secuencialmente dentro de cada ensayo con un desplazamiento temporal de 0.5s entre ventanas consecutivas.
 
 Antes de cada tarea mental se le da una instrucción al usuario, esta instrucción puede alterar el clasificador, ya que no corresponde con ninguna tarea mental definida, por lo que se eliminan durante el preprocesamiento.
 
 Adicionalmente, antes de cada ensayo se incluía un periodo inicial de duración aleatoria en el que el sujeto realizaba una tarea mental distinta. El objetivo de este periodo es el de reducir artefactos y ruido en la señal (convergencia de filtros). Este segmento fue eliminado durante el procesamiento previo del dataset.
 
-Cada ventana de datos EEG está formada por 27 canales y 400 muestras por canal. Los 27 canales corresponden a los electrodos seleccionados para la adquisición de la señal. Por tanto, cada instancia del dataset puede interpretarse como una matriz de tamaño $27 \times 400$, donde cada fila representa la evolución temporal de un canal EEG durante la ventana analizada.
+Durante las sesiones experimentales los sujetos alternaban entre las tareas de imaginación estática (\textit{static}) y de imaginación motora (\textit{motion}) con el objetivo de reducir la fatiga y evitar la monotonía durante la adquisición.
 
-Los 27 canales EEG utilizados fueron: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6 y P4. Estos electrodos se colocaron siguiendo el sistema internacional 10-10.
+La Figura \ref{fig:ventanas} muestra un esquema de la segmentación temporal empleada durante los ensayos.
 
-Los datos y las etiquetas están alineados a nivel de ventana, utilizando un fichero auxiliar que permite asociar cada segmento de señal con su correspondiente etiqueta.
-
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{img/ventanas.png}
+    \caption{Estructura temporal de las ventanas EEG utilizadas durante cada ensayo. Adaptado de \cite{ferrero_BCIBased2021}.}
+    \label{fig:ventanas}
+\end{figure}
 
 \subsubsection{Preprocesamiento}
 
-A partir de los datos disponibles, se ha realizado una reorganización estructural de los mismos con el objetivo de facilitar su uso en los modelos propuestos. En concreto, los datos se han reestructurado en tensores de seis dimensiones:
+Previo al estudio, las señales EEG fueron sometidas a una etapa de preprocesamiento con el objetivo de reducir el ruido y conservar únicamente los componentes frecuenciales relevantes para las tareas mentales objetivo.
+
+En concreto, a cada canal EEG se le aplicó un filtro paso banda entre 8 y 40 Hz. Este rango frecuencial incluye principalmente las bandas $\mu$ (8--13 Hz) y $\beta$ (13--30 Hz), ampliamente utilizadas en aplicaciones de \acrshort{bci} basadas en imaginación motora debido a su relación con la actividad cortical motora \cite{mirnaziri_UsingCombination2013}.
+
+A partir de los datos preprocesados, se ha realizado una reorganización estructural de los mismos con el objetivo de facilitar su uso en los modelos propuestos. En concreto, los datos se han reestructurado en tensores de seis dimensiones:
+
+Con el objetivo de facilitar el entrenamiento y evaluación de los modelos propuestos, los datos fueron reorganizados en tensores que preservan la jerarquía original del dataset.
+
+Los tensores de entrada y etiquetas presentan las siguientes dimensiones:
+
 \begin{figure}[H]
     \centering
     \fbox{
@@ -162,85 +188,18 @@ A partir de los datos disponibles, se ha realizado una reorganización estructur
     \label{fig:tensor_input}
 \end{figure}
 
-Esta reorganización permite explotar explícitamente la estructura jerárquica del dataset durante el entrenamiento y la evaluación de los modelos.
+Esta organización permite mantener la coherencia temporal y experimental de las muestras durante las distintas fases de entrenamiento y evaluación.
 
-En cuanto a la partición de los datos, se ha realizado una división entrenamiento-test con una proporción del 70\% y 30\%, respectivamente. Esta separación se ha llevado a cabo a nivel de \textit{trial}, manteniendo la coherencia temporal de las ventanas.
+En cuanto a la partición de los datos, se ha realizado una división entrenamiento-test con una proporción del 70\% y 30\%, respectivamente. Esta separación se ha llevado a cabo a nivel de \textit{trial}, evitando separar ventanas pertenecientes al mismo ensayo entre ambos conjuntos.
 
-La selección de los datos de test no se ha realizado de forma aleatoria, sino utilizando los últimos \textit{trials} de cada sujeto y día. Esta decisión se basa en la hipótesis de que los sujetos presentan una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, lo que permite evaluar el modelo en condiciones más estables.
+La selección del conjunto de test no se ha realizado de forma aleatoria, sino utilizando los últimos \textit{trials} de cada sujeto y día. Esta decisión se basa en la hipótesis de que los sujetos presentan una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, lo que permite evaluar el modelo en condiciones más estables.
 
-Finalmente, no se han aplicado técnicas adicionales de preprocesamiento o filtrado sobre las señales EEG más allá de la estructuración descrita.
+Finalmente, no se aplicaron técnicas adicionales de filtrado o procesamiento sobre las señales EEG.
 
-
-\begin{itemize}
-    \item adsad
-\end{itemize}
-
-¿Qué preprocesado EEG se aplicó?
-
-filtrado (bandpass?)
-eliminación de artefactos (ICA?)
-normalización?
+{\color{red}
 
 
-El dataset utilizado se compone por dos ficheros de labels y dos de datos de entrenamiento. Los labels contienen la intención de movimiento de cada canal de EEG, mientras que los datos contienen las lecturas de cada canal de EEG.
 
-Estos ficheros están separados por la tarea a analizar, de esta forma tenemos los cuatro ficheros:
-
-\begin{center}
-    \begin{tabular}{|c|c|c|}
-        \hline
-         & \textbf{Labels} & \textbf{Training} \\ \hline
-        \textbf{Static} &\texttt{labels\_static\_data.mat} & \texttt{training\_static\_data.mat} \\ \hline
-        \textbf{Motion} &\texttt{labels\_motion\_data.mat} & \texttt{training\_motion\_data.mat} \\ \hline
-    \end{tabular}
-\end{center}
-
-%% también puedo ponerlo así
-\begin{itemize}
-    \item \texttt{labels\_static\_data.mat}
-    \item \texttt{training\_static\_data.mat}
-    \item \texttt{labels\_motion\_data.mat}
-    \item \texttt{training\_motion\_data.mat}
-\end{itemize}
-
-Los ficheros contienen la siguiente estructura de datos:
-Los labels tienen la forma (15400, 1), mientras que los datos tienen la forma (15400, 27, 400).
-Los ficheros de labels contienen una matriz con el numero de ventanas y una columna con la intención de movimiento
-Los ficheros de training contienen una matriz de tamaño $N \times C \times S$, donde $N$ es el número de ventanas, $C$ es el número de canales y $S$ es el número de muestras. En el caso de este experimento $N = 15400$ $C = 27$ y $S = 400$. Las muestras son obtenidas durante 2 segundos a 200hz
-
-%% ESTA PARTE ESTÁ Sacada del paper original de donde se sacan los datos
-The 27 channels selected for acquisition were: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6, P4. They were placed following the 10-10 international system.
-Four electrodes were located next to the eyes to record electrooculography (EOG) and ground and reference electrodes were located on the right and left ear lobes, respectively. Each channel signal was amplified with BrainVision BrainAmp amplifier. 
-
-%NOSE COMO PONER ESTO:
-Se tienen los datos de 5 usuarios, con 5 días cada uno, 11 trials por día, cada día, 56 ventanas por trial. Por lo tanto, se tienen 5 x 5 x 11 x 56 = 15400 ventanas.
-
-Cada trial corresponde a una secuencia de dos tareas mentales, relajación e imaginación de la marcha, que se repite en intervalos de 14 ventanas temporales (0.5s x ventana = 0.7s) de relajación, 28 de imaginación de la marcha (0.5s x ventana = 1.4s) y finalmente otras 14 de relajación. 
-Se cuenta con un periodo inicial de duración aleatoria en la cual se le pedía al sujeto realizar una tarea mental compleja, diferente a la imaginación motora. Este periodo se utiliza para eliminar ruidos en la señal EEG y se ha eliminado del dataset final.
-
-Un esquema de las ventanas se puede ver en la figura \ref{fig:ventanas}.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{ventanas.png}
-%     \caption{Esquema de las ventanas}
-%     \label{fig:ventanas}
-% \end{figure}
-
-% Los labels y los datos están relacionados a nivel de ventana, utilizando un fichero auxiliar vector_tasks_training.mat.
-
-\subsubsection{Preprocesamiento de datos}
-
-Los datos han sido procesados previamente en otro estudio.
-% Para este trabajo, se modificaron los arrays para que tuvieran 6 dimensiones (input) y 5 dimensiones (labels):
-% input_6d = input_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,N_CHANNELS,N_SAMPLES)
-% labels_6d = labels_data.reshape(N_USERS,N_DAYS,N_TRIALS,N_WINDOWS,1)
-
-La separación entre los datos de entrenamiento y testeo se ha hecho en un 70\% de entrenamiento y 30\% de testeo y se aplica al nivel de trial. Esta separación se ha hecho para cada entrenamiento del modelo y se toma en cuenta el usuario y día de cada uno. No se ha hecho de manera aleatoria, sino que se han utilizado para testeo empezando por el final de la lista de trials. 
-
-La razón de esta decisión es que en los primeros trials el sujeto suele presentar un menor control sobre su imaginación motora. %esta frase no me gusta ni un pelooooooo
-
-Más allá de estos preprocesamientos, no se ha hecho nada más
 
 \begin{comment}
 la Pipeline
@@ -259,12 +218,51 @@ Ejemplo:
 
 \end{comment}
 
-\subsection{Modelos utilizados}
-Aquí metes:
+\subsection{Modelos utilizados}\label{sec:modelos_utilizados}
+
+Se van a definir las arquitecturas de los modelos usados en el estudio y a justificar su elección. 
+
+\subsubsection{DeepConvNet y ShallowConvNet}
+
+Las redes neuronales DeepConvNet y ShallowConvNet, propuestas por Schirrmeister et al. \cite{schirrmeister_DeepLearning2017} se tratan de los primeros modelos convolucionales en causar un impacto significativo en la \acrshort{eeg}. Desde entonces el uso de estas arquitecturas se ha incrementado en la literatura científica \cite{kollod_DeepComparisons2023}.
+
+
+
+
+the DeepConvNet architecture was designed to be a general-purpose architecture that is not restricted to specific feature types \cite{}, and thus it serves as a more valid comparison to EEGNet.
+
+
+
+
+
+We would like to emphasize that the ShallowConvNet architecture was designed specifically for oscillatory signal classification (by extracting features related to log band-power); thus, it may not work well on ERP-based classification tasks.
 
 \subsubsection{EEGNet}
-\subsubsection{DeepConvNet}
-\subsubsection{ShallowConvNet} (si lo usas)
+
+EEGNet es un modelo de red neuronal convolucional (\acrshort{cnn}) diseñado específicamente para la clasificación de señales EEG. Su arquitectura se basa en el uso de convoluciones \textit{Depthwise} y \textit{Separable}, ampliamente utilizadas en tareas de clasificación de imágenes, adaptándolas al procesamiento de señales EEG. Este enfoque permite extraer características espaciales y temporales de forma eficiente, utilizando conceptos como el filtrado espacial y la construcción de bancos de filtros \cite{lawhern_EEGNetCompact2018}.
+
+Las características principales de este modelo son:
+
+\begin{itemize}
+    \item Independencia respecto al paradigma \acrshort{bci}, permitiendo su aplicación en distintos tipos de señales EEG.
+    \item Menor número de parámetros en comparación con otros modelos de \acrshort{cnn}.
+    \item Buena capacidad de generalización incluso con conjuntos de datos limitados.
+    \item Arquitectura compacta con técnicas de regularización integradas, como \textit{Batch Normalization} y \textit{Dropout}.
+\end{itemize}
+
+El modelo comienza con una capa convolucional temporal encargada de extraer información frecuencial de la señal EEG. Posteriormente, se aplica una convolución \textit{Depthwise} que aprende filtros espaciales específicos para cada mapa de características. A continuación, la arquitectura utiliza una convolución \textit{Separable}, compuesta por una convolución \textit{Depthwise} seguida de una convolución \textit{Pointwise}. La primera resume temporalmente cada mapa de características de manera independiente, mientras que la segunda combina la información obtenida entre los distintos mapas de características \cite{lawhern_EEGNetCompact2018}. El esquema de esta arquitectura se muestra en la figura \ref{fig:eegnet_arch}.
+
+Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la función de pérdida de entropía cruzada categórica.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{img/eegnet_arch.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Arquitectura de EEGNet. las lineas muestran la conexión entre las capas \cite{lawhern_EEGNetCompact2018}.}
+    \label{fig:eegnet_arch}
+\end{figure}
+
+La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.  Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar  potenciales corticales relacionados con el movimiento (\acrshort{mrcp}). Estas características hacen de EEGNet una arquitectura adecuada para la clasificación de señales EEG en el contexto de este trabajo.
 
 \begin{comment}
 
@@ -282,23 +280,21 @@ Aquí metes:
 Aquí es donde entra todo tu proyecto de verdad.
 \subsubsection{Variables del estudio}
 
-Muy importante estructurarlo así:
+Arquitectura del modelo
 
-    Arquitectura del modelo
+Método de entrenamiento:
+\begin{itemize}
+    \item    same-day
+    \item    acumulativo
+    \item    fine-tuning
+\end{itemize}
 
-    Método de entrenamiento:
-
-        same-day
-
-        acumulativo
-
-        fine-tuning
-
-    Tarea:
-
-        static / motion
-
-    Usuario
+Tarea:
+\begin{itemize}
+\item    static 
+\item    motion
+\end{itemize}
+Usuario
 
 \subsubsection{Estrategia de entrenamiento}\label{sec:metodos_entrenamiento}
 
@@ -316,49 +312,45 @@ Muy importante estructurarlo así:
 
     métrica (accuracy)
 
-No te líes demasiado, pero deja claro cómo entrenas
 
 
 
 \subsubsection{Evaluación}
 
-MUY importante:
 
     validación cruzada
 
     pseudo-online
 
-explica qué significa pseudo-online (aunque sea breve)
+explicar qué significa pseudo-online
 
 
 
-\subsection{Infraestructura Experimental}
+\subsection{Infraestructura Experimental}\label{sec:infraestructura_exp}
 
-Aquí metes tu microframework (esto es TU aporte técnico fuerte)
 
 sistema para ejecutar múltiples experimentos
 gestión de parámetros
 almacenamiento de resultados (DuckDB)
 automatización
 
-Esto es diferencial → véndelo bien
+
 
 
 Se ha programado un microframework para el desarrollo de experimentos de Machine Learning.
 
-Como se ha comentado en el apartado \ref{sec:}, se ha realizado la comparación de tres modelos de redes neuronales convolucionales para la clasificación de la intención de caminar o detenerse con un exoesqueleto. Se ha utilizado un dataset de EEG con 27 canales, obtenido de una muestra de un estudio previo XXXXXX. Los parametros a comparar son la arquitectura de la red, el metodo de entrenamiento, la tarea a predecir y la variabilidad entre usuarios.
+Como se ha comentado en el apartado \ref{sec:modelos_utilizados}, se ha realizado la comparación de tres modelos de redes neuronales convolucionales para la clasificación de la intención de caminar o detenerse con un exoesqueleto. Se ha utilizado un dataset de EEG con 27 canales, obtenido de una muestra de un estudio previo XXXXXX. Los parametros a comparar son la arquitectura de la red, el metodo de entrenamiento, la tarea a predecir y la variabilidad entre usuarios.
 
 Al necesitarse de cientos de ejecuciones para obtener todos los datos necesarios, durante las etapas iniciales se tomó la decisión de enfocar el proyecto de manera horizontal, preparando una base de ejecución sobre la cual modificar facilmente todo lo necesario para cada ejecución y permitiendo ejecutar multiples experimentos de manera secuencial.
 
-(((((((Aquí no sé si ir diicendo TOOOOODo lo que he ido poniendo en el código. Puedo ir siguiendo el timeline de Github y hacer un resumen de los commits))))))))
+
 
 
 \subsubsection{Diseño de experimentos}
 
-Aquí explicas cómo organizaste TODO
+
 
 combinaciones de parámetros
 nº de ejecuciones
 cómo comparas resultados
 
-Esto conecta directamente con Results luego

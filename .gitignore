@@ -4,3 +4,6 @@ build/*
 !build/TFG_TFM.pdf
 
 .vscode
+
+*.odt
+.*
