@@ -2,7 +2,6 @@
 \documentclass[a4paper, 12pt, spanish, twoside]{article}
 % ---------------------------------------------- %
 \input{preamble.tex}
-\addbibresource{biblio.bib}
 \addbibresource{TFM.bib}
 \input{acronyms.tex}
 % ---------------------------------------------- % 
@@ -96,7 +95,7 @@
 
 % Se genera la bibliografía mediante el comando \printbibliography (en ella aparecen únicamente las referencias citadas a lo largo del documento):
 \newpage
-\appto{\bibsetup}{\sloppy}
+\appto{\bibsetup}{\sloppy} 
 \printbibliography[heading=bibintoc, title=BIBLIOGRAFÍA] % el argumento "title" puede modificarse indicando el título que convenga (bibliografía, referencias, etc.).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

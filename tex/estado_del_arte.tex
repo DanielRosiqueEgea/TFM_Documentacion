@@ -54,10 +54,30 @@ Nose el qué
 \end{itemize}
 \end{comment}
 
+\subsubsection{Redes neuronales convolucionales}
+{\color{orange}
+A convolution neural network (CNN) is among the most popular and successful deep learning methods for EEG decoding. CNNs are designed for signal processing and analysis, especially for those contexts that provide spatial information. The convolutional layer is a fundamental building block of CNN that extracts features by sliding small filters across the input. Each filter is equipped with learnable weights designed to detect specific patterns, and the aggregation of multiple filters results in the creation of a feature map. During the training of a CNN, backpropagation is adopted to calculate the gradients of the loss function with respect to the weights of the network, allowing for weight updates that minimize the overall loss. When adopted into EEG decoding, CNNs are generally initiated with an input layer that accepts the pre-processed EEG data. \cite{edelman_NonInvasiveBrainComputer2025}
+
+Then, the CNN extracts spectral and spatial features by deploying a spatial convolution layer along the channel dimension and a temporal convolution layer along the sample dimension. After this step, several layers will be followed to project the feature into higher dimensions. Between two convolutional layers, there always exists one pooling layer to reduce the parameter dimension and eliminate overfitting. In the final phase, the fully connected layer serves as a decision-making layer, mapping the high-level representations to the specific classes related to the decoding task.\cite{edelman_NonInvasiveBrainComputer2025}
+
+
+LeCun et al. [2015], Goodfellow et al. [2016], and Schmidhuber [2015]. \cite{schirrmeister_DeepLearning2017}
+
+}
+
+
 \subsection{Relación con Proyectos Similares}
 
 Estructura muy clara:
 \subsubsection{Métodos clásicos}
+
+{\color{orange}
+Esto investigarlo más y ponerlo bonito
+Barachant et al. [22] introduced Riemannian geometry for BCI with an LDA classifier to successfully classify EEG covariance matrices. Lotte and Guan [23] introduced a unifying theoretical framework for regularizing the CSP and compared it with 10 other regularized versions of the CSP algorithm. Another feature extraction algorithm, considering the CSP, is the Filter Bank Common Spatial Pattern  (FBCSP) with a Naïve Bayesian Parzen Window classifier  \cite{kollod_DeepComparisons2023}
+
+The winner of the BCI discipline of the Cybathlon competitions used the power spectral density of the EEG signals as a feature [13], [19] with a Gaussian classifier.
+}
+
 \begin{itemize}
     \item LDA, SVM
     \item Features manuales
@@ -65,6 +85,11 @@ Estructura muy clara:
 \end{itemize}
 \subsubsection{Deep Learning aplicado a EEG}
 
+{\color{orange}
+Before neural networks, scientists intended to investigate and develop hand-crafted feature extraction methods combined with simple classification algorithms. \cite{kollod_DeepComparisons2023}
+With the introduction of the Deep and Shallow ConvNets, a new trend started in BCI development. The focus had been shifted from hand-crafted features to creating neural networks which not just classify the signal but also include the feature extraction step. Lawhern et al. [25] introduced the EEGNet, which was inspired by former neural networks that were designed for EEG signal processing, including MI-based BCIs [1], [26]–[28]. It was demonstrated that EEGNet makes a similar feature extraction as the FBCSP\cite{kollod_DeepComparisons2023}
+Other publications outside the EEGNet family [43]–[49] highlight the importance of neural network-based BCI research.
+}
     CNNs (EEGNet, DeepConvNet…)
 
     Qué han conseguido
