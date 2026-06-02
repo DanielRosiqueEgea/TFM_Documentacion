@@ -54,17 +54,7 @@ Nose el qué
 \end{itemize}
 \end{comment}
 
-\subsubsection{Redes neuronales convolucionales}
-{\color{orange}
-A convolution neural network (CNN) is among the most popular and successful deep learning methods for EEG decoding. CNNs are designed for signal processing and analysis, especially for those contexts that provide spatial information. The convolutional layer is a fundamental building block of CNN that extracts features by sliding small filters across the input. Each filter is equipped with learnable weights designed to detect specific patterns, and the aggregation of multiple filters results in the creation of a feature map. During the training of a CNN, backpropagation is adopted to calculate the gradients of the loss function with respect to the weights of the network, allowing for weight updates that minimize the overall loss. When adopted into EEG decoding, CNNs are generally initiated with an input layer that accepts the pre-processed EEG data. \cite{edelman_NonInvasiveBrainComputer2025}
-
-Then, the CNN extracts spectral and spatial features by deploying a spatial convolution layer along the channel dimension and a temporal convolution layer along the sample dimension. After this step, several layers will be followed to project the feature into higher dimensions. Between two convolutional layers, there always exists one pooling layer to reduce the parameter dimension and eliminate overfitting. In the final phase, the fully connected layer serves as a decision-making layer, mapping the high-level representations to the specific classes related to the decoding task.\cite{edelman_NonInvasiveBrainComputer2025}
-
-
-LeCun et al. [2015], Goodfellow et al. [2016], and Schmidhuber [2015]. \cite{schirrmeister_DeepLearning2017}
-
-}
-
+\input{tex/estado_del_arte/cnn.tex}
 
 \subsection{Relación con Proyectos Similares}
 
@@ -83,12 +73,36 @@ The winner of the BCI discipline of the Cybathlon competitions used the power sp
     \item Features manuales
     \item Limitaciones
 \end{itemize}
+
 \subsubsection{Deep Learning aplicado a EEG}
+
+Kollod et al. \cite{kollod_DeepComparisons2023} realizaron una comparación exhaustiva de diferentes arquitecturas de aprendizaje profundo aplicadas a señales EEG, incluyendo modelos ampliamente utilizados como EEGNet, DeepConvNet y ShallowConvNet. Además de comparar el rendimiento de las distintas arquitecturas, los autores analizaron diferentes estrategias de entrenamiento, incluyendo enfoques within-subject y técnicas de transferencia de aprendizaje basadas en preentrenamiento inter-sujeto y posterior ajuste fino sobre el sujeto objetivo. Este trabajo resulta especialmente relevante para el presente estudio, ya que evalúa tanto varias de las arquitecturas utilizadas como estrategias de entrenamiento similares a las implementadas en esta investigación.
+
+
+kollodDeepComparisons2023 $\rightarrow$ hace una comparación entre varios modelos y tipos de entrenamiento 
 
 {\color{orange}
 Before neural networks, scientists intended to investigate and develop hand-crafted feature extraction methods combined with simple classification algorithms. \cite{kollod_DeepComparisons2023}
-With the introduction of the Deep and Shallow ConvNets, a new trend started in BCI development. The focus had been shifted from hand-crafted features to creating neural networks which not just classify the signal but also include the feature extraction step. Lawhern et al. [25] introduced the EEGNet, which was inspired by former neural networks that were designed for EEG signal processing, including MI-based BCIs [1], [26]–[28]. It was demonstrated that EEGNet makes a similar feature extraction as the FBCSP\cite{kollod_DeepComparisons2023}
+With the introduction of the Deep and Shallow ConvNets, a new trend started in BCI development. The focus had been shifted from hand-crafted features to creating neural networks which not just classify the signal but also include the feature extraction step. \cite{lawhern_EEGNetCompact2018} introduced the EEGNet, which was inspired by former neural networks that were designed for EEG signal processing, including MI-based BCIs \cite{schirrmeister_DeepLearning2017}, \cite{sakhavi_LearningTemporal2018,tabar_NovelDeep2016}. $\rightarrow$ Uso las redes de schirrmeister en el estudio.
+
+It was demonstrated that EEGNet makes a similar feature extraction as the FBCSP This neural network inspired many scientists, which resulted in many improved versions of the EEGNet [29]–[42], \cite{kollod_DeepComparisons2023} $\rightarrow$  Esto es importante, ya que utilizo la eegNet
+
 Other publications outside the EEGNet family [43]–[49] highlight the importance of neural network-based BCI research.
+
+26-28  29-42 42-49
+
+
+Along with the development of neural networks, scientists started investigating the effect of transfer learning [50]. This method aims to transfer knowledge between two domains and increase the classification’s accuracy. Khademi et al. [51]
+
+This way, they aimed to transfer the knowledge of image classification and use it on spatial EEG images generated with continuous wavelet transformation method using complex Morlet mother wavelet
+
+nother strategy is to utilize the entire EEG dataset and combine cross-subject and within-subject training, as presented in [49], [52], [53]  $\rightarrow$  Esto es importante, ya que los entrenamientos elegidos para el estudio son similares.
+
+In this case, the knowledge is granted from subjects not used in the test set of the neural network. The network is pretrained on data from all but one subject, as it would in a cross-subject training procedure. But then the data of the test subject is also split to train and test set, as in the within-subject, and the training part is used for fine-tuning the pretrained neural network. We selected the later version of transfer learning because it is architecture independent and aimed to use it after artifact filtering.
+
+
+Next to the subject-wise learning, we also investigated the effect of transfer learning. First, test subjects were selected as distinct groups of 10. The remaining subjects, called pre-train subjects, were used to set the initial optimal weights for the neural networks. A validation set was separated from the pre-train data to use it with our modified early stopping and model-saving strategy. When the pretraining phase converged, either reaching the maximum training epoch number or stopping it by the early stopping strategy, the best weights of the network were stored. For each test subject, 5-fold withinsubject cross-validation $\rightarrow$  esto es bastante parecido a uno de los métodos de entrenamiento que uso
+
 }
     CNNs (EEGNet, DeepConvNet…)
 

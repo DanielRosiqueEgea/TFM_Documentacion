@@ -365,7 +365,9 @@ Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la
     \label{fig:eegnet_arch}
 \end{figure}
 
-La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.  Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar  potenciales corticales relacionados con el movimiento (\acrshort{mrcp}). Estas características hacen de EEGNet una arquitectura adecuada para la clasificación de señales EEG en el contexto de este trabajo.
+La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.  
+
+Estudios posteriores han mostrado que EEGNet es capaz de aprender representaciones similares a las obtenidas mediante métodos clásicos de extracción de características, como Filter Bank Common Spatial Patterns (FBCSP), manteniendo la ventaja de realizar dicho proceso de forma automática dentro de la propia red neuronal. Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar  potenciales corticales relacionados con el movimiento (\acrshort{mrcp}). Estas características hacen de EEGNet una arquitectura adecuada para la clasificación de señales EEG en el contexto de este trabajo \cite{lawhern_EEGNetCompact2018,kollod_DeepComparisons2023}.
 
 \begin{comment}
 
@@ -391,6 +393,9 @@ Método de entrenamiento:
     \item    acumulativo
     \item    fine-tuning
 \end{itemize}
+
+
+Diversos trabajos han señalado que la transferencia de aprendizaje constituye una estrategia eficaz para mejorar el rendimiento de modelos de clasificación EEG cuando la cantidad de datos disponibles por sujeto es limitada. Una aproximación habitual consiste en realizar un preentrenamiento utilizando datos procedentes de múltiples sujetos y posteriormente ajustar el modelo mediante datos específicos del sujeto objetivo \cite{kollod_DeepComparisons2023}. Debido a que este enfoque es independiente de la arquitectura empleada, ha sido adoptado en numerosos estudios comparativos recientes y constituye una de las estrategias evaluadas en este trabajo.
 
 Tarea:
 \begin{itemize}
