@@ -1,7 +1,7 @@
 \section{Introducción} \label{sec:introduccion}
 Según la \gls{oms}, las lesiones medulares afectan a más de 15 millones de personas a nivel mundial. Estas pueden ser ocasionadas tanto por traumatismos como por causas no traumáticas, incluyendo tumores, enfermedades degenerativas y vasculares, infecciones o defectos congénitos. Como consecuencia, producen una pérdida completa o parcial de las funciones sensoriales y/o motoras por debajo del nivel de la lesión, siendo una de las principales causas de discapacidad de larga duración \cite{worldhealthorganizationwho_LesionMedula2024}.
 
-Las limitaciones en la movilidad derivadas de estas lesiones dificultan la participación plena en la sociedad. En adultos, esto se traduce en tasas de desempleo superiores al $60\%$, mientras que en población infantil se observa una menor continuidad en el sistema educativo \cite{worldhealthorganizationwho_LesionMedula2024,bravo_ExclusionSocial2017}.
+Las limitaciones en la movilidad derivadas de estas lesiones dificultan la participación plena en la sociedad. En adultos, esto se traduce en tasas de desempleo superiores al \(60\%\), mientras que en población infantil se observa una menor continuidad en el sistema educativo \cite{worldhealthorganizationwho_LesionMedula2024,bravo_ExclusionSocial2017}.
 
 La necesidad de abordar los problemas causados por estas lesiones ha impulsado en los últimos años el desarrollo de nuevas terapias y dispositivos de rehabilitación \cite{morone_NeurorehabilitationInsights2025}.
 
@@ -9,11 +9,14 @@ En este contexto, las \gls{bcis} han emergido como una tecnología prometedora p
 
 Sin embargo, la interpretación de las señales \acrshort{eeg} presenta importantes desafíos debido a su baja relación señal-ruido y a la elevada variabilidad entre sujetos y sesiones, lo que dificulta el desarrollo de modelos robustos y generalizables \cite{yun_AdvancesChallenges2024}.
 
+\begin{comment}
+
 \subsection{Motivación}
+\end{comment}
 
 \subsection{Definición del problema}
 
-Este trabajo aborda la clasificación de señales \acrshort{eeg} registradas durante la imaginación activa de tareas de marcha, con el objetivo de detectar patrones cerebrales relacionados con la intención de caminar o detenerse. 
+Este trabajo aborda la clasificación de señales \acrshort{eeg} registradas durante la imaginación activa de tareas de marcha, con el objetivo de detectar patrones cerebrales relacionados con la intención de caminar o detenerse.
 
 El problema se enmarca en el contexto de las \acrshort{bci} orientadas a aplicaciones de rehabilitación, donde resulta fundamental identificar de forma fiable los estados mentales del usuario a partir de señales cerebrales no invasivas.
 
@@ -29,18 +32,18 @@ Para alcanzar este objetivo general, se plantean los siguientes objetivos espec�
 
 \begin{enumerate}
     \item  Entrenar y evaluar diferentes arquitecturas de redes neuronales
-    \begin{itemize}
-        \item EEGNet
-        \item DeepConvNet
-        \item ShallowConvNet
-    \end{itemize}
+          \begin{itemize}
+              \item EEGNet
+              \item DeepConvNet
+              \item ShallowConvNet
+          \end{itemize}
     \item Evaluar diferentes métodos de entrenamiento
-    \begin{itemize}
-        \item Same-day
-        \item Acumulativo
-        \item Fine-tuning
-        \item Same-day + Fine-tuning 
-    \end{itemize}
+          \begin{itemize}
+              \item Same-day
+              \item Acumulativo
+              \item Fine-tuning
+              \item Same-day + Fine-tuning
+          \end{itemize}
     \item Analizar variabilidad entre usuarios y su efecto en el rendimiento de los modelos
     \item Evaluar el comportamiento de los modelos en diferentes escenarios de validación, incluyendo validación cruzada y entornos pseudo-online.
 \end{enumerate}

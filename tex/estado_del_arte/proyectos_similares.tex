@@ -1,0 +1,56 @@
+
+\subsection{Proyectos similares}
+
+\subsubsection{Comparación de modelos en la literatura}
+
+El uso de técnicas de aprendizaje profundo para el análisis de señales EEG ha experimentado un crecimiento significativo durante la última década. Este incremento ha motivado la aparición de numerosos trabajos orientados a comparar distintas arquitecturas de redes neuronales, así como a evaluar su capacidad de generalización en diferentes paradigmas BCI, conjuntos de datos y protocolos experimentales.
+
+Uno de los trabajos más influyentes en este ámbito es el realizado por \textcite{schirrmeister_DeepLearning2017}, quienes introdujeron las arquitecturas DeepConvNet y ShallowConvNet para la clasificación de señales EEG. Además de proponer ambas redes, los autores realizaron una comparación frente a métodos clásicos basados en extracción manual de características, como Filter Bank Common Spatial Patterns (FBCSP), demostrando que las arquitecturas convolucionales eran capaces de alcanzar resultados comparables o superiores sin necesidad de diseñar manualmente las características relevantes de la señal. Este trabajo supuso uno de los primeros éxitos significativos del aprendizaje profundo aplicado a sistemas BCI.
+
+Posteriormente, \textcite{lawhern_EEGNetCompact2018} propusieron EEGNet, una arquitectura compacta diseñada específicamente para señales EEG. A diferencia de otros modelos convolucionales más profundos, EEGNet está enfocada en reducir significativamente el número de parámetros entrenables. Los autores demostraron que era posible obtener resultados competitivos en diferentes paradigmas BCI utilizando modelos considerablemente más ligeros, facilitando su aplicación en escenarios con recursos computacionales limitados o conjuntos de datos reducidos.
+
+\textcite{kollod_DeepComparisons2023} desarrollaron un estudio exhaustivo sobre diferentes modelos de aprendizaje profundo aplicados a EEG. Entre las arquitecturas evaluadas se encontraban EEGNet, DeepConvNet y ShallowConvNet, además de otros modelos recientes. Los autores analizaron no sólo el efecto de la arquitectura utilizada, sino también el impacto de distintas estrategias de entrenamiento, incluyendo enfoques dependientes del sujeto y métodos basados en transferencia de aprendizaje. Sus resultados mostraron que no existe una arquitectura claramente superior para todos los conjuntos de datos y escenarios experimentales, observándose una fuerte dependencia tanto del protocolo de entrenamiento como de las características específicas de cada tarea.
+
+La conclusion anterior coincide con las observaciones recogidas en diversas revisiones bibliográficas sobre aprendizaje profundo aplicado a EEG, como los de \textcite{craik_DeepLearning2019} y \textcite{roy_DeepLearningbased2019}. Estos trabajos destacan que las diferencias de rendimiento entre arquitecturas suelen depender en gran medida del conjunto de datos utilizado, del paradigma BCI considerado y del protocolo experimental empleado. Asimismo, coinciden en la ausencia de una arquitectura universalmente superior y reacalcan la necesidad de utilizar benchmarks comunes que permitan realizar comparaciones más rigurosas entre arquitecturas.
+
+En conjunto, la literatura actual sugiere que tanto la arquitectura seleccionada como la estrategia de entrenamiento empleada desempeñan un papel fundamental en el rendimiento final de los sistemas BCI basados en EEG. Por este motivo, en el presente trabajo se evalúan tres de las arquitecturas convolucionales más utilizadas en la literatura (EEGNet, DeepConvNet y ShallowConvNet) junto con diferentes estrategias de entrenamiento.
+
+\subsubsection{Distintos entrenamientos en la literatura}
+
+Según \textcite{wan_ReviewTransfer2021}, las diferencias inter-sujeto y la escasez de datos constituyen dos de los principales obstáculos para el desarrollo de sistemas BCI basados en aprendizaje profundo. Como consecuencia, numerosas investigaciones han propuesto distintas estrategias de transferencia y reutilización del conocimiento con el objetivo de mejorar la generalización de los modelos EEG.
+
+\paragraph*{Entrenamiento intra-sesión}
+
+El entrenamiento intra-sesión constituye el enfoque tradicional en sistemas BCI. En este escenario, el modelo se entrena y evalúa utilizando únicamente datos obtenidos durante una misma sesión del usuario. Este planteamiento minimiza el impacto de la variabilidad temporal y entre sujetos, permitiendo obtener una alta precisión para la sesión concreta utilizada durante el entrenamiento.
+
+\textcite{ma_LargeEEG2022} propusieron un benchmark intra-sesión en el que los datos de cada sesión eran divididos aleatoriamente en conjuntos de entrenamiento, validación y test siguiendo una proporción 8:1:1. La evaluación final se realizaba mediante validación cruzada de 10 particiones. Este protocolo fue utilizado para comparar diferentes arquitecturas de aprendizaje profundo, entre ellas EEGNet, DeepConvNet y ShallowConvNet.
+
+A pesar de proporcionar buenos resultados, este tipo de entrenamiento presenta una importante limitación práctica: requiere una nueva fase de calibración para cada sesión del usuario, dificultando su utilización en aplicaciones reales de larga duración, como mencionan \textcite{sung_ImprovingIntersession2024}.
+
+\paragraph*{Transferencia entre sesiones}
+
+Con el objetivo de reducir la necesidad de re-entrenar el modelo para cada sesión, diversos autores han estudiado estrategias que aprovechan información procedente de sesiones anteriores del mismo usuario.
+
+En el benchmark cross-sesión propuesto por \textcite{ma_LargeEEG2022}, los datos de la primera sesión de cada sujeto se utilizaron para el entrenamiento, mientras que las cuatro sesiones restantes se emplearon para evaluación. Este protocolo permite cuantificar el impacto de la variabilidad temporal de las señales EEG sobre el rendimiento de los clasificadores.
+
+Posteriormente, \textcite{sung_ImprovingIntersession2024} compararon diferentes estrategias de transferencia entre sesiones. Entre ellas destaca el método \textit{Whole Session Transfer} (WST), que incorpora todas las sesiones anteriores al conjunto de entrenamiento de la sesión actual. Los autores observaron que este enfoque obtenía mejores resultados que el entrenamiento exclusivamente intra-sesión. Además, propusieron una estrategia denominada \textit{Relevant Session Transfer} (RST), basada en la selección de sesiones previas mediante medidas de similitud, obteniendo mejoras adicionales en la precisión de clasificación.
+
+De forma similar, \textcite{wu_TransferLearning2020} identifican la transferencia cross-sesión como uno de los principales escenarios de \textit{transfer learning} en sistemas EEG, donde los datos de sesiones previas son utilizados para facilitar la calibración de nuevas sesiones del mismo usuario.
+
+\paragraph*{Transferencia entre sujetos}
+
+Otra línea de investigación busca reducir la dependencia de datos específicos del usuario mediante la utilización de información procedente de otros participantes.
+
+Según la clasificación propuesta por \textcite{wu_TransferLearning2020}, el escenario \textit{cross-subject} utiliza datos de varios sujetos como dominios fuente para facilitar la calibración de un nuevo usuario. Este enfoque resulta especialmente interesante debido a que permite disminuir significativamente el tiempo necesario para la adquisición de datos de calibración.
+
+Diversos trabajos recientes han explorado estrategias de adaptación basadas en modelos pre-entrenados con múltiples usuarios y posteriormente ajustados mediante \textit{fine-tuning} utilizando una cantidad reducida de datos del sujeto objetivo \textcite{otarbay_TransferLearning2026,an_SubjectAdaptiveTransfer2024}. Estos métodos han demostrado que es posible aprovechar conocimiento adquirido en otros usuarios para mejorar el rendimiento inicial de los sistemas BCI.
+
+\paragraph*{Aprendizaje continuo y adaptación progresiva}
+
+Más recientemente, varios autores han estudiado estrategias de adaptación progresiva en las que el modelo incorpora nueva información conforme se dispone de sesiones adicionales del usuario.
+
+\textcite{lu_HybridTransfer2023} proponen un procedimiento basado en el entrenamiento inicial de un modelo general utilizando datos fuente y posteriormente su adaptación mediante \textit{fine-tuning} con datos específicos del usuario objetivo. Por su parte, \textcite{wimpff_FineTuningStrategies2025} demostraron que la adaptación progresiva utilizando únicamente datos disponibles antes de cada sesión de evaluación permite mejorar tanto la precisión como la estabilidad del sistema a lo largo del tiempo.
+
+Este tipo de enfoques se encuentra estrechamente relacionado con el aprendizaje continuo (\textit{continual learning}), cuyo objetivo es incorporar nueva información preservando simultáneamente el conocimiento previamente adquirido y reduciendo el problema de la pérdida de rendimiento en sesiones largas (\textcite{huang_ContinualLearningEnhancedCNN2026}). En esta misma línea, \textcite{abu-rmileh_CoadaptiveTraining2019} propusieron un mecanismo de actualización periódica del clasificador utilizando los datos de los dos ensayos anteriores del usuario para adaptar progresivamente el modelo durante varios días de uso.
+
+Las estrategias descritas anteriormente constituyen la base de los distintos métodos de entrenamiento evaluados en este trabajo, los cuales buscan estudiar el impacto del método de transferenciasobre el rendimiento de modelos convolucionales aplicados a señales EEG.

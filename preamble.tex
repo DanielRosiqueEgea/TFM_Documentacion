@@ -292,13 +292,15 @@ every picture/.append style={
   sortcites,
   firstinits=true,
   backend=biber,
-  style=numeric,
+  style=ieee,
   sorting=none,
-  maxcitenames=200,
+  maxcitenames=2,
+  mincitenames=1,
   maxbibnames=500,
   giveninits=true,
   uniquename=init
 ]{biblatex}
+\usepackage[shortlabels]{enumitem}
 
 \usepackage{dblfnote}
 

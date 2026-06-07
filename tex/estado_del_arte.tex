@@ -1,12 +1,5 @@
 \section{Estado del Arte}
 
-
-{\color{orange}
-La rehabilitación de los pacientes tras una lesión medular es un tema peliagudo, que conlleva un de complicaciones, ya que la rehabilitación de estos pacientes requiere de un gran esfuerzo físico y psicológico 
-%\cite{Buscarla en los apuntes o en algún sitio, que seguro que está}%.
-Por estos motivos, en los últimos años, un enfoque que está ganando tracción es el de las interfaces cerebro-computador (\acrshort{bci}), que permiten una rehabilitación asistida más eficiente y con una menor carga al paciente y al profesional \cite{XXX}.
-}
-
 Este capitulo trata de introducir los fundamentos que sustentan este trabajo, al igual que se ahonda en el estado actual de las técnicas de \acrfull{bci} y \acrfull{eeg} y sus aplicaciones, para de esta manera poder entender el problema que se pretende resolver y la solución que se pretende dar.
 
 
@@ -14,26 +7,25 @@ Este capitulo trata de introducir los fundamentos que sustentan este trabajo, al
 
 \subsection{Conceptos Relevantes del Dominio}
 
-Aqui debería poner algoooooooooooooooooooooooooooooo
-Nose el qué
+En este apartado se mencionan los conceptos relevantes que se utilizan en este trabajo para proporcionar una base suficiente para entender el problema que se pretende resolver.
 
 \input{tex/estado_del_arte/lesion_motora.tex}
 
 \input{tex/estado_del_arte/eeg.tex}
 
+\begin{comment}
 \subsubsection{Potenciales relacionados a eventos (ERP)}
 
 \subsubsection{Intención de movimiento (MI)}
-\begin{comment}
 
-    \begin{itemize}
+\begin{itemize}
     \item Qué es detectar intención
     \item Tipos de señales:
-    \begin{itemize}
-    \item motor imagery
-    \item movimiento real 
-\end{itemize}
-\item Importancia en control de dispositivos
+          \begin{itemize}
+              \item motor imagery
+              \item movimiento real
+          \end{itemize}
+    \item Importancia en control de dispositivos
 \end{itemize}
 
 \end{comment}
@@ -47,91 +39,5 @@ Nose el qué
 
 \input{tex/estado_del_arte/cnn.tex}
 
-\subsection{Relación con Proyectos Similares}
+\input{tex/estado_del_arte/proyectos_similares.tex}
 
-Estructura muy clara:
-\subsubsection{Métodos clásicos}
-
-{\color{orange}
-Esto investigarlo más y ponerlo bonito
-Barachant et al. [22] introduced Riemannian geometry for BCI with an LDA classifier to successfully classify EEG covariance matrices. Lotte and Guan [23] introduced a unifying theoretical framework for regularizing the CSP and compared it with 10 other regularized versions of the CSP algorithm. Another feature extraction algorithm, considering the CSP, is the Filter Bank Common Spatial Pattern  (FBCSP) with a Naïve Bayesian Parzen Window classifier  \cite{kollod_DeepComparisons2023}
-
-The winner of the BCI discipline of the Cybathlon competitions used the power spectral density of the EEG signals as a feature [13], [19] with a Gaussian classifier.
-}
-
-\begin{itemize}
-    \item LDA, SVM
-    \item Features manuales
-    \item Limitaciones
-\end{itemize}
-
-\subsubsection{Deep Learning aplicado a EEG}
-
-Kollod et al. \cite{kollod_DeepComparisons2023} realizaron una comparación exhaustiva de diferentes arquitecturas de aprendizaje profundo aplicadas a señales EEG, incluyendo modelos ampliamente utilizados como EEGNet, DeepConvNet y ShallowConvNet. Además de comparar el rendimiento de las distintas arquitecturas, los autores analizaron diferentes estrategias de entrenamiento, incluyendo enfoques within-subject y técnicas de transferencia de aprendizaje basadas en preentrenamiento inter-sujeto y posterior ajuste fino sobre el sujeto objetivo. Este trabajo resulta especialmente relevante para el presente estudio, ya que evalúa tanto las arquitecturas utilizadas como estrategias de entrenamiento similares a las implementadas en esta investigación.
-
-
-
-kollodDeepComparisons2023 $\rightarrow$ hace una comparación entre varios modelos y tipos de entrenamiento 
-
-{\color{orange}
-Before neural networks, scientists intended to investigate and develop hand-crafted feature extraction methods combined with simple classification algorithms. \cite{kollod_DeepComparisons2023}
-With the introduction of the Deep and Shallow ConvNets, a new trend started in BCI development. The focus had been shifted from hand-crafted features to creating neural networks which not just classify the signal but also include the feature extraction step. \cite{lawhern_EEGNetCompact2018} introduced the EEGNet, which was inspired by former neural networks that were designed for EEG signal processing, including MI-based BCIs \cite{schirrmeister_DeepLearning2017}, \cite{sakhavi_LearningTemporal2018,tabar_NovelDeep2016}. $\rightarrow$ Uso las redes de schirrmeister en el estudio.
-
-It was demonstrated that EEGNet makes a similar feature extraction as the FBCSP This neural network inspired many scientists, which resulted in many improved versions of the EEGNet [29]–[42], \cite{kollod_DeepComparisons2023} $\rightarrow$  Esto es importante, ya que utilizo la eegNet
-
-Other publications outside the EEGNet family [43]–[49] highlight the importance of neural network-based BCI research.
-
-26-28  29-42 42-49
-
-
-Along with the development of neural networks, scientists started investigating the effect of transfer learning [50]. This method aims to transfer knowledge between two domains and increase the classification’s accuracy. Khademi et al. [51]
-
-This way, they aimed to transfer the knowledge of image classification and use it on spatial EEG images generated with continuous wavelet transformation method using complex Morlet mother wavelet
-
-nother strategy is to utilize the entire EEG dataset and combine cross-subject and within-subject training, as presented in [49], [52], [53]  $\rightarrow$  Esto es importante, ya que los entrenamientos elegidos para el estudio son similares.
-
-In this case, the knowledge is granted from subjects not used in the test set of the neural network. The network is pretrained on data from all but one subject, as it would in a cross-subject training procedure. But then the data of the test subject is also split to train and test set, as in the within-subject, and the training part is used for fine-tuning the pretrained neural network. We selected the later version of transfer learning because it is architecture independent and aimed to use it after artifact filtering.
-
-
-Next to the subject-wise learning, we also investigated the effect of transfer learning. First, test subjects were selected as distinct groups of 10. The remaining subjects, called pre-train subjects, were used to set the initial optimal weights for the neural networks. A validation set was separated from the pre-train data to use it with our modified early stopping and model-saving strategy. When the pretraining phase converged, either reaching the maximum training epoch number or stopping it by the early stopping strategy, the best weights of the network were stored. For each test subject, 5-fold withinsubject cross-validation $\rightarrow$  esto es bastante parecido a uno de los métodos de entrenamiento que uso
-
-}
-    CNNs (EEGNet, DeepConvNet…)
-
-    Qué han conseguido
-
-    Problemas abiertos:
-
-        generalización
-
-        dependencia del usuario
-
-\subsubsection{Aplicaciones en exoesqueletos / rehabilitación}
-
-    Uso de BCI para control
-
-    Problema clave:
-
-        detección fiable de intención
-
-\subsubsection{Limitaciones actuales}
-
-    variabilidad entre sujetos
-
-    necesidad de recalibración
-
-    falsos positivos peligrosos
-
-    falta de evaluación en escenarios realistas
-
-\subsubsection{Propuesta}
-
-En este contexto, este trabajo se centra en…
-
-Aquí conectas directamente con tu TFM:
-
-    comparación de métodos de entrenamiento
-
-    evaluación pseudo-online
-
-    análisis sistemático
