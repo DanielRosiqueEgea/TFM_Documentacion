@@ -1,38 +1,5 @@
 \section{Material y Métodos} \label{sec:material}
 
-\subsection{Vision General del Sistema}
-
-Se ha definido un pipeline de ejecución que permite realizar múltiples experimentos de forma iterativa y automatizada. Este pipeline está compuesto por distintos módulos encargados de gestionar el preprocesamiento de los datos, la configuración de los modelos, el entrenamiento y la evaluación de los mismos.
-
-Con el objetivo de facilitar la reproducibilidad y la exploración sistemática de parámetros, el código se ha estructurado como un microframework que permite modificar de forma sencilla las variables de estudio, así como controlar la ejecución de los experimentos. Este enfoque ha resultado especialmente útil dado el elevado número de ejecuciones.
-
-Para organizar la ejecución, se ha definido una estructura jerárquica en tres niveles:
-
-\begin{itemize}
-    \item \textbf{Experimento}: nivel superior que agrupa el conjunto completo de configuraciones evaluadas. Un experimento consiste en la ejecución sistemática de múltiples combinaciones de parámetros.
-    \item \textbf{Iteración}: cada una de las ejecuciones individuales del pipeline dentro de un experimento, asociada a una combinación específica de parámetros (arquitectura, método de entrenamiento y tipo de tarea).
-    \item \textbf{Entrenamiento}: nivel más bajo de la jerarquía, correspondiente al entrenamiento y evaluación de un modelo para un usuario y sesión concretos dentro de una iteración.
-\end{itemize}
-
-De este modo, cada experimento está compuesto por múltiples iteraciones, y cada iteración incluye varios entrenamientos, uno por cada usuario y sesión del dataset.
-Los experimentos se definen mediante la combinación de distintos parámetros, entre los que destacan el tipo de tarea, la arquitectura del modelo y el método de entrenamiento. Para cada combinación se ejecuta una iteración independiente
-
-En cada iteración, el sistema inicializa los parámetros de entrenamiento y carga el conjunto de datos correspondiente al tipo de tarea. A continuación, se ejecuta el método de entrenamiento seleccionado, en el que se itera sobre los distintos usuarios y sesiones disponibles en el dataset. Para cada caso, se inicializa el modelo, se realiza el entrenamiento y se evalúa su rendimiento.
-
-Finalmente, los resultados obtenidos, junto con los parámetros utilizados, se almacenan de forma estructurada, permitiendo su posterior análisis. 
-
-Este proceso permite realizar un gran número de experimentos de manera secuencial y facilita el posterior estudio de los resultados obtenidos por cada combinación de parámetros definida.
-
-La Figura \ref{fig:pipeline_general} resume la organización jerárquica del pipeline experimental.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{img/diagrama_pipeline.drawio.png}
-    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Pipeline experimental}
-    \label{fig:pipeline_general}
-\end{figure}
-
 \subsection{Materiales}
 \subsubsection{Hardware}
 
@@ -45,17 +12,17 @@ Para ejecutar los distintos entrenamientos se ha utilizado un ordenador con las 
     \item \textbf{GPU RAM}: 8 GiB
 \end{itemize}
 
-Estas características han resultado suficientes para completar los experimentos planteados sin limitaciones críticas. 
-El tiempo medio de entrenamiento por iteración ha sido aproximadamente 40 minutos, dependiendo de la configuración del modelo y de los parámetros de entrenamiento. 
+Estas características han resultado suficientes para completar los experimentos planteados sin limitaciones críticas.
+El tiempo medio de entrenamiento por iteración ha sido aproximadamente 40 minutos, dependiendo de la configuración del modelo y de los parámetros de entrenamiento.
 
 El tiempo total de cómputo se estima mediante:
 
 
 \begin{equation*}
     \text{Tiempo total (h)} = \frac{N_{\text{iteraciones}} \times t_{\text{iteración}}}{60}
-\end{equation*} 
+\end{equation*}
 
-Donde $N_{\text{iteraciones}} = 1917$ y $t_{\text{iteración}} = 40 \text{minutos}$, resultando en un tiempo total aproximado de 766.8 horas ($\approx 31 \text{días}$).
+Donde \(N_{\text{iteraciones}} = 1917\) y \(t_{\text{iteración}} = 40 \text{minutos}\), resultando en un tiempo total aproximado de 766.8 horas (\(\approx 31 \text{días}\)).
 
 El uso de hardware con mayores prestaciones permitiría reducir significativamente el tiempo total de entrenamiento y facilitar la realización de un mayor número de experimentos.
 
@@ -80,16 +47,16 @@ Como gestor de base de datos se ha utilizado DuckDB\footnote{https://duckdb.org/
 Todas estas herramientas han sido integradas en un flujo de trabajo unificado orientado a la ejecución reproducible de experimentos.
 
 \subsection{Dataset}
- 
+
 El dataset utilizado en este trabajo está compuesto por registros EEG obtenidos de 5 sujetos a lo largo de 5 días consecutivos de adquisición. Para cada día se realizaron 11 ensayos (\textit{trials}), y cada ensayo fue segmentado en 56 ventanas temporales, obteniendo un total de:
 
 \[
-5 \times 5 \times 11 \times 56 = 15400 \text{ ventanas}
+    5 \times 5 \times 11 \times 56 = 15400 \text{ ventanas}
 \]
 
 Cada ventana contiene 400 muestras adquiridas a una frecuencia de muestreo de 200 Hz, lo que equivale a 2 segundos de señal \acrshort{eeg}.
 
-Las Muestras a su vez incluyen la señal de 27 canales \acrshort{eeg}. Los 27 canales corresponden a los electrodos seleccionados para la adquisición de la señal. Por tanto, cada instancia del dataset puede interpretarse como una matriz de tamaño $27 \times 400$, donde cada fila representa la evolución temporal de un canal EEG durante la ventana analizada.
+Las Muestras a su vez incluyen la señal de 27 canales \acrshort{eeg}. Los 27 canales corresponden a los electrodos seleccionados para la adquisición de la señal. Por tanto, cada instancia del dataset puede interpretarse como una matriz de tamaño \(27 \times 400\), donde cada fila representa la evolución temporal de un canal EEG durante la ventana analizada.
 
 Los 27 canales EEG utilizados fueron: F3, FZ, FC1, FCZ, C1, CZ, CP1, CPZ, FC5, FC3, C5, C3, CP5, CP3, P3, PZ, F4, FC2, FC4, FC6, C2, C4, CP2, CP4, C6, CP6 y P4. Estos electrodos se colocaron siguiendo el sistema internacional 10-10 \cite{ferrero_BCIBased2021}.
 
@@ -98,7 +65,7 @@ Los datos originales se encuentran distribuidos en cuatro ficheros MATLAB difere
 \begin{center}
     \begin{tabular}{|c|c|c|}
         \hline
-         & \textbf{Labels} & \textbf{Training} \\ \hline
+                        & \textbf{Labels}                   & \textbf{Training}                   \\ \hline
         \textbf{Static} & \texttt{labels\_static\_data.mat} & \texttt{training\_static\_data.mat} \\ \hline
         \textbf{Motion} & \texttt{labels\_motion\_data.mat} & \texttt{training\_motion\_data.mat} \\ \hline
     \end{tabular}
@@ -107,12 +74,12 @@ Los datos originales se encuentran distribuidos en cuatro ficheros MATLAB difere
 Los ficheros de etiquetas contienen la intención de movimiento asociada a cada ventana temporal, mientras que los ficheros de entrenamiento almacenan las señales EEG correspondientes.
 
 
-Las etiquetas presentan una dimensión $(15400, 1)$, mientras que los datos EEG poseen una estructura $(15400, 27, 400)$, donde:
+Las etiquetas presentan una dimensión \((15400, 1)\), mientras que los datos EEG poseen una estructura \((15400, 27, 400)\), donde:
 
 \begin{itemize}
-    \item $N = 15400$ corresponde al número total de ventanas,
-    \item $C = 27$ representa el número de canales EEG,
-    \item $S = 400$ indica el número de muestras temporales por ventana.
+    \item \(N = 15400\) corresponde al número total de ventanas,
+    \item \(C = 27\) representa el número de canales EEG,
+    \item \(S = 400\) indica el número de muestras temporales por ventana.
 \end{itemize}
 
 \subsubsection{Estructura temporal de los ensayos}
@@ -131,7 +98,7 @@ Antes de cada tarea mental se le da una instrucción al usuario, esta instrucci�
 
 Adicionalmente, antes de cada ensayo se incluía un periodo inicial de duración aleatoria en el que el sujeto realizaba una tarea mental distinta. El objetivo de este periodo es el de reducir artefactos y ruido en la señal (convergencia de filtros). Este segmento fue eliminado durante el procesamiento previo del dataset.
 
-Durante las sesiones experimentales los sujetos alternaban entre las tareas de imaginación estática (\textit{static}) y de imaginación motora (\textit{motion}) con el objetivo de reducir la fatiga y evitar la monotonía durante la adquisición.
+Durante las sesiones experimentales los sujetos alternaban entre las tareas de imaginación de parada (\textit{static}) y de imaginación de movimiento (\textit{motion}) con el objetivo de reducir la fatiga y evitar la monotonía durante la adquisición.
 
 La Figura \ref{fig:ventanas} muestra un esquema de la segmentación temporal empleada durante los ensayos.
 
@@ -146,7 +113,7 @@ La Figura \ref{fig:ventanas} muestra un esquema de la segmentación temporal emp
 
 Previo al estudio, las señales EEG fueron sometidas a una etapa de preprocesamiento con el objetivo de reducir el ruido y conservar únicamente los componentes frecuenciales relevantes para las tareas mentales objetivo.
 
-En concreto, a cada canal EEG se le aplicó un filtro paso banda entre 8 y 40 Hz. Este rango frecuencial incluye principalmente las bandas $\mu$ (8--13 Hz) y $\beta$ (13--30 Hz), ampliamente utilizadas en aplicaciones de \acrshort{bci} basadas en imaginación motora debido a su relación con la actividad cortical motora \cite{mirnaziri_UsingCombination2013}.
+En concreto, a cada canal EEG se le aplicó un filtro paso banda entre 8 y 40 Hz. Este rango frecuencial incluye principalmente las bandas \(\mu\) (8--13 Hz) y \(\beta\) (13--30 Hz), ampliamente utilizadas en aplicaciones de \acrshort{bci} basadas en imaginación motora debido a su relación con la actividad cortical motora \cite{mirnaziri_UsingCombination2013}.
 
 A partir de los datos preprocesados, se ha realizado una reorganización estructural de los mismos con el objetivo de facilitar su uso en los modelos propuestos. En concreto, los datos se han reestructurado en tensores de seis dimensiones:
 
@@ -157,32 +124,32 @@ Los tensores de entrada y etiquetas presentan las siguientes dimensiones:
 \begin{figure}[H]
     \centering
     \fbox{
-    \begin{minipage}{0.95\textwidth}
-    \centering
+        \begin{minipage}{0.95\textwidth}
+            \centering
 
-    \textbf{Input tensor shape:} $(5, 5, 11, 56, 27, 400)$
+            \textbf{Input tensor shape:} \((5, 5, 11, 56, 27, 400)\)
 
-    \vspace{0.3cm}
+            \vspace{0.3cm}
 
-    \begin{tabular}{c | c c c c c c}
-        \textbf{Dim.} & 1 & 2 & 3 & 4 & 5 & 6 \\
-        \textbf{Name} & Users & Days & Trials & Windows & Channels & Samples \\
-        \textbf{Size} & 5 & 5 & 11 & 56 & 27 & 400
-    \end{tabular}
+            \begin{tabular}{c | c c c c c c}
+                \textbf{Dim.} & 1     & 2    & 3      & 4       & 5        & 6       \\
+                \textbf{Name} & Users & Days & Trials & Windows & Channels & Samples \\
+                \textbf{Size} & 5     & 5    & 11     & 56      & 27       & 400
+            \end{tabular}
 
-    \vspace{0.6cm}
+            \vspace{0.6cm}
 
-    \textbf{Labels tensor shape:} $(5, 5, 11, 56, 1)$
+            \textbf{Labels tensor shape:} \((5, 5, 11, 56, 1)\)
 
-    \vspace{0.3cm}
+            \vspace{0.3cm}
 
-    \begin{tabular}{c | c c c c c}
-        \textbf{Dim.} & 1 & 2 & 3 & 4 & 5 \\
-        \textbf{Name} & Users & Days & Trials & Windows & Label \\
-        \textbf{Size} & 5 & 5 & 11 & 56 & 1 
-    \end{tabular}
+            \begin{tabular}{c | c c c c c}
+                \textbf{Dim.} & 1     & 2    & 3      & 4       & 5     \\
+                \textbf{Name} & Users & Days & Trials & Windows & Label \\
+                \textbf{Size} & 5     & 5    & 11     & 56      & 1
+            \end{tabular}
 
-    \end{minipage}
+        \end{minipage}
     }
     \caption{Estructura jerárquica de los tensores de entrada y etiquetas utilizados en el modelo.}
     \label{fig:tensor_input}
@@ -202,20 +169,20 @@ qué hace tu sistema de principio a fin
 
 Ejemplo:
 
-    entrada: EEG
+entrada: EEG
 
-    procesamiento
+procesamiento
 
-    modelo
+modelo
 
-    salida: predicción
+salida: predicción
 
 
 \end{comment}
 
 \subsection{Modelos utilizados}\label{sec:modelos_utilizados}
 
-Se van a definir las arquitecturas de los modelos usados en el estudio y a justificar su elección. 
+Se van a definir las arquitecturas de los modelos usados en el estudio y a justificar su elección.
 
 \subsubsection{DeepConvNet y ShallowConvNet}
 
@@ -226,69 +193,69 @@ La arquitectura DeepConvNet está formada por cuatro bloques convolucionales seg
 
 
 \begin{table}[H]
-\centering
-\footnotesize
-\begin{tabular}{clcccll}
-\toprule
-\textbf{Block} & \textbf{Layer} & \textbf{\# filters} & \textbf{Size} & \textbf{\# params} & \textbf{Output} \\ 
-\midrule
-1 & Input & -- & -- & 0 & $(27, 400, 1)$ \\
+    \centering
+    \footnotesize
+    \begin{tabular}{clcccll}
+        \toprule
+        \textbf{Block} & \textbf{Layer} & \textbf{\# filters} & \textbf{Size} & \textbf{\# params} & \textbf{Output}   \\
+        \midrule
+        1              & Input          & --                  & --            & 0                  & \((27, 400, 1)\)  \\
 
-  & Conv2D & 25 & $(1,8)$ & 225 & $(27, 393, 25)$ \\
+                       & Conv2D         & 25                  & \((1,8)\)     & 225                & \((27, 393, 25)\) \\
 
-  & Conv2D & 25 & $(27,1)$ & 16900 & $(1, 393, 25)$ \\
+                       & Conv2D         & 25                  & \((27,1)\)    & 16900              & \((1, 393, 25)\)  \\
 
-  & BatchNorm & -- & -- & 100 & $(1, 393, 25)$ \\
+                       & BatchNorm      & --                  & --            & 100                & \((1, 393, 25)\)  \\
 
-  & Activation & -- & ELU & 0 & $(1, 393, 25)$ \\
+                       & Activation     & --                  & ELU           & 0                  & \((1, 393, 25)\)  \\
 
-  & MaxPool2D & -- & $(1,2)$ & 0 & $(1, 196, 25)$ \\ 
+                       & MaxPool2D      & --                  & \((1,2)\)     & 0                  & \((1, 196, 25)\)  \\
 
-  & Dropout & -- & -- & 0 & $(1, 196, 25)$ \\
-\midrule
+                       & Dropout        & --                  & --            & 0                  & \((1, 196, 25)\)  \\
+        \midrule
 
-2 & Conv2D & 50 & $(1,8)$ & 10050 & $(1, 189, 50)$  \\
+        2              & Conv2D         & 50                  & \((1,8)\)     & 10050              & \((1, 189, 50)\)  \\
 
-  & BatchNorm & -- & -- & 200 & $(1, 189, 50)$ \\
-  & Activation & -- & ELU & 0 & $(1, 189, 50)$ \\
+                       & BatchNorm      & --                  & --            & 200                & \((1, 189, 50)\)  \\
+                       & Activation     & --                  & ELU           & 0                  & \((1, 189, 50)\)  \\
 
-  & MaxPool2D & -- & $(1,2)$ & 0 & $(1, 94, 50)$ \\
+                       & MaxPool2D      & --                  & \((1,2)\)     & 0                  & \((1, 94, 50)\)   \\
 
-  & Dropout & -- & -- & 0 & $(1, 94, 50)$ \\
-\midrule
+                       & Dropout        & --                  & --            & 0                  & \((1, 94, 50)\)   \\
+        \midrule
 
-3 & Conv2D & 100 & $(1,8)$ & 40100 & $(1, 87, 100)$ \\
+        3              & Conv2D         & 100                 & \((1,8)\)     & 40100              & \((1, 87, 100)\)  \\
 
-  & BatchNorm & -- & -- & 400 & $(1, 87, 100)$ \\
+                       & BatchNorm      & --                  & --            & 400                & \((1, 87, 100)\)  \\
 
-  & Activation & -- & ELU & 0 & $(1, 87, 100)$ \\
+                       & Activation     & --                  & ELU           & 0                  & \((1, 87, 100)\)  \\
 
-  & MaxPool2D & -- & $(1,2)$ & 0 & $(1, 43, 100)$ \\ 
+                       & MaxPool2D      & --                  & \((1,2)\)     & 0                  & \((1, 43, 100)\)  \\
 
-  & Dropout & -- & -- & 0 & $(1, 43, 100)$ \\
-\midrule
+                       & Dropout        & --                  & --            & 0                  & \((1, 43, 100)\)  \\
+        \midrule
 
-4 & Conv2D & 200 & $(1,8)$ & 160200 & $(1, 36, 200)$ \\ 
+        4              & Conv2D         & 200                 & \((1,8)\)     & 160200             & \((1, 36, 200)\)  \\
 
-  & BatchNorm & -- & -- & 800 & $(1, 36, 200)$ \\
+                       & BatchNorm      & --                  & --            & 800                & \((1, 36, 200)\)  \\
 
-  & Activation & -- & ELU & 0 & $(1, 36, 200)$ \\
+                       & Activation     & --                  & ELU           & 0                  & \((1, 36, 200)\)  \\
 
-  & MaxPool2D & -- & $(1,2)$ & 0 & $(1, 18, 200)$ \\
+                       & MaxPool2D      & --                  & \((1,2)\)     & 0                  & \((1, 18, 200)\)  \\
 
-  & Dropout & -- & -- & 0 & $(1, 18, 200)$ \\
+                       & Dropout        & --                  & --            & 0                  & \((1, 18, 200)\)  \\
 
-  & Flatten & -- & -- & 0 & $(3600)$ \\
-\midrule
+                       & Flatten        & --                  & --            & 0                  & \((3600)\)        \\
+        \midrule
 
-Classifier & Dense & -- & -- & 7202 & $(2)$ \\
+        Classifier     & Dense          & --                  & --            & 7202               & \((2)\)           \\
 
-  & Activation & -- & softmax & 0 & $(2)$ \\ 
+                       & Activation     & --                  & softmax       & 0                  & \((2)\)           \\
 
-\bottomrule
-\end{tabular}
-\caption{Arquitectura DeepConvNet utilizada.}
-\label{tab:deepconvnet_architecture}
+        \bottomrule
+    \end{tabular}
+    \caption{Arquitectura DeepConvNet utilizada.}
+    \label{tab:deepconvnet_architecture}
 \end{table}
 
 Por otro lado, la arquitectura ShallowConvNet fue diseñada específicamente para la clasificación de características de la potencia de banda. Su estructura busca aproximarse al funcionamiento del método \acrshort{fbcsp} mediante operaciones equivalentes implementadas mediante capas convolucionales. Al igual que DeepConvNet, las primeras capas realizan convoluciones temporales y espaciales. Sin embargo, en este caso la convolución temporal utiliza kernels de mayor tamaño con el objetivo de capturar mejor la información frecuencial de la señal.
@@ -297,39 +264,39 @@ Después de estas convoluciones, ShallowConvNet incorpora una secuencia de opera
 
 
 \begin{table}[H]
-\centering
-\footnotesize
-\begin{tabular}{clcccl}
-\toprule
-\textbf{Block} & \textbf{Layer} & \textbf{\# filters} & \textbf{Size} & \textbf{\# params} & \textbf{Output} \\
-\midrule
-1 & Input & -- & -- & 0 & $(27, 400, 1)$ \\
+    \centering
+    \footnotesize
+    \begin{tabular}{clcccl}
+        \toprule
+        \textbf{Block} & \textbf{Layer} & \textbf{\# filters} & \textbf{Size} & \textbf{\# params} & \textbf{Output}   \\
+        \midrule
+        1              & Input          & --                  & --            & 0                  & \((27, 400, 1)\)  \\
 
-  & Conv2D & 40 & $(1,20)$ & 840 & $(27, 381, 40)$ \\
+                       & Conv2D         & 40                  & \((1,20)\)    & 840                & \((27, 381, 40)\) \\
 
-  & Conv2D & 40 & $(27,1)$ & 43200 & $(1, 381, 40)$ \\
+                       & Conv2D         & 40                  & \((27,1)\)    & 43200              & \((1, 381, 40)\)  \\
 
-  & BatchNorm & -- & -- & 160 & $(1, 381, 40)$ \\
+                       & BatchNorm      & --                  & --            & 160                & \((1, 381, 40)\)  \\
 
-  & Activation & -- & square & 0 & $(1, 381, 40)$ \\
+                       & Activation     & --                  & square        & 0                  & \((1, 381, 40)\)  \\
 
-  & AveragePool2D & -- & $(1,60)$ & 0 & $(1, 27, 40)$ \\
+                       & AveragePool2D  & --                  & \((1,60)\)    & 0                  & \((1, 27, 40)\)   \\
 
-  & Activation & -- & log & 0 & $(1, 27, 40)$ \\
+                       & Activation     & --                  & log           & 0                  & \((1, 27, 40)\)   \\
 
-  & Dropout & -- & $p = 0.4$ & 0 & $(1, 27, 40)$ \\
+                       & Dropout        & --                  & \(p = 0.4\)   & 0                  & \((1, 27, 40)\)   \\
 
-  & Flatten & -- & -- & 0 & $(1080)$ \\
+                       & Flatten        & --                  & --            & 0                  & \((1080)\)        \\
 
-\midrule
-Classifier & Dense & -- & -- & 2162 & $(2)$ \\
+        \midrule
+        Classifier     & Dense          & --                  & --            & 2162               & \((2)\)           \\
 
-  & Activation & -- & softmax & 0 & $(2)$ \\
+                       & Activation     & --                  & softmax       & 0                  & \((2)\)           \\
 
-\bottomrule
-\end{tabular}
-\caption{Arquitectura ShallowConvNet utilizada.}
-\label{tab:shallowconvnet_architecture}
+        \bottomrule
+    \end{tabular}
+    \caption{Arquitectura ShallowConvNet utilizada.}
+    \label{tab:shallowconvnet_architecture}
 \end{table}
 
 Las Tablas \ref{tab:shallowconvnet_architecture} y
@@ -365,93 +332,131 @@ Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la
     \label{fig:eegnet_arch}
 \end{figure}
 
-La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.  
 
-Estudios posteriores han mostrado que EEGNet es capaz de aprender representaciones similares a las obtenidas mediante métodos clásicos de extracción de características, como Filter Bank Common Spatial Patterns (FBCSP), manteniendo la ventaja de realizar dicho proceso de forma automática dentro de la propia red neuronal. Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar  potenciales corticales relacionados con el movimiento (\acrshort{mrcp}). Estas características hacen de EEGNet una arquitectura adecuada para la clasificación de señales EEG en el contexto de este trabajo \cite{lawhern_EEGNetCompact2018,kollod_DeepComparisons2023}.
+Estudios posteriores han mostrado que EEGNet es capaz de aprender representaciones similares a las obtenidas mediante métodos clásicos de extracción de características, como Filter Bank Common Spatial Patterns (FBCSP), manteniendo la ventaja de realizar dicho proceso de forma automática dentro de la propia red neuronal. Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar potenciales en la señal EEG relacionados con el movimiento (\acrshort{mrcp}) \cite{lawhern_EEGNetCompact2018,kollod_DeepComparisons2023}.
+
+La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.
+
 
 \begin{comment}
 
-    Para cada uno:
-    
-    breve descripción (2–3 líneas)
-    
-    por qué lo eliges
-    
-    NO pongas la arquitectura entera en detalle aquí (eso es más de anexos si acaso)
+Para cada uno:
+
+breve descripción (2–3 líneas)
+
+por qué lo eliges
+
+NO pongas la arquitectura entera en detalle aquí (eso es más de anexos si acaso)
 \end{comment}
 
 
 
 
-\begin{itemize}
-    \item    same-day
-    \item    acumulativo
-    \item    fine-tuning
-\end{itemize}
+
 \subsection{Metodología experimental}
 \subsubsection{Variables del estudio}
 
-Aquí es donde entra todo tu proyecto de verdad.
+En este trabajo se realiza un análisis comparativo entre las arquitecturas \textit{EEGNet}, \textit{ShallowConvNet} y \textit{DeepConvNet}. Para ello, se han definido cuatro estrategias de entrenamiento con el objetivo de evaluar cómo se adapta cada modelo a diferentes usuarios, sesiones y condiciones experimentales.
 
-Arquitectura del modelo
+Las tareas de imaginación motora consideradas son la imaginación de movimiento y la imaginación de parada. En la primera, el sujeto realiza un esfuerzo mental activo orientado a iniciar o mantener el movimiento del exoesqueleto. En la segunda, el sujeto realiza un esfuerzo mental activo orientado a detener dicho movimiento.
+
+Las estrategias de entrenamiento seleccionadas se basan en los paradigmas descritos previamente en la sección \ref{sec:metodos_entrenamiento}.
+
+\paragraph*{Entrenamiento intra sesión}
+
+En esta estrategia se utilizan únicamente los datos de una sesión concreta y de un único usuario. Los ensayos de dicha sesión se dividen en conjuntos de entrenamiento y validación siguiendo una proporción del 70\% y 30\%, respectivamente. Para la validación se emplean siempre los últimos ensayos de la sesión.
+
+Esta elección se basa en la hipótesis de que los sujetos pueden presentar una mejora progresiva en el control de la imaginación motora a lo largo de la sesión. Por tanto, evaluar el modelo sobre los últimos ensayos permite analizar su rendimiento en una fase potencialmente más estable de la tarea.
+
+\paragraph*{Entrenamiento entre sesiones}
+
+En este caso, el modelo se entrena utilizando los datos de las sesiones anteriores del mismo usuario. A estos datos se añaden los ensayos de entrenamiento de la sesión actual, manteniendo la misma división del 70\% para entrenamiento y 30\% para validación.
+
+Esta estrategia permite evaluar si la información acumulada de sesiones previas mejora la adaptación del modelo a una nueva sesión del mismo usuario.
+
+\paragraph*{Entrenamiento entre usuarios}
+
+En esta estrategia se genera inicialmente un modelo general entrenado con los datos del resto de usuarios, excluyendo al usuario objetivo. Posteriormente, dicho modelo se ajusta mediante \textit{fine-tuning} utilizando los datos de entrenamiento de la sesión actual del usuario objetivo, manteniendo la misma proporción de entrenamiento y validación descrita anteriormente.
+
+Este proceso se repite para todas las sesiones del usuario, generando un nuevo modelo adaptado para cada una de ellas. El objetivo de esta estrategia es analizar si un modelo preentrenado con datos de otros usuarios puede transferir conocimiento útil al usuario objetivo.
 
 
+\paragraph*{Entrenamiento continuo}
 
-Diversos trabajos han señalado que la transferencia de aprendizaje constituye una estrategia eficaz para mejorar el rendimiento de modelos de clasificación EEG cuando la cantidad de datos disponibles por sujeto es limitada. Una aproximación habitual consiste en realizar un preentrenamiento utilizando datos procedentes de múltiples sujetos y posteriormente ajustar el modelo mediante datos específicos del sujeto objetivo \cite{kollod_DeepComparisons2023}. Debido a que este enfoque es independiente de la arquitectura empleada, ha sido adoptado en numerosos estudios comparativos recientes y constituye una de las estrategias evaluadas en este trabajo.
+El entrenamiento continuo sigue un esquema similar al entrenamiento entre usuarios, partiendo también de un modelo general entrenado con los datos del resto de usuarios. Sin embargo, en lugar de generar un nuevo modelo independiente para cada sesión, el modelo se conserva entre sesiones y se reentrena progresivamente con los datos disponibles de la sesión actual.
 
-Tarea:
-\begin{itemize}
-\item    static 
-\item    motion
-\end{itemize}
-Usuario
+De este modo, el modelo incorpora de forma acumulativa la información del usuario objetivo, partiendo de un conocimiento inicial obtenido a partir del resto de usuarios y adaptándose gradualmente a sus sesiones sucesivas.
 
-\subsubsection{Estrategia de entrenamiento}\label{sec:metodos_entrenamiento}
 
-    epochs
+    {\color{red}
+        \subsubsection{Estrategia de entrenamiento}\label{sec:estrategia_entrenamiento}
 
-    batch size
+        epochs
 
-    callbacks:
+        batch size
+
+        callbacks:
 
         early stopping
 
         reduce LR
 
-    función de pérdida
+        función de pérdida
 
-    métrica (accuracy)
-
-
+        métrica (accuracy)
 
 
-\subsubsection{Evaluación}
 
 
-    validación cruzada
+        \subsubsection{Evaluación}
 
-    pseudo-online
 
-explicar qué significa pseudo-online
+        validación cruzada
 
+        pseudo-online
+
+        explicar qué significa pseudo-online
+    }
 
 
 \subsection{Infraestructura Experimental}\label{sec:infraestructura_exp}
 
+El elevado numero de ejecuciones requeridas para el estudio, hizo que, durante las etapas iniciales, se tomara la decisión de enfocar el proyecto de manera horizontal, preparando una base de ejecución sobre la cual modificar facilmente todo lo necesario para cada ejecución y permitiendo ejecutar multiples experimentos de manera secuencial.
 
-sistema para ejecutar múltiples experimentos
-gestión de parámetros
-almacenamiento de resultados (DuckDB)
-automatización
+Para lograr esto, se ha definido un pipeline de ejecución que permite realizar múltiples experimentos de forma iterativa y automatizada. Este pipeline está compuesto por distintos módulos encargados de gestionar el preprocesamiento de los datos, la configuración de los modelos, el entrenamiento y la evaluación de los mismos.
+
+Con el objetivo de facilitar la reproducibilidad y la exploración sistemática de parámetros, el código se ha estructurado como un microframework que permite modificar de forma sencilla las variables de estudio, así como controlar la ejecución de los experimentos.
+
+Para organizar la ejecución, se ha definido una estructura jerárquica en tres niveles:
+
+\begin{itemize}
+    \item \textbf{Experimento}: nivel superior que agrupa el conjunto completo de configuraciones evaluadas. Un experimento consiste en la ejecución sistemática de múltiples combinaciones de parámetros.
+    \item \textbf{Iteración}: cada una de las ejecuciones individuales del pipeline dentro de un experimento, asociada a una combinación específica de parámetros (arquitectura, método de entrenamiento y tipo de tarea).
+    \item \textbf{Entrenamiento}: nivel más bajo de la jerarquía, correspondiente al entrenamiento y evaluación de un modelo para un usuario y sesión concretos dentro de una iteración.
+\end{itemize}
+
+De este modo, cada experimento está compuesto por múltiples iteraciones, y cada iteración incluye varios entrenamientos, uno por cada usuario y sesión del dataset.
+Los experimentos se definen mediante la combinación de distintos parámetros, entre los que destacan el tipo de tarea, la arquitectura del modelo y el método de entrenamiento. Para cada combinación se ejecuta una iteración independiente
+
+En cada iteración, el sistema inicializa los parámetros de entrenamiento y carga el conjunto de datos correspondiente al tipo de tarea. A continuación, se ejecuta el método de entrenamiento seleccionado, en el que se itera sobre los distintos usuarios y sesiones disponibles en el dataset. Para cada caso, se inicializa el modelo, se realiza el entrenamiento y se evalúa su rendimiento.
+
+Finalmente, los resultados obtenidos, junto con los parámetros utilizados, se almacenan de forma estructurada, permitiendo su posterior análisis.
+
+Este proceso permite realizar un gran número de experimentos de manera secuencial y facilita el posterior estudio de los resultados obtenidos por cada combinación de parámetros definida.
+
+La Figura \ref{fig:pipeline_general} resume la organización jerárquica del pipeline experimental.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{img/diagrama_pipeline.drawio.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Pipeline experimental}
+    \label{fig:pipeline_general}
+\end{figure}
 
 
 
 
-Se ha programado un microframework para el desarrollo de experimentos de Machine Learning.
-
-Como se ha comentado en el apartado \ref{sec:modelos_utilizados}, se ha realizado la comparación de tres modelos de redes neuronales convolucionales para la clasificación de la intención de caminar o detenerse con un exoesqueleto. Se ha utilizado un dataset de EEG con 27 canales, obtenido de una muestra de un estudio previo XXXXXX. Los parametros a comparar son la arquitectura de la red, el metodo de entrenamiento, la tarea a predecir y la variabilidad entre usuarios.
-
-Al necesitarse de cientos de ejecuciones para obtener todos los datos necesarios, durante las etapas iniciales se tomó la decisión de enfocar el proyecto de manera horizontal, preparando una base de ejecución sobre la cual modificar facilmente todo lo necesario para cada ejecución y permitiendo ejecutar multiples experimentos de manera secuencial.
 
 
 

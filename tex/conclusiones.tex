@@ -5,3 +5,30 @@ en función de los resultados obtenidos, se expondrán las conclusiones de la in
 
 
 La literatura reciente muestra que el rendimiento de las arquitecturas profundas para EEG depende significativamente del conjunto de datos y de la estrategia de entrenamiento empleada, por lo que resulta necesario evaluar distintos modelos bajo las condiciones específicas de cada aplicación \cite{kollod_DeepComparisons2023}.
+
+
+
+
+\subsubsection{Vías Futuras}
+
+Una posible línea de trabajo futuro consiste en integrar dos modelos distintos dentro de un mismo sistema de control, con el objetivo de aprovechar las dos tareas de imaginación motora para construir una \acrshort{bci} de bucle cerrado basada en una máquina de estados finitos. Este enfoque permitiría controlar de forma independiente el comportamiento del exoesqueleto y proporcionar al usuario un mayor grado de autonomía durante la interacción.
+
+En este planteamiento, el sistema comenzaría en un estado de \textbf{parada}, en el que el exoesqueleto permanecería inmóvil mientras un modelo entrenado sobre la tarea estática (\textit{Modelo de Inicio de la Marcha}) monitoriza continuamente la actividad cerebral del usuario. Cuando dicho modelo detectase una intención de inicio de la marcha, el sistema realizaría una transición al estado de \textbf{movimiento}.
+
+Durante este segundo estado, el exoesqueleto ejecutaría la marcha asistida mientras un modelo entrenado sobre la tarea en movimiento (\textit{Motion Model}) analiza la señal EEG en busca de una intención de detención. Una vez detectada esta intención, el sistema regresaría al estado de \textbf{parada}, completando así el ciclo de control.
+
+Con el objetivo de reducir la probabilidad de falsos positivos, las predicciones de ambos modelos podrían combinarse mediante una estrategia basada en una media ponderada. De esta forma, aunque cada estado disponga de un clasificador principal, la decisión final tendría en cuenta la información proporcionada por ambos modelos, aumentando potencialmente la robustez del sistema frente a errores de clasificación.
+
+La Figura \ref{fig:diagrama_estados} muestra una representación conceptual de esta máquina de estados finitos y de las transiciones asociadas a cada uno de los modelos de clasificación.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{img/diagrama_estados_ferrero.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Ejemplo de arquitectura de control basada en una máquina de estados finitos para sistemas BCI. Tomado de \cite{ferrero_BMIBased2021}}
+    \label{fig:diagrama_estados}
+\end{figure}
+
+Este procedimiento es consistente con diversas propuestas presentes en la literatura, donde el control de sistemas \acrshort{bci} se aborda mediante máquinas de estados finitos donde varios clasificadores de EEG son utilizados para detectar las distintas intenciones del usuario, tales como iniciar, mantener, o finalizar la marcha. En esta línea, Ferrero et al. \parencite{ferrero_BMIBased2021} emplean una arquitectura de control basada en estados para gobernar la marcha de un exoesqueleto, mientras que los mismos autores \parencite{ferrero_BCIBased2021} aplican un enfoque similar al control de una cinta de marcha.
+
+Asimismo, \textcite{choi_DevelopingMotor2020} demostraron la viabilidad de este paradigma en sistemas de control asíncronos para exoesqueletos de miembro inferior, utilizando tres estados funcionales (parada, marcha y sentado) y transiciones activadas mediante imaginación motora.
