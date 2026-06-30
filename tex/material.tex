@@ -26,7 +26,7 @@ Donde \(N_{\text{iteraciones}} = 1917\) y \(t_{\text{iteración}} = 40 \text{min
 
 El uso de hardware con mayores prestaciones permitiría reducir significativamente el tiempo total de entrenamiento y facilitar la realización de un mayor número de experimentos.
 
-\subsubsection{Sofware}
+\subsubsection{Sofware}\label{sec:software}
 
 Para el desarrollo del proyecto se ha utilizado una infraestructura basada en herramientas ampliamente empleadas en el ámbito del aprendizaje automático y la ingeniería de software.
 
@@ -38,7 +38,7 @@ Durante las etapas iniciales del proyecto se empleó Jupyter Notebook\footnote{h
 
 Posteriormente, se adoptó Visual Studio Code\footnote{https://code.visualstudio.com/} como entorno de desarrollo principal, debido a su capacidad para gestionar múltiples tipos de archivos y su integración con herramientas de desarrollo. Se utilizaron extensiones específicas para Python, Jupyter y GitHub, permitiendo un flujo de trabajo unificado.
 
-Como sistema de control de versiones se ha utilizado GitHub\footnote{https://github.com/}, que facilita la gestión del código, el seguimiento de cambios y la colaboración con el tutor del proyecto. Además, permite la sincronización del repositorio entre distintos dispositivos de forma eficiente.
+Como sistema de control de versiones se ha utilizado GitHub\footnote{https://github.com/}, que facilita la gestión del código, el seguimiento de cambios y la colaboración con el tutor del proyecto. Además, permite la sincronización del repositorio entre distintos dispositivos de forma eficiente. El código final desarrollado durante este trabajo se encuentra disponible en un repositorio público, referenciado en la bibliografía \cite{eeg_DanielRosiqueEgeaEeg}.
 
 Para la visualización de resultados se ha utilizado Vega-Altair\footnote{https://altair-viz.github.io/}, una librería de visualización estadística declarativa enfocada en la simplicidad, eficiencia y legibilidad. A diferencia de enfoques imperativos como Matplotlib, Altair permite definir visualizaciones de forma estructurada y reproducible, enfocándose en lo que se quiere observar en lugar de en los detalles de la implementación. Esto conduce a un código más limpio y legible \cite{_IntroductionAltair2025}
 
@@ -161,7 +161,7 @@ En cuanto a la partición de los datos, se ha realizado una división entrenamie
 
 La selección del conjunto de test no se ha realizado de forma aleatoria, sino utilizando los últimos \textit{trials} de cada sujeto y día. Esta decisión se basa en la hipótesis de que los sujetos presentan una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, lo que permite evaluar el modelo en condiciones más estables.
 
-Finalmente, no se aplicaron técnicas adicionales de filtrado o procesamiento sobre las señales EEG.
+Finalmente, no se aplicaron técnicas adicionales de filtrado o procesamiento sobre las señales \acrshort{eeg}.
 
 \begin{comment}
 la Pipeline
@@ -189,7 +189,7 @@ Se van a definir las arquitecturas de los modelos usados en el estudio y a justi
 
 Las arquitecturas DeepConvNet y ShallowConvNet, propuestas por Schirrmeister et al. \cite{schirrmeister_DeepLearning2017}, fueron de los primeros modelos convolucionales en lograr un impacto significativo en la clasificación de señales \acrshort{eeg}. Desde entonces, estas arquitecturas han sido ampliamente utilizadas como referencia en numerosos trabajos relacionados con interfaces cerebro-computador y Deep Learning aplicado a EEG \cite{kollod_DeepComparisons2023}.
 
-La arquitectura DeepConvNet está formada por cuatro bloques convolucionales seguidos de operaciones de \textit{max-pooling} y una capa final de clasificación \textit{softmax}. El primer bloque convolucional fue diseñado específicamente para adaptarse a las características de las señales EEG, las cuales presentan un número elevado de canales de entrada correspondientes a los distintos electrodos. Para ello, el bloque es separado en dos capas. La primera realiza un filtrado temporal sobre la señal de cada canal, permitiendo extraer patrones relacionados con las frecuencias presentes en el EEG. Posteriormente, la segunda convolución aplica un filtrado espacial combinando la información obtenida en la primera capa. Esta separación entre convolución temporal y espacial actúa además como una forma implícita de regularización, forzando a la red a aprender transformaciones más estructuradas \cite{schirrmeister_DeepLearning2017}.
+La arquitectura DeepConvNet está formada por cuatro bloques convolucionales seguidos de operaciones de \textit{max-pooling} y una capa final de clasificación \textit{softmax}. El primer bloque convolucional fue diseñado específicamente para adaptarse a las características de las señales EEG, las cuales presentan un número elevado de canales de entrada correspondientes a los distintos electrodos. Para ello, el bloque es separado en dos capas. La primera realiza un filtrado temporal sobre la señal de cada canal, permitiendo extraer patrones relacionados con las frecuencias presentes en el \acrshort{eeg}. Posteriormente, la segunda convolución aplica un filtrado espacial combinando la información obtenida en la primera capa. Esta separación entre convolución temporal y espacial actúa además como una forma implícita de regularización, forzando a la red a aprender transformaciones más estructuradas \cite{schirrmeister_DeepLearning2017}.
 
 
 \begin{table}[H]
@@ -309,18 +309,18 @@ Los resultados obtenidos por Schirrmeister et al. mostraron que estas arquitectu
 
 \subsubsection{EEGNet}
 
-EEGNet es un modelo de red neuronal convolucional (\acrshort{cnn}) diseñado específicamente para la clasificación de señales EEG. Su arquitectura se basa en el uso de convoluciones \textit{Depthwise} y \textit{Separable}, ampliamente utilizadas en tareas de clasificación de imágenes, adaptándolas al procesamiento de señales EEG. Este enfoque permite extraer características espaciales y temporales de forma eficiente, utilizando conceptos como el filtrado espacial y la construcción de bancos de filtros \cite{lawhern_EEGNetCompact2018}.
+EEGNet es un modelo de red neuronal convolucional (\acrshort{cnn}) diseñado específicamente para la clasificación de señales \acrshort{eeg}. Su arquitectura se basa en el uso de convoluciones \textit{Depthwise} y \textit{Separable}, ampliamente utilizadas en tareas de clasificación de imágenes, adaptándolas al procesamiento de señales \acrshort{eeg}. Este enfoque permite extraer características espaciales y temporales de forma eficiente, utilizando conceptos como el filtrado espacial y la construcción de bancos de filtros \cite{lawhern_EEGNetCompact2018}.
 
 Las características principales de este modelo son:
 
 \begin{itemize}
-    \item Independencia respecto al paradigma \acrshort{bci}, permitiendo su aplicación en distintos tipos de señales EEG.
+    \item Independencia respecto al paradigma \acrshort{bci}, permitiendo su aplicación en distintos tipos de señales \acrshort{eeg}.
     \item Menor número de parámetros en comparación con otros modelos de \acrshort{cnn}.
     \item Buena capacidad de generalización incluso con conjuntos de datos limitados.
     \item Arquitectura compacta con técnicas de regularización integradas, como \textit{Batch Normalization} y \textit{Dropout}.
 \end{itemize}
 
-El modelo comienza con una capa convolucional temporal encargada de extraer información frecuencial de la señal EEG. Posteriormente, se aplica una convolución \textit{Depthwise} que aprende filtros espaciales específicos para cada mapa de características. A continuación, la arquitectura utiliza una convolución \textit{Separable}, compuesta por una convolución \textit{Depthwise} seguida de una convolución \textit{Pointwise}. La primera resume temporalmente cada mapa de características de manera independiente, mientras que la segunda combina la información obtenida entre los distintos mapas de características \cite{lawhern_EEGNetCompact2018}. El esquema de esta arquitectura se muestra en la figura \ref{fig:eegnet_arch}.
+El modelo comienza con una capa convolucional temporal encargada de extraer información frecuencial de la señal \acrshort{eeg}. Posteriormente, se aplica una convolución \textit{Depthwise} que aprende filtros espaciales específicos para cada mapa de características. A continuación, la arquitectura utiliza una convolución \textit{Separable}, compuesta por una convolución \textit{Depthwise} seguida de una convolución \textit{Pointwise}. La primera resume temporalmente cada mapa de características de manera independiente, mientras que la segunda combina la información obtenida entre los distintos mapas de características \cite{lawhern_EEGNetCompact2018}. El esquema de esta arquitectura se muestra en la figura \ref{fig:eegnet_arch}.
 
 Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la función de pérdida de entropía cruzada categórica.
 
@@ -335,7 +335,7 @@ Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la
 
 Estudios posteriores han mostrado que EEGNet es capaz de aprender representaciones similares a las obtenidas mediante métodos clásicos de extracción de características, como Filter Bank Common Spatial Patterns (FBCSP), manteniendo la ventaja de realizar dicho proceso de forma automática dentro de la propia red neuronal. Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar potenciales en la señal EEG relacionados con el movimiento (\acrshort{mrcp}) \cite{lawhern_EEGNetCompact2018,kollod_DeepComparisons2023}.
 
-La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en EEG. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.
+La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en \acrshort{eeg}. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.
 
 
 \begin{comment}
@@ -440,7 +440,7 @@ Los experimentos se definen mediante la combinación de distintos parámetros, e
 
 En cada iteración, el sistema inicializa los parámetros de entrenamiento y carga el conjunto de datos correspondiente al tipo de tarea. A continuación, se ejecuta el método de entrenamiento seleccionado, en el que se itera sobre los distintos usuarios y sesiones disponibles en el dataset. Para cada caso, se inicializa el modelo, se realiza el entrenamiento y se evalúa su rendimiento.
 
-Finalmente, los resultados obtenidos, junto con los parámetros utilizados, se almacenan de forma estructurada, permitiendo su posterior análisis.
+Finalmente, los resultados obtenidos, junto con los parámetros utilizados, se almacenan de forma estructurada en una base de datos relacional usando el motor de DuckDB, permitiendo su posterior análisis. Un ánalisis detallado del esquema de la base de datos se presenta en el anexo \ref{sec:db_schema}.
 
 Este proceso permite realizar un gran número de experimentos de manera secuencial y facilita el posterior estudio de los resultados obtenidos por cada combinación de parámetros definida.
 
@@ -461,11 +461,12 @@ La Figura \ref{fig:pipeline_general} resume la organización jerárquica del pip
 
 
 
+{\color{red}
 \subsubsection{Diseño de experimentos}
-
-
 
 combinaciones de parámetros
 nº de ejecuciones
 cómo comparas resultados
 
+Esto lo iba a poner, ahora no lo tengo claro, pero lo dejo aquí para no olvidarlo
+}

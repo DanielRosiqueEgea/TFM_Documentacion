@@ -1,23 +1,106 @@
-
-
-
-
 \section*{ANEXOS} \label{sec:anexos} % Se añade un asterisco a \section para que el título no esté numerado.
 \addcontentsline{toc}{section}{ANEXOS} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC).
 \markright{ANEXOS} % Al utilizar \section* se ha de añadir manualmente el título del apartado al encabezado.
-
-tantos como se considere necesario en funci´on de los aspectos concretos que se quieran especificar.
 
 \renewcommand{\thesubsection}{\Alph{subsection}} % Se numeran los anexos con letras del alphabeto en lugar de números.
 % Se indica que las tablas, figuras y códigos se numeran con el código del anexo (A, B, C, ...) seguido del número de tabla, figura o código dentro del anexo (tabla A.2, figura C.1, etc.)
 \renewcommand{\thetable}{\Alph{subsection}.\arabic{table}}
 \renewcommand{\thefigure}{\Alph{subsection}.\arabic{figure}}
 \renewcommand{\thecode}{\Alph{subsection}.\arabic{code}}
-
+\setcounter{subsection}{0} % Se reinicia el contador de anexos a 0.
 % ---------------- Primer anexo ---------------- %
-\subsection{Primer anexo} \label{sec:anexo1}
+\subsection{Esquema de la base de datos} \label{sec:db_schema}
 
-Contenido del primer anexo (texto, tablas, figuras, códigos, etc.)
+La tabla \ref{tab:db_schema} muestra el esquema de la base de datos relacional utilizada para almacenar los resultados de los experimentos realizados. Esta base de datos ha permitido organizar y estructurar la información obtenida durante el proceso de entrenamiento y evaluación de los modelos, facilitando su posterior análisis y comparación.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        Nombre\_Tabla: & \textbf{Runs\_t}         & \textbf{Trials\_t }      & \textbf{Classes\_t}: \\ \hline
+        N\_Entradas:   & 1917                     & 5751                     & 15336                \\ \hline
+        \multicolumn{4}{|c|}{\textbf{Run metadata}}                                                 \\ \hline
+        1              & run\_id                  & run\_id                  & run\_id              \\ \hline
+        2              & run\_timestamp           & run\_timestamp           & run\_timestamp       \\ \hline
+        3              & sample\_id               & sample\_id               & sample\_id           \\ \hline
+        4              & title                    & ~                        & ~                    \\ \hline
+        5              & file\_path               & ~                        & ~                    \\ \hline
+        6              & comment                  & ~                        & ~                    \\ \hline
+        \multicolumn{4}{|c|}{\textbf{Dimensions}}                                                   \\ \hline
+        7              & training\_method         & training\_method         & training\_method     \\ \hline
+        8              & model\_name              & model\_name              & model\_name          \\ \hline
+        9              & task\_mode               & task\_mode               & task\_mode           \\ \hline
+        10             & user                     & user                     & user                 \\ \hline
+        11             & day                      & day                      & day                  \\ \hline
+        12             & ~                        & trial\_id                & trial\_id            \\ \hline
+        13             & ~                        & ~                        & class                \\ \hline
+        \multicolumn{4}{|c|}{\textbf{Metrics}}                                                      \\ \hline
+        14             & acc1                     & acc1                     & ~                    \\ \hline
+        15             & val\_accuracy            & val\_accuracy            & ~                    \\ \hline
+        16             & val\_precision\_macro    & val\_precision\_macro    & precision            \\ \hline
+        17             & val\_recall\_macro       & val\_recall\_macro       & recall               \\ \hline
+        18             & val\_f1\_macro           & val\_f1\_macro           & f1                   \\ \hline
+        19             & val\_precision\_weighted & val\_precision\_weighted & ~                    \\ \hline
+        20             & val\_recall\_weighted    & val\_recall\_weighted    & ~                    \\ \hline
+        21             & val\_f1\_weighted        & val\_f1\_weighted        & support              \\ \hline
+        22             & confusion\_matrix\_json  & confusion\_matrix\_json  & ~                    \\ \hline
+        \multicolumn{4}{|c|}{\textbf{Training\_metrics:}}                                           \\ \hline
+        27             & final\_train\_loss       & ~                        & ~                    \\ \hline
+        28             & final\_train\_acc        & ~                        & ~                    \\ \hline
+        29             & final\_training\_rate    & ~                        & ~                    \\ \hline
+        30             & final\_val\_loss         & ~                        & ~                    \\ \hline
+        31             & final\_val\_acc          & ~                        & ~                    \\ \hline
+        32             & best\_epoch              & ~                        & ~                    \\ \hline
+        33             & best\_val\_loss          & ~                        & ~                    \\ \hline
+        34             & best\_val\_acc           & ~                        & ~                    \\ \hline
+        \multicolumn{4}{|c|}{\textbf{Extras}}                                                       \\ \hline
+        23             & training\_samples        & ~                        & ~                    \\ \hline
+        24             & validation\_samples      & ~                        & ~                    \\ \hline
+        25             & epochs\_planned          & ~                        & ~                    \\ \hline
+        26             & epochs\_ran              & ~                        & ~                    \\ \hline
+    \end{tabular}
+    \caption{Esquema de la base de datos relacional utilizada para almacenar los resultados de los experimentos realizados.}
+    \label{tab:db_schema}
+\end{table}
+
+La organización de esta base de datos corresponde a tres tablas principales: \textbf{Runs\_t}, \textbf{Trials\_t} y \textbf{Classes\_t}. La tabla \textbf{Runs\_t} contiene información general sobre cada ejecución del experimento. La tabla \textbf{Trials\_t} almacena los resultados obtenidos durante la etapa de test de cada ejecución, separados por usuario, día y ensayo.
+
+Finalmente, la tabla \textbf{Classes\_t} contiene los resultados de cada clase individual dentro de cada ensayo, esta tabla nos permite análizar el rendimiento del modelo en cada clase específica y evaluar su capacidad para diferenciar entre las distintas categorías presentes en el conjunto de datos. Se puede obtener así métricas adicionales como la tasa de falsos positivos y falsos negativos, que son fundamentales para comprender el comportamiento del modelo en situaciones de clasificación desequilibrada o cuando ciertas clases son más críticas que otras.
+
+La siguiente tabla muestra un ejemplo de  las tasas de falsos positivos y falsos negativos para cada combinación de modelo y método de entrenamiento.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|p{3em}|p{7em}|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Task}              & \textbf{Model}                    & \textbf{Training Method} & \textbf{False Positive Rate}  & \textbf{False Negative Rate}  \\ \hline
+        \multirow{12}{3em}{Motion} & \multirow{4}{7em}{DeepConvNet}    & Intra-Session            & \cellcolor[HTML]{F8CBAD}0.425 & \cellcolor[HTML]{FDEEE4}0.298 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{F8CBAD}0.304 & \cellcolor[HTML]{F8CCAF}0.335 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{FDF2EA}0.258 & \cellcolor[HTML]{F8CBAD}0.412 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{FDEEE4}0.262 & \cellcolor[HTML]{F8CBAD}0.442 \\ \cline{2-5}
+                                   & \multirow{4}{4em}{EEGNet}         & Intra-Session            & \cellcolor[HTML]{FDFEFD}0.241 & \cellcolor[HTML]{FDEFE6}0.297 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{FCEBDF}0.266 & \cellcolor[HTML]{F0FBF2}0.264 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{FADDCA}0.280 & \cellcolor[HTML]{F9CFB3}0.332 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{F8CBAD}0.302 & \cellcolor[HTML]{F8CBAD}0.337 \\ \cline{2-5}
+                                   & \multirow{4}{4em}{ShallowConvNet} & Intra-Session            & \cellcolor[HTML]{FDEFE6}0.261 & \cellcolor[HTML]{F4FCF6}0.268 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{FFFEFD}0.245 & \cellcolor[HTML]{FDFEFD}0.277 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{FDEFE6}0.261 & \cellcolor[HTML]{FDF3EC}0.292 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{FBE4D5}0.273 & \cellcolor[HTML]{FADDCA}0.317 \\ \hline
+        \multirow{12}{4em}{Static} & \multirow{4}{4em}{DeepConvNet}    & Intra-Session            & \cellcolor[HTML]{F9CFB4}0.296 & \cellcolor[HTML]{E3F7E7}0.249 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{F3FCF5}0.232 & \cellcolor[HTML]{EDFAF0}0.260 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{E7F8EB}0.220 & \cellcolor[HTML]{F5FCF6}0.269 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{D9F4DE}0.205 & \cellcolor[HTML]{FBE4D4}0.310 \\ \cline{2-5}
+                                   & \multirow{4}{4em}{EEGNet}         & Intra-Session            & \cellcolor[HTML]{FEFFFE}0.242 & \cellcolor[HTML]{F0FBF2}0.263 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{CAF0D1}0.189 & \cellcolor[HTML]{D2F2D8}0.231 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{C6EFCE}0.184 & \cellcolor[HTML]{FDEDE3}0.299 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{CEF1D5}0.194 & \cellcolor[HTML]{FFFDFB}0.282 \\ \cline{2-5}
+                                   & \multirow{4}{4em}{ShallowConvNet} & Intra-Session            & \cellcolor[HTML]{D7F4DD}0.203 & \cellcolor[HTML]{C6EFCE}0.209 \\ \cline{3-5}
+                                   &                                   & Inter-Session            & \cellcolor[HTML]{CCF1D3}0.191 & \cellcolor[HTML]{C6EFCE}0.206 \\ \cline{3-5}
+                                   &                                   & Inter-Users              & \cellcolor[HTML]{C6EFCE}0.180 & \cellcolor[HTML]{C6EFCE}0.218 \\ \cline{3-5}
+                                   &                                   & Continuous               & \cellcolor[HTML]{C6EFCE}0.180 & \cellcolor[HTML]{C8F0D0}0.221 \\ \hline
+    \end{tabular}
+\end{table}
+
 
 % ---------------- Segundo anexo --------------- %
 \newpage
