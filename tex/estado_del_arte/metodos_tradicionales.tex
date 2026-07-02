@@ -1,0 +1,27 @@
+\subsection{Métodos tradicionales de extracción de características en señales EEG} \label{sec:metodos_tradicionales}
+
+El análisis de señales \acrshort{eeg} ha estado tradicionalmente asociado al proceso de extracción de características capaces de representar la información relevante contenida en la señal. Como se ha mencionado previamente, en el ámbito de las \acrshort{bci}, la extracción de características es un paso fundamental en el proceso de clasificación. En este proceso, el rendimiento del sistema depende en gran medida de la capacidad de las características extraídas para representar diferencias discriminativas entre clases \cite{krishnan_TrendsBiomedical2018,yuvaraj_ComprehensiveAnalysis2023, subasi_Chapter42019}.
+
+Las características comúnmente empleadas en señales \acrshort{eeg} pueden agruparse en distintas familias. Entre las más habituales se encuentran las características temporales, frecuenciales, tiempo-frecuencia y espaciales \cite{krishnan_TrendsBiomedical2018,stancin_ReviewEEG2021,siuly_EEGSignal2016}.
+
+\subsubsection{Características temporales, frecuenciales y tiempo-frecuencia}
+
+Las características temporales se calculan directamente sobre la señal registrada en una ventana de tiempo determinada. Este tipo de características permite describir propiedades estadísticas de la señal a lo largo del tiempo. Algunos ejemplos habituales son la media, la varianza, la desviación estándar, la amplitud pico a pico o la asimetría. Su principal ventaja es su sencillez y bajo coste computacional, aunque pueden resultar limitadas cuando la información discriminativa se encuentra asociada a cambios espectrales o a ritmos cerebrales concretos.
+
+Por otro lado, las características frecuenciales analizan la distribución de potencia de la señal en distintas bandas de frecuencia. En el caso de las señales \acrshort{eeg}, este enfoque resulta especialmente relevante, ya que determinados ritmos cerebrales se han relacionado con tareas cognitivas y motoras. En particular, las bandas \(\mu\) y \(\beta\), se han relacionado con tareas motoras y la imaginación de las mismas \cite{mirnaziri_UsingCombination2013}. Para extraer este tipo de información suelen emplearse técnicas como la transformada de Fourier, la estimación de la densidad espectral de potencia o el cálculo de potencia en bandas específicas.
+
+Sin embargo, una de las dificultades del análisis de señales \acrshort{eeg} es que estas presentan un carácter no estacionario, por lo que sus propiedades estadísticas pueden variar a lo largo del tiempo. Por este motivo, también se emplean métodos de análisis tiempo-frecuencia, como la transformada wavelet o la transformada de Fourier de tiempo corto (STFT) \cite{stancin_ReviewEEG2021,siuly_EEGSignal2016}, que permiten estudiar simultáneamente la evolución temporal y espectral de la señal.
+
+\subsubsection{Características espaciales: CSP y FBCSP}
+
+Además del contenido temporal y frecuencial, las señales \acrshort{eeg} contienen información espacial, ya que la actividad cerebral se registra mediante múltiples electrodos distribuidos sobre el cuero cabelludo. En lugar de analizar cada electrodo de forma independiente, los métodos espaciales buscan calcular nuevas señales como combinaciones lineales de los canales originales, buscando aumentar la discriminación entre clases.
+
+Uno de los métodos de filtrado espacial más utilizados en sistemas \acrshort{bci} es el algoritmo de \textbf{\acrfull{csp}}. Este método calcula filtros espaciales que proyectan la señal multicanal en un nuevo espacio, maximizando la varianza de una clase y minimizando simultáneamente la varianza de la otra. De este modo, \acrshort{csp} permite obtener componentes espaciales especialmente útiles para la clasificación \cite{ramoser_OptimalSpatial2000,blankertz_OptimizingSpatial2008}.
+
+Una limitación importante de \acrshort{csp} es que su rendimiento depende en gran medida de la banda frecuencial seleccionada, la cual puede variar entre sujetos, sesiones o tareas.
+
+Para abordar esta limitación se propuso el método de \textbf{\acrfull{fbcsp}} \cite{ang_FilterBank2008,ang_FilterBank2012}. Este algoritmo aplica primero un banco de filtros para dividir la señal \acrshort{eeg} en múltiples bandas de frecuencia. Posteriormente, se aplica \acrshort{csp} de forma independiente sobre cada banda, obteniendo características espaciales asociadas a distintos rangos frecuenciales.
+
+Finalmente, \acrshort{fbcsp} incorpora una etapa de selección de características para conservar aquellas con mayor capacidad discriminativa. De esta forma, el método permite seleccionar tanto los patrones espaciales como las bandas de frecuencia más relevantes para cada sujeto o tarea. Por esta razón, \acrshort{fbcsp} ha sido ampliamente utilizado en sistemas \acrshort{bci} de imaginación motora, habitualmente junto con clasificadores convencionales como \textit{Naïve Bayesian Parzen Window} (NVPW) \cite{ang_FilterBank2008,ang_FilterBank2012}.
+
+Sin embargo, a pesar de su eficacia, los métodos tradicionales de extracción de características presentan limitaciones importantes. En particular, al mantener la extracción y selección de características separadas de la clasificación, estos métodos requieren un conocimiento previo sobre la señal y la tarea a analizar. Esta dependencia del diseño manual de características ha motivado el uso de enfoques basados en aprendizaje profundo, capaces de aprender representaciones discriminativas directamente a partir de los datos.

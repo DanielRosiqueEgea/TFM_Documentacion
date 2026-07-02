@@ -9,15 +9,3 @@ Habitualmente, una CNN está formada por una sucesión de capas convolucionales 
 En el ámbito de las interfaces cerebro-computador (\acrshort{bci}), las CNN se han consolidado como una de las técnicas más utilizadas para la decodificación de señales EEG \cite{craik_DeepLearning2019,schirrmeister_DeepLearning2017,edelman_NonInvasiveBrainComputer2025}. A diferencia de las imágenes, las señales EEG presentan simultáneamente una dimensión temporal y una dimensión espacial asociada a la distribución de los electrodos sobre el cuero cabelludo. Por este motivo, las arquitecturas diseñadas para EEG suelen combinar convoluciones temporales, encargadas de extraer información espectral y patrones dependientes del tiempo, con convoluciones espaciales que modelan las relaciones entre los distintos canales de la señal \cite{edelman_NonInvasiveBrainComputer2025}.
 
 Tradicionalmente, los sistemas BCI basados en EEG dependían de técnicas de extracción manual de características combinadas con clasificadores convencionales. Sin embargo, la aparición de arquitecturas de redes neuronales profundas específicas para EEG, como DeepConvNet y ShallowConvNet, supuso un cambio de paradigma al integrar de forma conjunta las etapas de extracción de características y clasificación dentro de una misma red neuronal \cite{schirrmeister_DeepLearning2017,kollod_DeepComparisons2023}.
-
-
-\begin{comment}
-\begin{itemize}
-    \item Por qué CNNs
-    \item Ventajas vs métodos clásicos:
-          \begin{itemize}
-              \item menos feature engineering
-              \item mejor captura de patrones espaciales/temporales
-          \end{itemize}
-\end{itemize}
-\end{comment}

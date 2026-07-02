@@ -67,7 +67,7 @@ La organización de esta base de datos corresponde a tres tablas principales: \t
 
 Finalmente, la tabla \textbf{Classes\_t} contiene los resultados de cada clase individual dentro de cada ensayo, esta tabla nos permite análizar el rendimiento del modelo en cada clase específica y evaluar su capacidad para diferenciar entre las distintas categorías presentes en el conjunto de datos. Se puede obtener así métricas adicionales como la tasa de falsos positivos y falsos negativos, que son fundamentales para comprender el comportamiento del modelo en situaciones de clasificación desequilibrada o cuando ciertas clases son más críticas que otras.
 
-La siguiente tabla muestra un ejemplo de  las tasas de falsos positivos y falsos negativos para cada combinación de modelo y método de entrenamiento.
+La tabla \ref{tab:false_positive_negative_rates} muestra un ejemplo de  las tasas de falsos positivos y falsos negativos para cada combinación de modelo y método de entrenamiento.
 
 \begin{table}[!ht]
     \centering
@@ -99,6 +99,8 @@ La siguiente tabla muestra un ejemplo de  las tasas de falsos positivos y falsos
                                    &                                   & Inter-Users              & \cellcolor[HTML]{C6EFCE}0.180 & \cellcolor[HTML]{C6EFCE}0.218 \\ \cline{3-5}
                                    &                                   & Continuous               & \cellcolor[HTML]{C6EFCE}0.180 & \cellcolor[HTML]{C8F0D0}0.221 \\ \hline
     \end{tabular}
+    \caption{Tasas de falsos positivos y falsos negativos para cada combinación de modelo, método de entrenamiento y tarea objetivo. Los valores más altos se muestran en tonos rojizos, mientras que los valores más bajos se muestran en tonos verdosos.}
+    \label{tab:false_positive_negative_rates}
 \end{table}
 
 
