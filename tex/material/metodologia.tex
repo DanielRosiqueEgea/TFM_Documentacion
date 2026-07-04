@@ -1,79 +1,149 @@
 
 \subsection{Metodología experimental}
 
-
-{\color{red}
-    En cuanto a la partición de los datos, se ha realizado una división entrenamiento-test con una proporción del 70\% y 30\%, respectivamente. Esta separación se ha llevado a cabo a nivel de \textit{trial}, evitando separar ventanas pertenecientes al mismo ensayo entre ambos conjuntos.
-
-    La selección del conjunto de test no se ha realizado de forma aleatoria, sino utilizando los últimos \textit{trials} de cada sujeto y día. Esta decisión se basa en la hipótesis de que los sujetos presentan una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, lo que permite evaluar el modelo en condiciones más estables.
-
-    Finalmente, no se aplicaron técnicas adicionales de filtrado o procesamiento sobre las señales \acrshort{eeg}.
-}
-
-
 \subsubsection{Variables del estudio}
 
 En este trabajo se realiza un análisis comparativo entre las arquitecturas \textit{EEGNet}, \textit{ShallowConvNet} y \textit{DeepConvNet}. Para ello, se han definido cuatro estrategias de entrenamiento con el objetivo de evaluar cómo se adapta cada modelo a diferentes usuarios, sesiones y condiciones experimentales.
 
 Las tareas de imaginación motora consideradas son la imaginación de movimiento y la imaginación de parada. En la primera, el sujeto realiza un esfuerzo mental activo orientado a iniciar o mantener el movimiento del exoesqueleto. En la segunda, el sujeto realiza un esfuerzo mental activo orientado a detener dicho movimiento.
 
-Las estrategias de entrenamiento seleccionadas se basan en los paradigmas descritos previamente en la sección \ref{sec:metodos_entrenamiento}.
+El dataset utilizado en este trabajo contiene datos de 5 sujetos, cada uno con 5 sesiones de adquisición, 11 ensayos por sesión y 56 ventanas temporales por ensayo, como se detalla en la sección \ref{sec:estructura_dataset}. Durante los distintos entrenamientos se dividen los ensayos de la sesión objetivo en dos subconjuntos: un conjunto de entrenamiento formado por los primeros 8 ensayos y un conjunto de validación formado por los 3 ensayos restantes. De este modo, se mantiene una proporción aproximada del 70\% para entrenamiento y del 30\% para validación.
+
+De este modo, se evalúa la capacidad del modelo de aprender a partir de los primeros ensayos de un usuario y generalizar su conocimiento a los ensayos posteriores. Esta elección se basa en la hipótesis de que los sujetos pueden presentar una mejora progresiva en el control de la imaginación motora a lo largo de la sesión, por lo que evaluar el modelo sobre los últimos ensayos permite analizar su rendimiento en condiciones más estables. Además sirve como aproximación a un escenario real de uso, en el que los primeros ensayos de cada sesión se utilizan para un pre-entrenamiento del modelo, mientras que los últimos ensayos se evalúan a tiempo real en un sistema de bucle cerrado.
+
+Las estrategias de entrenamiento seleccionadas se basan en los paradigmas descritos previamente en la sección \ref{sec:metodos_entrenamiento}. La diferencia principal entre ellas reside en qué datos se utilizan para inicializar, entrenar o ajustar el modelo en cada caso: datos de una única sesión, datos acumulados de sesiones anteriores, datos de otros usuarios o una combinación progresiva de estos enfoques.
 
 \paragraph*{Entrenamiento intra sesión}
 
-En esta estrategia se utilizan únicamente los datos de una sesión concreta y de un único usuario. Los ensayos de dicha sesión se dividen en conjuntos de entrenamiento y validación siguiendo una proporción del 70\% y 30\%, respectivamente. Para la validación se emplean siempre los últimos ensayos de la sesión.
+El entrenamiento intra-sesión representa el enfoque tradicional en sistemas BCI. En esta estrategia se utilizan únicamente los datos de un único usuario y de una única sesión o día experimental. Es decir, para entrenar y validar el modelo correspondiente a un usuario \(u\) en un día \(d\), no se emplea información procedente de otros usuarios ni de otras sesiones del mismo usuario.
 
-Esta elección se basa en la hipótesis de que los sujetos pueden presentar una mejora progresiva en el control de la imaginación motora a lo largo de la sesión. Por tanto, evaluar el modelo sobre los últimos ensayos permite analizar su rendimiento en una fase potencialmente más estable de la tarea.
+Para cada combinación usuario-día se genera un modelo independiente desde cero. Los datos de la sesión se dividen en un conjunto de entrenamiento y un conjunto de validación utilizando el mismo procedimiento descrito anteriormente.
+
+Por ejemplo, para el usuario \(U_1\) en el día \(D_1\), el modelo se entrena únicamente con los ensayos de entrenamiento de \(U_1D_1\) y se valida con los ensayos restantes de esa misma sesión. Para el día \(D_2\), se repite el proceso desde cero, generando un nuevo modelo independiente entrenado únicamente con los datos de \(U_1D_2\). Este procedimiento se repite para todos los días y todos los usuarios.
+
+Esta estrategia permite analizar el rendimiento del modelo cuando sólo se dispone de información específica de la sesión actual. Además, al repetir el mismo procedimiento para todos los días de adquisición, es posible estudiar la evolución del rendimiento a lo largo de de los distintos días de adquisición. Esta evolución puede reflejar, entre otros factores, cambios en la calidad de la señal, variabilidad entre sesiones o una posible mejora progresiva del usuario en la realización de la tarea de imaginación motora.
+
+
+\begin{figure}[h!tbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/diagramas_entrenamientos/intra-sesión-bloques.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Esquema simplificado del método de entrenamiento intra sesión (Elaboración propia).}
+    \label{fig:intra_session_diagram}
+
+\end{figure}
 
 \paragraph*{Entrenamiento entre sesiones}
 
-En este caso, el modelo se entrena utilizando los datos de las sesiones anteriores del mismo usuario. A estos datos se añaden los ensayos de entrenamiento de la sesión actual, manteniendo la misma división del 70\% para entrenamiento y 30\% para validación.
+El entrenamiento entre sesiones tiene como objetivo evaluar si la información adquirida en sesiones anteriores de un mismo usuario puede mejorar el rendimiento del modelo en sesiones posteriores. A diferencia del entrenamiento intra sesión, en este caso el conjunto de entrenamiento no solo utiliza los datos del día actual, sino que incorpora progresivamente información de días anteriores del mismo usuario.
 
-Esta estrategia permite evaluar si la información acumulada de sesiones previas mejora la adaptación del modelo a una nueva sesión del mismo usuario.
+El primer día de cada usuario se trata de forma equivalente al entrenamiento intra sesión, ya que no existen sesiones previas disponibles. A partir del segundo día, el conjunto de entrenamiento se amplía. Para este día, un nuevo modelo se entrena utilizando los ensayos del \(D_1\) junto el conjunto de entrenamiento del \(D_2\) y se valida con los ensayos reservados del \(D_2\). De forma análoga, para el día \(D_3\), se utilizan los datos de entrenamiento del día actual y los datos acumulados de los días \(D_1\) y \(D_2\). Este proceso continúa sucesivamente hasta el último día experimental, incrementando progresivamente la cantidad de información disponible para cada modelo. En todos los casos, la validación se realiza sobre los ensayos reservados del día que se está evaluando.
+
+Esta estrategia permite estudiar si la acumulación de información intra-usuario mejora la adaptación del modelo a lo largo de la semana. Además, al igual que en el caso intra sesión, permite analizar la evolución temporal del rendimiento, pero considerando ahora un escenario en el que el modelo dispone cada vez de más información previa del mismo sujeto.
+
+
+\begin{figure}[h!tbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/diagramas_entrenamientos/inter-sesión-bloques.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Esquema simplificado del método de entrenamiento entre sesiones (Elaboración propia).}
+    \label{fig:inter_session_diagram}
+\end{figure}
+
+
 
 \paragraph*{Entrenamiento entre usuarios}
 
-En esta estrategia se genera inicialmente un modelo general entrenado con los datos del resto de usuarios, excluyendo al usuario objetivo. Posteriormente, dicho modelo se ajusta mediante \textit{fine-tuning} utilizando los datos de entrenamiento de la sesión actual del usuario objetivo, manteniendo la misma proporción de entrenamiento y validación descrita anteriormente.
+El entrenamiento entre usuarios introduce una etapa previa de aprendizaje basada en información procedente de sujetos distintos al usuario objetivo. En esta estrategia se genera inicialmente un modelo general entrenado con los datos de todos los usuarios disponibles excepto el usuario que se desea evaluar. De este modo, el modelo inicial parte de una representación aprendida a partir de patrones presentes en otros sujetos.
 
-Este proceso se repite para todas las sesiones del usuario, generando un nuevo modelo adaptado para cada una de ellas. El objetivo de esta estrategia es analizar si un modelo preentrenado con datos de otros usuarios puede transferir conocimiento útil al usuario objetivo.
+Una vez obtenido el modelo general, se realiza un ajuste mediante \textit{fine-tuning} sobre una copia de este modelo utilizando los datos de entrenamiento del usuario objetivo en la sesión correspondiente, siguiendo el esquema del entrenamiento intra-sesión. Es decir, para cada usuario y cada día, el modelo no parte de una inicialización aleatoria, sino de un modelo previamente entrenado con datos de otros usuarios. Posteriormente, dicho modelo se adapta con los ensayos de entrenamiento del usuario objetivo y se valida con los ensayos reservados de ese mismo día.
+
+Por ejemplo, si el usuario objetivo es \(U_1\), el modelo inicial se entrena con los datos de los usuarios \(U_2, U_3, U_4, U_5\). Después, para evaluar el día \(D_1\) de \(U_1\), una copia del modelo general se ajusta con los ensayos de entrenamiento de \(U_1D_1\) y se valida con los ensayos restantes de \(U_1D_1\). Para el día \(D_2\), se parte de una nueva copia del modelo general entrenado con el resto de usuarios y se realiza un nuevo ajuste independiente con los datos de \(U_1D_2\). Por tanto, cada sesión del usuario objetivo genera un modelo adaptado independiente.
+
+El objetivo de esta estrategia es analizar si un modelo pre-entrenado con datos de otros usuarios es capaz de transferir conocimiento útil al usuario objetivo. Esto resulta especialmente relevante en señales \acrshort{eeg}, donde la variabilidad entre sujetos suele ser elevada y la cantidad de datos disponible por usuario puede ser limitada. Mediante esta estrategia se estudia si la información inter-usuario puede servir como punto de partida para mejorar el rendimiento frente a un entrenamiento realizado únicamente con datos del usuario objetivo.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/diagramas_entrenamientos/inter-user-bloques.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Esquema simplificado del método de entrenamiento entre usuarios (Elaboración propia).}
+    \label{fig:inter_user_diagram}
+
+\end{figure}
 
 
 \paragraph*{Entrenamiento continuo}
 
-El entrenamiento continuo sigue un esquema similar al entrenamiento entre usuarios, partiendo también de un modelo general entrenado con los datos del resto de usuarios. Sin embargo, en lugar de generar un nuevo modelo independiente para cada sesión, el modelo se conserva entre sesiones y se reentrena progresivamente con los datos disponibles de la sesión actual.
+El entrenamiento continuo combina la información inter-usuario con una adaptación progresiva al usuario objetivo. Al igual que en el entrenamiento entre usuarios, el proceso comienza con un modelo general entrenado con los datos del resto de usuarios, excluyendo al usuario que se desea evaluar. Este modelo inicial proporciona una base de conocimiento común obtenida a partir de sujetos distintos al usuario objetivo.
 
-De este modo, el modelo incorpora de forma acumulativa la información del usuario objetivo, partiendo de un conocimiento inicial obtenido a partir del resto de usuarios y adaptándose gradualmente a sus sesiones sucesivas.
-
-
-    {\color{red}
-        \subsubsection{Estrategia de entrenamiento}\label{sec:estrategia_entrenamiento}
-
-        epochs
-
-        batch size
-
-        callbacks:
-
-        early stopping
-
-        reduce LR
-
-        función de pérdida
-
-        métrica (accuracy)
+La diferencia principal respecto al entrenamiento entre usuarios es que, en este caso, el modelo no se reinicia para cada sesión. En lugar de generar un modelo adaptado independiente para cada día, el modelo se conserva entre sesiones y se actualiza progresivamente con los datos del usuario objetivo. De este modo, cada nuevo día parte del modelo ajustado en la sesión anterior, incorporando de forma acumulativa la información aprendida hasta ese momento.
 
 
+Por ejemplo, para evaluar al usuario \(U_1\), se genera primero un modelo general entrenado con los datos de los usuarios \(U_2, U_3, U_4, U_5\). En el día \(D_1\), este modelo se ajusta con los ensayos de entrenamiento de \(U_1D_1\) y se valida con los ensayos reservados de esa misma sesión. Para el día \(D_2\), no se vuelve al modelo general inicial, sino que se parte del modelo ya adaptado con \(U_1D_1\) y se continúa el entrenamiento con los datos de \(U_1D_2\). Este procedimiento se repite durante el resto de sesiones, de forma que el modelo va acumulando progresivamente la información específica del usuario objetivo.
+
+Esta estrategia permite estudiar un escenario de adaptación continua, en el que el sistema mejora gradualmente a medida que dispone de más datos del usuario. Desde el punto de vista de una aplicación real, este enfoque resulta especialmente interesante, ya que un sistema BCI podría partir de un modelo general entrenado con usuarios previos y adaptarse progresivamente al usuario final conforme se realizan nuevas sesiones de experimento.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/diagramas_entrenamientos/continuo-bloques.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Esquema simplificado del método de entrenamiento continuo (Elaboración propia).}
+    \label{fig:continuo_diagram}
+
+\end{figure}
 
 
-        \subsubsection{Evaluación}
+\paragraph{\textbf{Resumen estrategias de entrenamiento}}
+
+\begingroup
+\renewcommand{\arraystretch}{2}
+\begin{table}[htbp]
+    \centering
+
+    \begin{tabular}{p{2.5cm} p{4cm} p{4cm} p{3.5cm}}
+        \hline
+        \textbf{Estrategia} & \textbf{Datos iniciales}                          & \textbf{Datos de adaptación}                              & \textbf{Evolución entre días}                  \\
+        \hline
+        Intra sesión        & Ninguno, modelo inicializado desde cero           & Sólo datos del usuario y día actual                       & Modelos independientes por día                 \\
+        Entre sesiones      & Ninguno, modelo inicializado desde cero           & Datos del usuario actual acumulados hasta el día evaluado & Aumenta la cantidad de datos del mismo usuario \\
+        Entre usuarios      & Modelo general entrenado con el resto de usuarios & Datos del usuario objetivo y día actual                   & Modelos adaptados independientes por día       \\
+        Continuo            & Modelo general entrenado con el resto de usuarios & Datos acumulados progresivamente del usuario objetivo     & El modelo se conserva y mejora entre días      \\
+        \hline
+    \end{tabular}
+    \caption{Resumen de las estrategias de entrenamiento empleadas.}
+    \label{tab:resumen_entrenamientos}
+\end{table}
+\endgroup
+
+{\color{red}
+    \subsubsection{Estrategia de entrenamiento}\label{sec:estrategia_entrenamiento}
+
+    epochs
+
+    batch size
+
+    callbacks:
+
+    early stopping
+
+    reduce LR
+
+    función de pérdida
+
+    métrica (accuracy)
 
 
-        validación cruzada
 
-        pseudo-online
 
-        explicar qué significa pseudo-online
-    }
+    \subsubsection{Evaluación}
+
+
+    validación cruzada
+
+    pseudo-online
+
+    explicar qué significa pseudo-online
+}
 
 
 \subsection{Infraestructura Experimental}\label{sec:infraestructura_exp}

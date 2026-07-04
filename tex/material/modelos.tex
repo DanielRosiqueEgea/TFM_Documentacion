@@ -11,7 +11,7 @@ Las arquitecturas DeepConvNet y ShallowConvNet, propuestas por Schirrmeister et 
 La arquitectura DeepConvNet está formada por cuatro bloques convolucionales seguidos de operaciones de \textit{max-pooling} y una capa final de clasificación \textit{softmax}. El primer bloque convolucional fue diseñado específicamente para adaptarse a las características de las señales EEG, las cuales presentan un número elevado de canales de entrada correspondientes a los distintos electrodos. Para ello, el bloque es separado en dos capas. La primera realiza un filtrado temporal sobre la señal de cada canal, permitiendo extraer patrones relacionados con las frecuencias presentes en el \acrshort{eeg}. Posteriormente, la segunda convolución aplica un filtrado espacial combinando la información obtenida en la primera capa. Esta separación entre convolución temporal y espacial actúa además como una forma implícita de regularización, forzando a la red a aprender transformaciones más estructuradas \cite{schirrmeister_DeepLearning2017}.
 
 
-\begin{table}[H]
+\begin{table}[htbp]
     \centering
     \footnotesize
     \begin{tabular}{clcccll}
@@ -82,7 +82,7 @@ Por otro lado, la arquitectura ShallowConvNet fue diseñada específicamente par
 Después de estas convoluciones, ShallowConvNet incorpora una secuencia de operaciones compuesta por una \textit{no linealidad cuadrática}, una capa de \textit{mean-pooling} y una activación logarítmica. Este conjunto de transformaciones es análogo al cálculo de la varianza logarítmica utilizado tradicionalmente en \acrshort{fbcsp}. Además, el uso de múltiples regiones de \textit{pooling} dentro de un mismo ensayo permite a la red aprender variaciones temporales de la potencia de banda a lo largo del tiempo \cite{schirrmeister_DeepLearning2017}.
 
 
-\begin{table}[H]
+\begin{table}[htbp]
     \centering
     \footnotesize
     \begin{tabular}{clcccl}
@@ -155,14 +155,3 @@ Finalmente, el modelo se entrena utilizando el optimizador Adam y minimizando la
 Estudios posteriores han mostrado que EEGNet es capaz de aprender representaciones similares a las obtenidas mediante métodos clásicos de extracción de características, como Filter Bank Common Spatial Patterns (FBCSP), manteniendo la ventaja de realizar dicho proceso de forma automática dentro de la propia red neuronal. Finalmente, esta arquitectura ha mostrado buenos resultados al clasificar potenciales en la señal EEG relacionados con el movimiento (\acrshort{mrcp}) \cite{lawhern_EEGNetCompact2018,kollod_DeepComparisons2023}.
 
 La elección de este modelo se debe principalmente a su arquitectura compacta y a su capacidad para obtener buenos resultados incluso con conjuntos de datos reducidos, una situación habitual en aplicaciones basadas en \acrshort{eeg}. Además, el uso de convoluciones \textit{Depthwise} y \textit{Separable} permite reducir significativamente el número de parámetros del modelo respecto a otras arquitecturas convolucionales, disminuyendo así el el coste computacional del entrenamiento \cite{lawhern_EEGNetCompact2018}.
-
-{\color{red}
-
-Para cada uno:
-
-breve descripción (2-3 líneas)
-
-por qué lo eliges
-
-NO pongas la arquitectura entera en detalle aquí (eso es más de anexos si acaso)
-}
