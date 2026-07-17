@@ -1,36 +1,35 @@
 \section{Resultados y Discusión} \label{sec:resultados}
 
-Los resultados obtenidos durante la experimentación se han almacenado en una base de datos DuckDB, tal y como se describió en la Sección \ref{sec:infraestructura_exp}. Las tablas generadas contienen, para cada ejecución realizada, tanto los metadatos asociados al entrenamiento como las métricas obtenidas durante su evaluación.
+Los resultados obtenidos durante la experimentación se han almacenado en una base de datos DuckDB, tal y como se describe en la Sección \ref{sec:infraestructura_exp}.
+
+Se generaron tres tablas distintas en la base de datos donde almacenar los resultados de los experimentos realizados: \textbf{Runs\_t} (datos relativos el entrenamiento y evaluación), \textbf{Trials\_t} (test con ensayos individuales) y \textbf{Classes\_t} (test con clases individuales de cada ensayo). Por lo tanto, las tablas generadas contienen tanto los metadatos asociados al entrenamiento como las métricas obtenidas durante su evaluación.
 
 Con el objetivo de reducir la influencia de posibles valores atípicos (\textit{outliers}) sobre el análisis estadístico, se han creado vistas derivadas de cada tabla en las que se eliminan aquellos registros cuyos valores de \textit{accuracy} se encuentran fuera de un intervalo de tres desviaciones estándar respecto a la media. Este procedimiento, basado en el método \textit{Z-Score} \cite{venkataanusha_DetectingOutliers2019}, se define como:
 
 \[
-z = \frac{x - \mu}{\sigma}
+    z = \frac{x - \mu}{\sigma}
 \]
 
 donde \(x\) representa el valor analizado, \(\mu\) la media de la distribución y \(\sigma\) la desviación estándar. De esta forma, se consideran valores atípicos aquellos que cumplen:
 
 \[
-|z| > 3
+    |z| > 3
 \]
 
-Además, también se han eliminado aquellos registros correspondientes a entrenamientos incompletos o interrumpidos, con el fin de garantizar la consistencia de los resultados analizados.
+Además, también se han eliminado aquellos registros correspondientes a experimentos incompletos o interrumpidos, con el fin de garantizar la consistencia de los resultados analizados.
 
 Tras aplicar este proceso de filtrado, el número total de registros válidos quedó reducido de la siguiente manera:
 
 \begin{itemize}
     \item Tabla de entrenamientos: de 1917 registros originales se eliminaron 105, obteniéndose un total de 1812 registros válidos.
-    
-    \item Tabla de trials: de 5751 registros originales se eliminaron 515, obteniéndose un total de 5246 registros válidos.
-    
+
+    \item Tabla de ensayos: de 5751 registros originales se eliminaron 515, obteniéndose un total de 5246 registros válidos.
+
     \item Tabla de clases: de 15336 registros originales se eliminaron 3331, obteniéndose un total de 12605 registros válidos.
 \end{itemize}
 
-En esta sección se presentarán estos resultados, los cuales se discutirán y analizarán siguiendo la siguiente metodología:
 
-Primero se analizarán los resultados obtenidos por cada modelo en función de la tarea 
-
-\subsection{Tarea Estática} \label{sec:tareaestatica} 
+\subsection{Tarea Estática} \label{sec:tareaestatica}
 
 \subsubsection{Comparación de Global}
 
@@ -43,10 +42,10 @@ Primero se analizarán los resultados obtenidos por cada modelo en función de l
 \end{figure}
 
 
-Me da igual todo, solo me centro en los modelos. hago avg y std con los metodos y los usuarios 
+Me da igual todo, solo me centro en los modelos. hago avg y std con los metodos y los usuarios
 
 \subsubsection{Comparación de Método de Entrenamiento}
-Me da igual todo, solo me centro en los metodos. hago avg y std con los modelos y los usuarios 
+Me da igual todo, solo me centro en los metodos. hago avg y std con los modelos y los usuarios
 
 \subsubsection{Variabilidad Entre Usuarios}
 
@@ -68,8 +67,8 @@ Me da igual todo, solo me centro en los metodos. hago avg y std con los modelos 
     \label{fig:best_global_configurations_static}
 \end{figure}
 
-\subsection{Tarea Movimiento} \label{sec:tareamovimiento} 
-mismo esquema 
+\subsection{Tarea Movimiento} \label{sec:tareamovimiento}
+mismo esquema
 
 \subsubsection{Comparación de Global}
 

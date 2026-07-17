@@ -115,59 +115,31 @@ Esta estrategia permite estudiar un escenario de adaptación continua, en el que
 \end{table}
 \endgroup
 
-{\color{red}
-    \subsubsection{Estrategia de entrenamiento}\label{sec:estrategia_entrenamiento}
-
-    epochs
-
-    batch size
-
-    callbacks:
-
-    early stopping
-
-    reduce LR
-
-    función de pérdida
-
-    métrica (accuracy)
-
-
-
-
-    \subsubsection{Evaluación}
-
-
-    validación cruzada
-
-    pseudo-online
-
-    explicar qué significa pseudo-online
-}
-
 
 \subsection{Infraestructura Experimental}\label{sec:infraestructura_exp}
 
-El elevado numero de ejecuciones requeridas para el estudio, hizo que, durante las etapas iniciales, se tomara la decisión de enfocar el proyecto de manera horizontal, preparando una base de ejecución sobre la cual modificar facilmente todo lo necesario para cada ejecución y permitiendo ejecutar multiples experimentos de manera secuencial.
+La complejidad de orquestar distintas ejecuciones, junto con el elevado numero de estas, hizo que durante las etapas iniciales se tomara la decisión de diseñar una infraestructura experimental común, modular y reutilizable, que permitiera modificar fácilmente la configuración de cada ejecución y automatizar la realización de múltiples experimentos de manera secuencial.
 
-Para lograr esto, se ha definido un pipeline de ejecución que permite realizar múltiples experimentos de forma iterativa y automatizada. Este pipeline está compuesto por distintos módulos encargados de gestionar el preprocesamiento de los datos, la configuración de los modelos, el entrenamiento y la evaluación de los mismos.
+Para lograr esto, se ha definido un pipeline de ejecución que gestionar las diferentes etapas del proceso experimental: la carga de la configuración, el preprocesamiento de los datos, la inicialización de los modelos, su entrenamiento, la evaluación de los resultados y el almacenamiento de estos.
 
-Con el objetivo de facilitar la reproducibilidad y la exploración sistemática de parámetros, el código se ha estructurado como un microframework que permite modificar de forma sencilla las variables de estudio, así como controlar la ejecución de los experimentos.
+Con el objetivo de facilitar la reproducibilidad y la exploración sistemática de las variables de estudio, el código se estructuró como un framework experimental ligero que permite modificar de forma sencilla las variables de estudio, así como controlar la ejecución de los experimentos y mantener una estructura común para los diferentes métodos de entrenamiento.
 
-Para organizar la ejecución, se ha definido una estructura jerárquica en tres niveles:
+Para entender la organización de las ejecuciones, se ha definido una estructura jerárquica en tres niveles:
 
 \begin{itemize}
-    \item \textbf{Experimento}: nivel superior que agrupa el conjunto completo de configuraciones evaluadas. Un experimento consiste en la ejecución sistemática de múltiples combinaciones de parámetros.
-    \item \textbf{Iteración}: cada una de las ejecuciones individuales del pipeline dentro de un experimento, asociada a una combinación específica de parámetros (arquitectura, método de entrenamiento y tipo de tarea).
-    \item \textbf{Entrenamiento}: nivel más bajo de la jerarquía, correspondiente al entrenamiento y evaluación de un modelo para un usuario y sesión concretos dentro de una iteración.
+    \item \textbf{Experimento}: nivel superior que agrupa el conjunto completo de configuraciones evaluadas. Un experimento consiste en la ejecución de distintas combinaciones de las variables experimentales, formadas por la arquitectura, el método de entrenamiento y el tipo de tarea, junto con una configuración de entrenamiento común.
+    \item \textbf{Iteración}: ejecución individual del pipeline asociada a una combinación concreta de arquitectura, método de entrenamiento y tipo de tarea. En este nivel se carga el conjunto de datos correspondiente, se inicializa la configuración experimental y se ejecuta el método de entrenamiento
+    \item \textbf{Entrenamiento}: nivel más bajo de la jerarquía, correspondiente al entrenamiento y evaluación de un modelo para un usuario y una sesión objetivo determinados. La ejecución del entrenamiento y el uso de los datos depende del método de entrenamiento seleccionado. Por ejemplo, para el método de entrenamiento \textit{intra-sesión} se utilizarán los datos de un solo día y para el \textit{entre-sesiones} se utilizan los datos de las sesiones anteriores, los métodos de entrenamiento \textit{entre-usuarios} y \textit{continuo} incluyen el
+
 \end{itemize}
 
-De este modo, cada experimento está compuesto por múltiples iteraciones, y cada iteración incluye varios entrenamientos, uno por cada usuario y sesión del dataset.
-Los experimentos se definen mediante la combinación de distintos parámetros, entre los que destacan el tipo de tarea, la arquitectura del modelo y el método de entrenamiento. Para cada combinación se ejecuta una iteración independiente
+De este modo, cada experimento recorre sistemáticamente todas las combinaciones definidas de arquitectura, método de entrenamiento y tipo de tarea. Es decir, se realiza una iteración para cada combinación Además se utiliza un fichero auxiliar que contiene los distintos parámetros comunes del proceso de entrenamiento, como el número máximo de épocas, los callbacks utilizados o la métrica monitorizada.
 
-En cada iteración, el sistema inicializa los parámetros de entrenamiento y carga el conjunto de datos correspondiente al tipo de tarea. A continuación, se ejecuta el método de entrenamiento seleccionado, en el que se itera sobre los distintos usuarios y sesiones disponibles en el dataset. Para cada caso, se inicializa el modelo, se realiza el entrenamiento y se evalúa su rendimiento.
+En cada iteración, el sistema inicializa los parámetros de entrenamiento y carga el conjunto de datos correspondiente al tipo de tarea. A continuación, se ejecuta el método de entrenamiento seleccionado, que determina cómo se recorren los usuarios y las sesiones y qué datos se utilizan en cada caso. Para cada usuario y sesión objetivo se construye o recupera el modelo, se entrena y se evalúa sobre el conjunto de prueba.
 
-Finalmente, los resultados obtenidos, junto con los parámetros utilizados, se almacenan de forma estructurada en una base de datos relacional usando el motor de DuckDB, permitiendo su posterior análisis. Un ánalisis detallado del esquema de la base de datos se presenta en el anexo \ref{sec:db_schema}.
+Finalmente, los resultados obtenidos y el identificador de cada entrenamiento se almacenan de forma estructurada en una base de datos relacional usando el motor de DuckDB, permitiendo su posterior análisis. Un análisis detallado del esquema de la base de datos se presenta en el anexo \ref{sec:db_schema}.
+
+Para permitir la reanudación de la ejecución en caso de interrupción, se ha establecido un sistema de control donde se registra el estado de cada etapa del pipeline. De este modo, cuando se produce un error o interrupción, la ejecución puede reanudarse desde el punto en el que ocurrió.
 
 Este proceso permite realizar un gran número de experimentos de manera secuencial y facilita el posterior estudio de los resultados obtenidos por cada combinación de parámetros definida.
 
@@ -175,25 +147,70 @@ La Figura \ref{fig:pipeline_general} resume la organización jerárquica del pip
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{img/diagrama_pipeline.drawio.png}
+    \includegraphics[width=0.80\textwidth]{img/esquema_codigo.drawio.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
     \caption{Pipeline experimental}
     \label{fig:pipeline_general}
 \end{figure}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.80\textwidth]{img/diagrama_pipeline.drawio.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{tengo estas dos y no sé muy bien cual usar}
+
+\end{figure}
 
 
+\subsubsection{Parámetros de entrenamiento}\label{sec:parametros_entrenamiento}
 
+Un paso importante en la implementación y estudio de modelos de \textit{Machine Learning} es la elección de los distintos parámetros que se van a usar para definir la red neuronal y para realizar el entrenamiento.
 
+Es importante diferenciar entre los hiperparámetros arquitectónicos, relacionados con la estructura de cada red neuronal, y los parámetros del proceso de entrenamiento, que incluyen aspectos como el número máximo de épocas, el optimizador empleado, los callbacks utilizados y la métrica monitorizada para seleccionar el mejor modelo.
 
+En este estudio no se ha realizado una optimización exhaustiva de los hiperparámetros arquitectónicos de las redes, ya que el objetivo principal no era proponer una nueva arquitectura ni maximizar el rendimiento de un modelo concreto, sino comparar distintas estrategias de entrenamiento bajo una configuración común. Además, en las arquitecturas empleadas (EEGNet, ShallowConvNet y DeepConvNet)  varios de sus parámetros se encuentran condicionados por la propia naturaleza de los datos, como el número de canales de entrada, la frecuencia de muestreo o la longitud temporal de las ventanas analizadas.
 
+Por ejemplo, para la EEGNet se define una longitud de kernel convolucional igual a la mitad de la frecuencia de muestreo utilizada al obtener los datos, un numero de canales de entrada igual al de canales EEG, etc.
 
-{\color{red}
-\subsubsection{Diseño de experimentos}
+Sin embargo, si se han realizado, varios experimentos preliminares modificando algunos parámetros relevantes con el objetivo de definir una configuración común de entrenamiento en los experimentos finales. En concreto, se analizaron diferentes valores para la tasa de aprendizaje inicial (\(0,1\), \(0,01\) y \(0,001\)), la tasa de \textit{dropout} (\(0,2\),\(0,3\) y \(0,4\)), el factor de reducción empleado por \textit{ReduceLROnPlateau} (\(0,1\), \(0,01\) y \(0,001\)) y el umbral de mejora mínima (\textit{min\_delta} del mismo \textit{callback}) (\(0,1\), \(0,01\) y \(0,001\)).
 
-combinaciones de parámetros
-nº de ejecuciones
-cómo comparas resultados
+Se realizaron los entrenamientos utilizando todo el conjunto de días de cada usuario. Sin embargo, dichas pruebas no mostraron mejoras consistentes en el rendimiento, por lo que se optó por mantener una configuración estable para todos los experimentos. Esto permite reducir la variabilidad de la búsqueda de hiperparámetros y la complejidad del estudio, además de garantizar unas condiciones experimentales comunes para cada modelo y método de entrenamiento. La \textit{semilla} se establece de manera aleatoria para cada experimento, evitando repetir experimentos iguales.
 
-Esto lo iba a poner, ahora no lo tengo claro, pero lo dejo aquí para no olvidarlo
-}
+La configuración de entrenamiento empleada se muestra en la Tabla \ref{tab:parametros}. El número máximo de épocas se establece en 500, aunque este valor actuó únicamente como límite superior, ya que la duración efectiva del entrenamiento estuvo controlada mediante el callback de EarlyStopping.
+
+\begin{table}[!ht]
+    \centering
+
+    \begin{tabular}{|p{4.5cm}|p{5.2cm}|p{4cm}|}
+        \hline
+        \textbf{Categoría}                              & \textbf{Parámetro}            & \textbf{Valor}                            \\ \hline
+        \multirow{4}{*}{\textbf{Configuración general}} & Número máximo de épocas       & 500                                       \\ \cline{2-3}
+        ~                                               & Tasa de aprendizaje inicial   & 0,01                                      \\ \cline{2-3}
+        ~                                               & Tasa de \textit{dropout}      & 0,4                                       \\ \cline{2-3}
+        ~                                               & Optimizador                   & Adam                                      \\ \cline{2-3}
+        ~                                               & Función de pérdida            & \textit{Sparse Categorical Cross-Entropy} \\ \cline{2-3}
+        ~                                               & Tamaño de lote                & 32                                        \\ \hline
+        \multirow{3}{*}{\textbf{Checkpointer}}          & Métrica monitorizada          & \texttt{val\_accuracy}                    \\ \cline{2-3}
+        ~                                               & Criterio de selección         & Maximización                              \\ \cline{2-3}
+        ~                                               & Almacenamiento                & Mejores pesos                             \\ \hline
+        \multirow{4}{*}{\textbf{EarlyStopping}}         & Métrica monitorizada          & Exactitud de validación                   \\ \cline{2-3}
+        ~                                               & Paciencia                     & 40 épocas                                 \\ \cline{2-3}
+        ~                                               & Mejora mínima                 & 0,001                                     \\ \cline{2-3}
+        ~                                               & Época de inicio               & 10                                        \\ \cline{2-3}
+        ~                                               & Restauración del mejor modelo & Sí                                        \\ \hline
+        \multirow{4}{*}{\textbf{ReduceLROnPlateau}}     & Métrica monitorizada          & \texttt{val\_loss}                        \\ \cline{2-3}
+        ~                                               & Paciencia                     & 15 épocas                                 \\ \cline{2-3}
+        ~                                               & Factor de reducción           & 0,1                                       \\ \cline{2-3}
+        ~                                               & Mejora mínima                 & \(10^{-4}\)                               \\ \hline
+    \end{tabular}
+    \caption{Parámetros de entrenamiento utilizados en el estudio.}
+    \label{tab:parametros}
+\end{table}
+
+Se utilizaron tres \textit{callbacks}: \textit{ModelCheckpoint}, \textit{EarlyStopping} y \textit{ReduceLROnPlateau}. El \textit{ModelCheckpoint} se configuró para almacenar únicamente los pesos correspondientes al modelo que alcanzó la mayor precisión sobre el conjunto de validación.
+
+El mecanismo de \textit{EarlyStopping} funciona monitorizando también la precisión de validación. A partir de la época 10, el entrenamiento se detiene si esta métrica no presenta una mejora mínima de 0,001 durante 40 épocas consecutivas. Una vez detenido el proceso, se restauran los pesos de la mejor época. De esta forma, el modelo que se utiliza durante la etapa de test no tiene por qué coincidir con el obtenido en la última época ejecutada.
+
+Finalmente, la tasa de aprendizaje se adapta dinámicamente mediante el \textit{callback} \textit{ReduceLROnPlateau}. Cuando la pérdida de validación no mejora al menos en \(10^{-4}\) durante 15 épocas consecutivas, la tasa de aprendizaje se multiplica por un factor de 0,1.
+
+Esta configuración se mantuvo constante entre los distintos experimentos. De esta manera, las diferencias observadas en los resultados pueden atribuirse principalmente a la arquitectura y a la estrategia de entrenamiento, en lugar de a variaciones en la configuración de entrenamiento.
