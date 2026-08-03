@@ -2,7 +2,14 @@
 
 Los resultados obtenidos durante la experimentación se han almacenado en una base de datos DuckDB, tal y como se describe en la Sección \ref{sec:infraestructura_exp}.
 
-Se generaron tres tablas distintas en la base de datos donde almacenar los resultados de los experimentos realizados: \textbf{Runs\_t} (datos relativos el entrenamiento y evaluación), \textbf{Trials\_t} (test con ensayos individuales) y \textbf{Classes\_t} (test con clases individuales de cada ensayo). Por lo tanto, las tablas generadas contienen tanto los metadatos asociados al entrenamiento como las métricas obtenidas durante su evaluación.
+Se generaron tres tablas distintas en la base de datos donde almacenar los resultados de los experimentos realizados:
+\begin{itemize}
+    \item \textbf{Runs\_t}: Contiene información general sobre cada ejecución del experimento, junto con las métricas obtenidas en el proceso de entrenamiento y validación.
+    \item \textbf{Trials\_t}: Almacena los resultados obtenidos durante el test con ensayos individuales.
+    \item \textbf{Classes\_t}: Contiene las métricas de cada una de las clases que componen los ensayos evaluados.
+\end{itemize}
+
+Por lo tanto, las tablas generadas contienen tanto los metadatos asociados al entrenamiento como las métricas obtenidas durante su evaluación.
 
 Con el objetivo de reducir la influencia de posibles valores atípicos (\textit{outliers}) sobre el análisis estadístico, se han creado vistas derivadas de cada tabla en las que se eliminan aquellos registros cuyos valores de \textit{accuracy} se encuentran fuera de un intervalo de tres desviaciones estándar respecto a la media. Este procedimiento, basado en el método \textit{Z-Score} \cite{venkataanusha_DetectingOutliers2019}, se define como:
 
@@ -16,99 +23,361 @@ donde \(x\) representa el valor analizado, \(\mu\) la media de la distribución 
     |z| > 3
 \]
 
-Además, también se han eliminado aquellos registros correspondientes a experimentos incompletos o interrumpidos, con el fin de garantizar la consistencia de los resultados analizados.
+Para más detalles sobre el proceso de eliminación de outliers, se puede consultar el Anexo \ref{sec:anexo_outliers}.
+
+Además, también se han eliminado aquellos registros correspondientes a entrenamientos incompletos o interrumpidos, con el fin de garantizar la consistencia de los resultados analizados.
 
 Tras aplicar este proceso de filtrado, el número total de registros válidos quedó reducido de la siguiente manera:
 
-\begin{itemize}
-    \item Tabla de entrenamientos: de 1917 registros originales se eliminaron 105, obteniéndose un total de 1812 registros válidos.
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        Tabla      & Elementos Pre-Filtro & Elementos Post-Filtro & Outliers \\ \hline
+        runs\_t    & 1917                 & 1917                  & 0        \\ \hline
+        trials\_t  & 5751                 & 5739                  & 12       \\ \hline
+        classes\_t & 15336                & 15218                 & 118      \\ \hline
+    \end{tabular}
+    \caption{Número de registros antes y después del proceso de filtrado.}
+\end{table}
 
-    \item Tabla de ensayos: de 5751 registros originales se eliminaron 515, obteniéndose un total de 5246 registros válidos.
+Para mostrar los resultados obtenidos durante el experimento, se han desarrollado distintas gráficas utilizando la librería Vega-Altair y apoyándose en distintas queries de la base de datos sobre las tablas filtradas. Una descripción más detallada sobre el proceso de obtención de estas gráficas se encuentra en el Anexo \ref{sec:anexo_graficas}.
 
-    \item Tabla de clases: de 15336 registros originales se eliminaron 3331, obteniéndose un total de 12605 registros válidos.
-\end{itemize}
+El análisis se organiza en tres partes. En primer lugar, se estudian por separado los resultados de la tarea estática y de la tarea de movimiento. Posteriormente, se realiza una comparación conjunta para identificar las diferencias asociadas a la tarea, la arquitectura, el usuario y el método de entrenamiento.
 
+Como se ha mencionado en el apartado \ref{sec:parametros_entrenamiento}, los experimentos han sido realizados con los mismos parámetros de entrenamiento, variando únicamente la semilla. Por lo tanto, en las gráficas de resultados obtenidas se utiliza la media de las métricas obtenidas a partir de las distintas inicializaciones.
 
 \subsection{Tarea Estática} \label{sec:tareaestatica}
 
-\subsubsection{Comparación de Global}
+\subsubsection{Comparación Global}
 
-\begin{figure}[H]
+La figura \ref{fig:architecture_training_comparison_clean_static} muestra la media de la precisión y su desviación estándar para cada combinación de modelo y método de entrenamiento.
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.90\textwidth]{img/resultados/architecture_training_comparison_clean_static.png}
+    \includegraphics[width=0.90\textwidth]{img/resultados/Comparacion_de_la_precision_por_arquitectura_y_entrenamiento_Estatico_bars.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Comparación general de las distintas arquitecturas y métodos de entrenamiento en la tarea estática}
+    \caption{Comparación general de las distintas arquitecturas y métodos de entrenamiento en la tarea estática (media obtenida a partir de los 5 usuarios).}
     \label{fig:architecture_training_comparison_clean_static}
 \end{figure}
 
+La arquitectura \textit{ShallowConvNet} obtiene los mejores resultados para todos los métodos de entrenamiento considerados. Además, su precisión media se mantiene relativamente estable entre los distintos métodos, lo que puede indicar que su rendimiento depende en menor medida de la estrategia de entrenamiento utilizada.
 
-Me da igual todo, solo me centro en los modelos. hago avg y std con los metodos y los usuarios
+Al contrario, \textit{DeepConvNet} presenta generalmente los valores de precisión más bajos. La única excepción se produce en el entrenamiento \textit{Intra-Sesión}, donde supera ligeramente a \textit{EEGNet}. Esta diferencia es reducida y no se mantiene en el resto de métodos, por lo que no se pueden obtener conclusiones sólidas.
 
-\subsubsection{Comparación de Método de Entrenamiento}
-Me da igual todo, solo me centro en los metodos. hago avg y std con los modelos y los usuarios
+Para los modelos \textit{EEGNet} y \textit{DeepConvNet}, el entrenamiento \textit{Intra-Sesión} muestra una precisión algo inferior y una mayor desviación estándar que los otros métodos que sí incorporan datos de otras sesiones y usuarios.
+Sin embargo, las diferencias entre los otros tres métodos son pequeñas en comparación con las observadas entre arquitecturas. Por tanto, estos resultados no permiten identificar un método de entrenamiento claramente superior para todas las redes estudiadas.
 
 \subsubsection{Variabilidad Entre Usuarios}
 
-\begin{figure}[H]
+La figura \ref{fig:user_variability_by_model_static} muestra la media de la precisión y su desviación estándar por usuario y modelo para la tarea estática.
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.90\textwidth]{img/resultados/user_variability_by_model_static.png}
+    \includegraphics[width=0.90\textwidth]{img/resultados/Variabilidad_entre_usuarios_Estatico_.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Variabilidad entre usuarios en la tarea estática}
+    \caption{Variabilidad entre usuarios en la tarea estática (media obtenida a partir de los métodos de entrenamiento).}
     \label{fig:user_variability_by_model_static}
 \end{figure}
 
-\subsubsection{Mejor Configuración}
+Las diferencias entre usuarios son considerablemente mayores que las observadas entre métodos de entrenamiento. El usuario 1 presenta los mejores resultados generales, mientras que el usuario 2 obtiene los valores más bajos. La diferencia entre ambos es de \(\approx\) 40\% en la precisión media.
+
+Esta variabilidad se observa en las tres arquitecturas, incluida \textit{ShallowConvNet}.
+En la gráfica anterior todos los modelos presentaban un comportamiento más estable. Por tanto, se puede establecer una correlación mucho más fuerte entre los usuarios y el modelo que entre el método de entrenamiento y el modelo.
+
+También destacan los resultados usuario 3, para el cual \textit{DeepConvNet} obtiene resultados mejores a los de las otras arquitecturas, mientras que en el resto de casos \textit{ShallowConvNet} obtiene mejores resultados con una gran diferencia. Este resultado parece apuntar a la existencia de interacciones entre las características particulares de cada sujeto y la arquitectura empleada.
+
+\begin{comment}
+
+\subsubsection{Variablilidad entre usuarios y días}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{img/resultados/best_global_configurations_static.png}
+    \includegraphics[width=1\textwidth]{img/resultados/Precision_por_usuario_y_dia_de_cada_metodo_de_entrenamiento_Estatico.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Mejores configuraciones globales en la tarea estática}
+    \caption{Variabilidad entre usuarios y día de cada método de entrenamiento en la tarea estática}
+    \label{fig:user_day_variability_by_model_static}
+\end{figure}
+
+\end{comment}
+
+\subsubsection{Mejor Configuración}
+
+La figura \ref{fig:best_global_configurations_static} muestra todas las configuraciones de modelo y método de entrenamiento con su respectiva media de la precisión y su desviación estándar.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/Mejor_configuracion_global_Estatico_bars.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Mejores configuraciones globales en la tarea estática (media obtenida a partir de los 5 usuarios).}
     \label{fig:best_global_configurations_static}
 \end{figure}
 
+Esta representación confirma que las configuraciones que usan el modelo \textit{ShallowConvNet} obtienen mejor precisión media, independientemente del método de entrenamiento. Las diferencias entre estas configuraciones son mínimas, por lo que no puede seleccionarse una estrategia de entrenamiento concreta como claramente superior.
+
+Por el contrario, la elección de la arquitectura sí produce una separación más evidente. \textit{DeepConvNet} y \textit{EEGNet} tienen peores resultados, aunque \textit{EEGNet} presenta una ligera mejora frente a \textit{DeepConvNet}.
+
+
 \subsection{Tarea Movimiento} \label{sec:tareamovimiento}
-mismo esquema
 
 \subsubsection{Comparación de Global}
 
-\begin{figure}[H]
+La figura \ref{fig:architecture_training_comparison_clean_motion} presenta la precisión media y la desviación estándar de cada arquitectura y método de entrenamiento para la tarea de movimiento.
+
+\begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.90\textwidth]{img/resultados/architecture_training_comparison_clean_motion.png}
+    \includegraphics[width=0.90\textwidth]{img/resultados/Comparacion_de_la_precision_por_arquitectura_y_entrenamiento_Movimiento_bars.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Comparación general de las distintas arquitecturas y métodos de entrenamiento en la tarea de movimiento}
+    \caption{Comparación general de las distintas arquitecturas y métodos de entrenamiento en la tarea de movimiento (media obtenida a partir de los 5 usuarios).}
     \label{fig:architecture_training_comparison_clean_motion}
 \end{figure}
 
+La distribución de los resultados es similar a la observada en la tarea estática, aunque con una una peor precisión y una mayor de la dispersión.
 
-\subsubsection{Comparación de Método de Entrenamiento}
+\textit{ShallowConvNet} continúa siendo la arquitectura con mejor rendimiento para todos los métodos de entrenamiento, seguida por \textit{EEGNet} y, finalmente, por \textit{DeepConvNet}. Para esta tarea, \textit{EEGNet} presenta una mayor diferencia respecto a \textit{DeepcConvNet}, la cual no supera a los demás modelos para ninguno de los métodos de entrenamiento. Esto puede indicar que la pequeña ventaja observada para esta red en el entrenamiento \textit{Intra-Sesión} de la tarea estática no se trata de una tendencia general.
+
+Nuevamente, las diferencias entre los distintos métodos de entrenamiento son pequeñas y no siguen un patrón consistente entre arquitecturas. Aunque algunos métodos presentan pequeñas mejoras en la precisión media, estas variaciones se pueden atribuir a una mayor dispersión de los resultados. Por este motivo,  para la tarea de movimiento tampoco se puede establecer una estrategia de entrenamiento superior.
+
 \subsubsection{Variabilidad Entre Usuarios}
-\begin{figure}[H]
+
+La figura \ref{fig:user_variability_by_model_motion} representa los resultados de cada usuario y arquitectura para la tarea de movimiento.
+
+\begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.90\textwidth]{img/resultados/user_variability_by_model_motion.png}
+    \includegraphics[width=0.90\textwidth]{img/resultados/Variabilidad_entre_usuarios_Movimiento_.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Variabilidad entre usuarios en la tarea de movimiento}
+    \caption{Variabilidad entre usuarios en la tarea de movimiento (media obtenida a partir de los métodos de entrenamiento).}
     \label{fig:user_variability_by_model_motion}
 \end{figure}
 
+Los resultados son, en general, peores a los obtenidos en la tarea estática. Sin embargo, la caída de rendimiento no se produce igual para todos los sujetos.
+
+En este caso, el usuario 4 alcanza la mayor precisión media, mientras que los usuarios 0 y 3 muestran una disminución considerable respecto a sus resultados en la tarea estática.
+
 \subsubsection{Mejor Configuración}
 
-\begin{figure}[H]
+La figura \ref{fig:best_global_configurations_motion} ordena las configuraciones evaluadas para la tarea de movimiento.
+
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{img/resultados/best_global_configurations_motion.png}
+    \includegraphics[width=1\textwidth]{img/resultados/Mejor_configuracion_global_Movimiento_bars.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Mejores configuraciones globales en la tarea de movimiento}
+    \caption{Mejores configuraciones globales en la tarea de movimiento (media obtenida a partir de los 5 usuarios).}
     \label{fig:best_global_configurations_motion}
 \end{figure}
 
+Las configuraciones basadas en \textit{ShallowConvNet} vuelven a obtener la mejor precisión media. No obstante, sus resultados son inferiores y presentan una mayor dispersión que en la tarea estática.
+
+La clasificación de las arquitecturas se mantiene a pesar del cambio de tarea, lo que proporciona más evidencias sobre una mayor influencia de la arquitectura respecto al método de entrenamiento.
+
+
+\subsection{Comparación entre usuarios}
+
+Las Figuras \ref{fig:architecture_training_comparison_by_user_0}, \ref{fig:architecture_training_comparison_by_user_1}, \ref{fig:architecture_training_comparison_by_user_2}, \ref{fig:architecture_training_comparison_by_user_3} y \ref{fig:architecture_training_comparison_by_user_4} muestran la precisión media y su desviación estándar para cada usuario, arquitectura y método de entrenamiento, separando los resultados obtenidos en la tarea estática y en la tarea de movimiento.
+
+Esta representación permite analizar con mayor detalle las diferencias entre participantes y observar cómo varía el rendimiento de cada arquitectura y método de entrenamiento en función del usuario y de la tarea evaluada.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_0_bars__static_motion.png}
+
+    \caption{Comparación entre arquitecturas y entrenamientos para el usuario 0 en la tarea estática y en la de movimiento.}
+    \label{fig:architecture_training_comparison_by_user_0}
+\end{figure}
+
+
+Los resultados muestran comportamientos diferentes entre los participantes. El usuario 3 presenta la mayor caída en precisión para la tarea de movimiento. En cambio, el usuario 4 mantiene valores similares en ambas tareas e incluso obtiene una precisión ligeramente superior en la tarea de movimiento para algunas configuraciones.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_1_bars__static_motion.png}
+
+    \caption{Comparación entre arquitecturas y entrenamientos para el usuario 1 en la tarea estática y en la de movimiento.}
+    \label{fig:architecture_training_comparison_by_user_1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_2_bars__static_motion.png}
+
+    \caption{Comparación entre arquitecturas y entrenamientos para el usuario 2 en la tarea estática y en la de movimiento.}
+    \label{fig:architecture_training_comparison_by_user_2}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_3_bars__static_motion.png}
+
+    \caption{Comparación entre arquitecturas y entrenamientos para el usuario 3 en la tarea estática y en la de movimiento.}
+    \label{fig:architecture_training_comparison_by_user_3}
+\end{figure}
+
+El usuario 2 mantiene un rendimiento claramente inferior al resto de participantes en ambas tareas. Sin embargo, es el único usuario para el que se observa una pequeña mejora general en la tarea de movimiento respecto a la tarea estática.
+El usuario 1 alcanza los mejores resultados en la tarea estática, aunque en la tarea de movimiento su precisión queda por debajo de la obtenida por el usuario 4.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_4_bars__static_motion.png}
+
+    \caption{Comparación entre arquitecturas y entrenamientos para el usuario 4 en la tarea estática y en la de movimiento.}
+    \label{fig:architecture_training_comparison_by_user_4}
+\end{figure}
+
+Las diferencias entre tareas también varían en función de la arquitectura. \textit{DeepConvNet} y \textit{EEGNet} presentan cambios más grandes entre la tarea estática y la de movimiento. En particular, \textit{DeepConvNet} presenta una mayor reducción relativa en la tarea de movimiento para varios usuarios. Por el contrario, \textit{ShallowConvNet} mantiene, de forma general, un rendimiento más estable entre ambas tareas.
+
+En cuanto a los métodos de entrenamiento, no se aprecia un comportamiento común a todos los participantes. La configuración que obtiene los mejores resultados cambia según el usuario, la arquitectura y la tarea, sin que ninguno de los métodos destaque de forma consistente en todas las condiciones analizadas.
+
+    {
+        \begin{comment}
+        \begin{figure}[htbp]
+            \centering
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_0_bars__static.png}
+                \label{fig:architecture_training_user_0}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_1_bars__static.png}
+                \label{fig:architecture_training_user_1}
+            \end{subfigure}
+
+            \vspace{0cm}
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_2_bars__static.png}
+                \label{fig:architecture_training_user_2}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_3_bars__static.png}
+                \label{fig:architecture_training_user_3}
+            \end{subfigure}
+
+            \vspace{0cm}
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_4_bars__static.png}
+                \label{fig:architecture_training_user_4}
+
+            \end{subfigure}
+
+            \caption{Comparación de la precisión obtenida por cada arquitectura y método de entrenamiento para los distintos usuarios en la tarea estática.}
+            \label{fig:architecture_training_comparison_by_user}
+
+        \end{figure}
+
+        \begin{figure}[htbp]
+            \centering
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_0_bars__motion.png}
+                \label{fig:architecture_motion_training_user_0}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_1_bars__motion.png}
+                \label{fig:architecture_motion_training_user_1}
+            \end{subfigure}
+
+            \vspace{0cm}
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_2_bars__motion.png}
+                \label{fig:architecture_motion_training_user_2}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_3_bars__motion.png}
+                \label{fig:architecture_motion_training_user_3}
+            \end{subfigure}
+
+            \vspace{0cm}
+
+            \begin{subfigure}[t]{0.46\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{img/resultados/usuarios/Comparacion_por_arquitectura_y_entrenamiento_4_bars__motion.png}
+                \label{fig:architecture_motion_training_user_4}
+
+            \end{subfigure}
+
+            \caption{Comparación de la precisión obtenida por cada arquitectura y método de entrenamiento para los distintos usuarios en la tarea de movimiento.}
+            \label{fig:architecture_motion_training_comparison_by_user}
+
+        \end{figure}
+        \end{comment}
+    }
+
 \subsection{Comparación entre tareas}
 
+La Figura \ref{fig:user_day_variability_by_method_and_task} muestra la evolución de la precisión media para cada usuario y día, separando los resultados correspondientes a la tarea estática y a la tarea de movimiento. La línea horizontal representa la precisión media global de cada tarea y se utiliza como referencia para interpretar la evolución de cada participante.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{img/resultados/static_vs_motion_accuracy.png}
+    \includegraphics[width=1\textwidth]{img/resultados/Comparacion_de_la_evolucion_de_la_precision_por_dia_y_usuario_entre_tareas.png}
     %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
-    \caption{Comparación de la precisión entre la tarea estática y la de movimiento}
+    \caption{Variabilidad entre usuarios y día para cada tarea (media obtenida a partir de los métodos de entrenamiento y los modelos).}
+    \label{fig:user_day_variability_by_method_and_task}
+\end{figure}
+
+La tarea de movimiento presenta una mayor desviación estándar que la tarea estática para la mayor parte de los usuarios. Esta mayor dispersión indica que su rendimiento es menos estable entre ejecuciones, usuarios y días.
+
+Además, no se observa una evolución temporal común a todos los participantes. Para el usuario 1, la precisión aumenta durante los primeros días para ambas tareas, mientras que el usuario 3 muestra una evolución descendente en la tarea estática y una precisión constante durante la tarea de movimiento. Por otra parte, el usuario 0 mantiene resultados relativamente estables en ambas tareas.
+
+Al igual que en las otras gráficas de comparación entre usuarios, el usuario 2 muestra un rendimiento claramente inferior a la media global de ambas tareas. Ocurre lo mismo con el usuario 0.
+
+La ausencia de una tendencia general indica que la incorporación de otras sesiones no produce necesariamente una mejora continua de la precisión. El efecto de añadir datos puede depender de la similitud entre las sesiones, de la variabilidad diaria de la señal y de las características de cada usuario.
+
+Por tanto, el día de adquisición no parece estar relacionado con una evolución del rendimiento. Su efecto debe interpretarse conjuntamente con el usuario, la tarea y la arquitectura utilizada.
+
+
+\subsubsection{Rendimiento global de las tareas}
+
+La Figura \ref{fig:static_vs_motion_accuracy} compara directamente la precisión media obtenida en las tareas estática y de movimiento según el modelo y el método de entrenamiento.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/Comparacion_de_las_tareas_estaticas_y_de_movimiento.png}
+
+    \caption{Comparación de la precisión entre la tarea estática y la de movimiento (media obtenida a partir de los 5 usuarios).}
     \label{fig:static_vs_motion_accuracy}
 \end{figure}
 
+La tarea estática alcanza una precisión media global de \(\approx\)77\%, frente a un valor de \(\approx\)70\% en la tarea de movimiento. Esto supone una diferencia de 7 puntos porcentuales sobre la tarea de movimiento.
+
+Esta diferencia se mantiene de forma general los distintos modelos y métodos de entrenamiento, aunque varía ligeramente en función de la configuración. Además, ambas tareas presentan valores de desviación estándar similares en esta agrupación, por lo que la menor precisión observada en la tarea de movimiento no constituye un aumento de la dispersión global.
+
+
+\subsection{Comparación entre métodos de entrenamiento}
+
+La figura \ref{fig:user_day_variability_global} presenta la evolución de la precisión por usuario y día, agrupando los resultados según el método de entrenamiento. La linea horizontal de cada sub-gráfica representa la media de precisión global para todos los métodos de entrenamiento, esto permite una comparación directa entre los distintos métodos.
+
+quitar esta y poner las cuatro redes. después evaluamos la media de los tres ensayos evaluados sobre el modelo elegido.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{img/resultados/Precision_por_usuario_y_dia_de_cada_metodo_de_entrenamiento_Global.png}
+    %\includegraphics[height=\dimexpr\pagegoal-\pagetotal-\baselineskip\relax,width=\textwidth,keepaspectratio]{img/diagrama_pipeline.drawio.png}
+    \caption{Variabilidad entre usuarios y día para cada método de entrenamiento (media obtenida a partir de los modelos).}
+    \label{fig:user_day_variability_global}
+\end{figure}
+
+No se observa un diferencias notables entre los distintos métodos de entrenamiento en cuanto a la evolución de la precisión durante los distintos días de la semana. Las curvas presentan comportamientos similares para todos los los métodos y sus diferencias parecen depender principalmente del usuario y del día analizado.
+
+El método \textit{Inter-Sesión} alcanza una precisión media ligeramente superior y una menor desviación estándar para los cinco usuarios, salvo el usuario 3, que mantiene una desviación estándar similar en todos los métodos. Este resultado podría indicar que el incorporar información procedente de sesiones anteriores de un mismo usuario aporta una pequeña mejora en la estabilidad del modelo. Sin embargo, esta ventaja es reducida.
+
+Los métodos \textit{Inter-Users} y \textit{Continuous} no producen una mejora claramente diferenciada respecto al entrenamiento \textit{Intra-Sesión}. El uso de un modelo inicial entrenado con otros usuarios no garantiza un aumento de la precisión tras su adaptación al usuario objetivo.
+
+El el Anexo \ref{sec:anexo_graficas} se incluyen gráficas adicionales que muestran la evolución de la precisión por usuario y día para cada arquitectura.

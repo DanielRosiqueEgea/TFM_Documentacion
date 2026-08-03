@@ -4,38 +4,15 @@
 \markright{RESUMEN} % Al utilizar \section* se ha de añadir manualmente el título del apartado al encabezado.
 \addcontentsline{toc}{section}{RESUMEN} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC)
 
-{\color{red}
+Las interfaces cerebro-computador dedicadas al control de exoesqueletos constituyen una herramienta prometedora para la rehabilitación de personas con lesiones motoras. En este contexto, la detección precisa de la intención de marcha del usuario a partir de señales electroencefalográficas (EEG) resulta fundamental para garantizar un funcionamiento seguro y eficiente del sistema. Así pues, el desarrollo de modelos de clasificación robustos y generalizables puede ayudar a reducir la dependencia de calibraciones extensas y mejorar la experiencia del usuario, facilitando la integración de estas tecnologías en entornos clínicos y domésticos.
 
-    \begin{itemize}
-        \item Contexto/problema (1-2 frases)
-        \item Objetivos (1 frase corta)
-        \item Metodología (2-3 frases)
-        \item Resultados ()
-              \begin{itemize}
-                  \item que el método funciona
-                  \item comparas enfoques
-                  \item cuál es mejor (aunque sea genérico)
-              \end{itemize}
-        \item Conclusiones/impacto (1-2 frases)
-    \end{itemize}
-    Se utilizarán redes neuronales convolucionales para detectar patrones cerebrales que detecten la intención de caminar o detenerse con un exoesqueleto. Se ajustarán los modelos para maximizar la detección y reducir los falsos positivos en validación cruzada y en pseudo-online. Los modelos utilizarán información del mismo día, acumulativos o aplicando fine tuning. Se realizará el estudio con registros previamente realizados y se planteará su aplicación a nuevos datos experimentales.
+El objetivo de este trabajo es analizar el rendimiento de diferentes arquitecturas de redes neuronales convolucionales en la clasificación de señales EEG, así como evaluar distintas estrategias de entrenamiento, incluyendo modelos entrenados con datos del mismo día, enfoques acumulativos y técnicas de fine-tuning. Entre las arquitecturas evaluadas se incluyen \textit{EEGNet}, \textit{DeepConvNet} y \textit{ShallowConvNet}, mientras que las estrategias de entrenamiento consideradas abarcan enfoques \textit{Intra-Sesión}, \textit{Inter-Sesión}, \textit{Inter-Usuarios} y \textit{Continuo}.
 
-}
+Los experimentos se han realizado utilizando registros de señales EEG correspondientes a cinco usuarios y cinco sesiones por participante. Las tareas objetivo han sido la detección de la intención de caminar y detenerse. Las diferentes configuraciones se han entrenado con varias semillas aleatorias y se han evaluado mediante la precisión media y su desviación estándar, permitiendo estudiar tanto el rendimiento como la estabilidad de los modelos. De esta manera, se ha analizado la influencia de la arquitectura, la tarea, el método de entrenamiento y la variabilidad entre usuarios.
 
+Los resultados muestran que \textit{ShallowConvNet} obtiene el mejor rendimiento global, con una precisión media aproximada del 76.6\%, seguida de \textit{EEGNet}, con un 71.4\%, y \textit{DeepConvNet}, con un 69.4\%. La tarea estática alcanza una precisión media cercana al 76.0\%, frente al 69.1\% obtenido en la tarea de movimiento. En cuanto a las estrategias de entrenamiento, el método \textit{Inter-Sesión} presenta el mejor resultado medio, aunque las diferencias entre métodos son moderadas y dependen en gran medida de la arquitectura, la tarea y el participante.
 
-
-
-{\color{orange}
-    Se utilizarán redes neuronales convolucionales para la detección de patrones cerebrales asociados a la intención de iniciar o detener la marcha en sistemas de asistencia robótica. Este problema resulta clave en el desarrollo de interfaces cerebro-computador aplicadas al control de exoesqueletos, donde la identificación precisa de la intención del usuario es fundamental para garantizar un funcionamiento seguro y eficiente.
-
-    El objetivo de este trabajo es analizar el rendimiento de diferentes arquitecturas de redes neuronales convolucionales en la clasificación de señales EEG, así como evaluar distintas estrategias de entrenamiento, incluyendo modelos entrenados con datos del mismo día, enfoques acumulativos y técnicas de fine-tuning. Para ello, se emplean registros de EEG previamente adquiridos, aplicando esquemas de validación cruzada y evaluaciones en entornos pseudo-online que simulan condiciones reales de uso.
-
-    Los resultados obtenidos permiten comparar el impacto de la arquitectura, el método de entrenamiento y la variabilidad entre usuarios en el rendimiento del sistema, destacando aquellas configuraciones que maximizan la precisión y reducen los falsos positivos. Asimismo, se identifican diferencias significativas entre los distintos enfoques evaluados, lo que proporciona información relevante para el diseño de sistemas más robustos.
-
-    Finalmente, este trabajo sienta las bases para la aplicación de estos modelos en escenarios reales, contribuyendo al desarrollo de sistemas de control más fiables en exoesqueletos y otras tecnologías de asistencia basadas en interfaces cerebro-computador.
-}
-
-\vspace{12cm}
+En conjunto, los resultados indican que la arquitectura seleccionada y la variabilidad entre usuarios tienen una mayor influencia sobre el rendimiento que la estrategia de entrenamiento. Este trabajo proporciona una base para el desarrollo de pruebas más exhaustivas orientadas a reducir el proceso de calibración de los sistemas de asistencia robótica y facilitar su integración en aplicaciones de rehabilitación.
 
 
 

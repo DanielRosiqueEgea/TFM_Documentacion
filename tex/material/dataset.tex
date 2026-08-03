@@ -44,7 +44,12 @@ Antes de cada tarea mental se proporcionaba una instrucción al usuario. Estos p
 
 Adicionalmente, antes de cada ensayo existía un periodo inicial de duración aleatoria en el que el sujeto realizaba una tarea mental distinta. Este segmento tenía como objetivo reducir artefactos y estabilizar la señal antes de la tarea principal, por lo que también fue descartado durante el preprocesamiento.
 
-Durante las sesiones experimentales los sujetos alternaban entre las tareas de imaginación de parada (\textit{static}) y de imaginación de movimiento (\textit{motion}) con el objetivo de reducir la fatiga y evitar la monotonía durante la adquisición.
+Durante las sesiones experimentales los sujetos alternaban entre dos tareas con el objetivo de reducir la fatiga y evitar la monotonía durante la adquisición \cite{ferrero_BrainMachine2024}.:
+
+\begin{itemize}
+    \item \textit{Estática}/\textit{Static}, donde los usuarios comenzaban parados y realizaban un esfuerzo mental activo orientado a iniciar el movimiento
+    \item \textit{Movimiento}/\textit{Motion}, donde la imaginación motora consistía en detener la marcha.
+\end{itemize}
 
 La Figura \ref{fig:ventanas} muestra un esquema de la segmentación temporal de las ventanas empleada durante los ensayos.
 
@@ -149,22 +154,3 @@ Se aplicaron dos filtros en la etapa inicial de preprocesamiento: un filtro notc
 Finalmente, a cada canal EEG se le aplicó un filtro paso banda entre 8 y 40 Hz. Este rango frecuencial incluye principalmente las bandas \(\mu\) (8--13 Hz) y \(\beta\) (13--30 Hz), ampliamente utilizadas en aplicaciones \acrshort{bci} basadas en imaginación motora debido a su relación con la actividad cortical motora \cite{mirnaziri_UsingCombination2013}.
 
 Posteriormente, se eliminaron los periodos correspondientes a instrucciones y segmentos iniciales no pertenecientes a las tareas mentales objetivo. De esta forma, el análisis se centró únicamente en las ventanas asociadas a relajación e imaginación motora.
-
-
-
-    {\color{red}
-        la Pipeline
-        qué hace tu sistema de principio a fin
-
-        Ejemplo:
-
-        entrada: EEG
-
-        procesamiento
-
-        modelo
-
-        salida: predicción
-
-
-    }

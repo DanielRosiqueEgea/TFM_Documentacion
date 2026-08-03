@@ -13,6 +13,7 @@
 \usepackage{verbatim}
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
+\usepackage{subcaption}
 
 
 
@@ -189,6 +190,52 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92} % Gris oscuro.
 
 % Se define el valor de ciertos parámetros de listings para adaptar dicho paquete a código escrito en Python:
+\lstdefinestyle{basecode}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegray},
+  keywordstyle=\color{codeblue},
+  stringstyle=\color{codegreen},
+  numberstyle=\tiny\color{codegray},
+  numbers=left,
+  numbersep=5pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  postbreak=\mbox{{\(\hookrightarrow\)}\space},
+  showspaces=false,
+  showstringspaces=false,
+  keepspaces=true,
+  tabsize=2,
+  captionpos=b
+}
+
+\lstdefinestyle{pythonstyle}{
+  style=basecode,
+  language=Python,
+  deletekeywords={print},
+  keywordstyle={[2]\ttfamily\color{codeblue}},
+  keywords=[2]{as},
+  keywordstyle={[3]\ttfamily\color{codepurple}},
+  keywords=[3]{
+      True, False, ttk, list, None, dict,
+      zip, range, len, print, float, sum
+    },
+  keywordstyle={[4]\bfseries\ttfamily},
+  keywords=[4]{_read_excel},
+  emph={MyClass,__init__}
+}
+
+\lstdefinestyle{sqlstyle}{
+  style=basecode,
+  language=SQL,
+  keywordstyle=\bfseries\color{codeblue},
+  commentstyle=\itshape\color{codegray},
+  stringstyle=\color{codegreen},
+  morekeywords={
+      CREATE, REPLACE, VIEW, WITH,
+      FILTER, STDDEV_SAMP, NULLIF
+    }
+}
 \lstdefinestyle{mystyle}{
   % - General:
   language=Python, % Lenguaje de programación.
@@ -199,22 +246,22 @@
   keywordstyle=\color{codeblue}, % Color de las palabras clave por defecto.
   stringstyle=\color{codegreen}, % Color de los "string"
   % - Palabras clave:
-  deletekeywords={print}, % Se elimina "print" del conjunto de palabras clave para posteriormente asignarle el color morado.
+  deletekeywords={print}, % Se elimina "print" del conjunto de palabras clave para osteriormente asignarle el color morado.
   keywordstyle={[2]\ttfamily\color{codeblue}},
   keywords=[2]{as}, % Se añaden las palabras clave de color azul.
   keywordstyle={[3]\ttfamily\color{codepurple}},
-  keywords=[3]{True, False, ttk, list, None, dict, zip, range, len, print, float, sum}, % Se añaden las palabras clave de color morado.
+  keywords=[3]{True, False, ttk, list, None, dict, zip, range, len, print, float, um}, % Se añaden las palabras clave de color morado.
   keywordstyle={[4]\bfseries\ttfamily},
   keywords=[4]{_read_excel}, % Se añaden las palabras clave en negrita.
   emph={MyClass,__init__}, % Se añaden las palabras clave enfatizadas.   
   % - Números de línea:
-  numberstyle=\tiny\color{codegray}, % Tamaño de fuente y color de los números de línea.
-  numbers=left, % Se colocan los números de línea en el lado izquierdo.                 
+  numberstyle=\tiny\color{codegray}, % Tamaño de fuente y color de los números de ínea.
+  numbers=left, % Se colocan los números de línea en el lado zquierdo.                 
   numbersep=5pt, % Separación horizontal de los números de línea.
   % - Saltos a la línea, espacios, indentación:
   breaklines=true, % Permitir saltos a la línea. 
   breakatwhitespace=true, % Saltar a la línea únicamente al encontrar espacios.
-  postbreak = \mbox{{\(\hookrightarrow\)}\space}, % Se añade una flecha al cambiar de línea.
+  postbreak = \mbox{{\(\hookrightarrow\)}\space}, % Se añade una flecha al cambiar e línea.
   showspaces=false, % No mostrar los espacios. 
   showstringspaces=false, % No mostrar los espacios en los "string".
   keepspaces=true, % Mantener los espacios presentes en el código. 
